@@ -5,7 +5,7 @@ sequenceDiagram
 
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
-    Note left of server: The server creates new note object, and adds it to raw JSON data
+    Note left of server: The server creates new note object, and adds it to notes list
     server-->>browser: Redirect to https://studies.cs.helsinki.fi/exampleapp/notes
     deactivate server
     
