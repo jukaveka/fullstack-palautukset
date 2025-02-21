@@ -48,12 +48,14 @@ const Statistics = ({positive, neutral, negative, total}) => {
     <div>
       <h1> Statistics </h1>
       <table>
-      <StatisticLine text="Good" value={positive} />
-      <StatisticLine text="Neutral" value={neutral} />
-      <StatisticLine text="Bad" value={negative} />
-      <StatisticLine text="Total" value={total} />
-      <StatisticLine text="Average" value={calculateAverage()} />
-      <StatisticLine text="Positive" value={calculatePositiveShare()} />
+        <tbody>
+          <StatisticLine text="Good" value={positive} />
+          <StatisticLine text="Neutral" value={neutral} />
+          <StatisticLine text="Bad" value={negative} />
+          <StatisticLine text="Total" value={total} />
+          <StatisticLine text="Average" value={calculateAverage()} />
+          <StatisticLine text="Positive" value={calculatePositiveShare()} />
+        </tbody>
       </table>
     </div>
   )
@@ -63,10 +65,12 @@ const StatisticLine = ({text, value}) => {
   console.log("Statistics", text, ", value", value)
 
   return (
-    <div>
-      <td width={65}> {text} </td>
-      <td> {value} </td>
-    </div>
+    <>
+      <tr>
+        <td width={65}> {text} </td>
+        <td> {value} </td>
+      </tr>
+    </>
   )
 }
 
