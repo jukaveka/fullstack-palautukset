@@ -30,7 +30,9 @@ const Statistics = ({positive, neutral, negative, total}) => {
       return 0
     }
 
-    return (positive / total) * 100
+    const positiveShare = (positive / total) * 100
+
+    return positiveShare + " %"
   }
 
   if (total === 0) {
@@ -45,12 +47,22 @@ const Statistics = ({positive, neutral, negative, total}) => {
   return (
     <div>
       <h1> Statistics </h1>
-      <p> Good {positive} </p>
-      <p> Neutral {neutral} </p>
-      <p> Bad {negative} </p>
-      <p> Total {total} </p>
-      <p> Average {calculateAverage()} </p>
-      <p> Positive {calculatePositiveShare()} %</p>
+      <StatisticLine text="Good" value={positive} />
+      <StatisticLine text="Neutral" value={neutral} />
+      <StatisticLine text="Bad" value={negative} />
+      <StatisticLine text="Total" value={total} />
+      <StatisticLine text="Average" value={calculateAverage()} />
+      <StatisticLine text="Positive" value={calculatePositiveShare()} />
+    </div>
+  )
+}
+
+const StatisticLine = ({text, value}) => {
+  console.log("Statistics", text, ", value", value)
+
+  return (
+    <div>
+      <p> {text} {value} </p>
     </div>
   )
 }
