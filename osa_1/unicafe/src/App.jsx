@@ -19,9 +19,18 @@ const Statistics = ({positive, neutral, negative, total}) => {
     if (total === 0) {
       return 0
     }
+
     const reactionValue = (positive * 1) + (negative * -1)
 
     return reactionValue / total
+  }
+
+  const calculatePositiveShare = () => {
+    if (positive === 0) {
+      return 0
+    }
+
+    return (positive / total) * 100
   }
 
   return (
@@ -32,6 +41,7 @@ const Statistics = ({positive, neutral, negative, total}) => {
       <p> Bad {negative} </p>
       <p> Total {total} </p>
       <p> Average {calculateAverage()} </p>
+      <p> Positive {calculatePositiveShare()} %</p>
     </div>
   )
 }
