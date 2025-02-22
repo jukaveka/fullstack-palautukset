@@ -14,9 +14,36 @@ const Votes = ({ votes, selected }) => {
   const anecdoteVotes = votes[selected]
 
   return (
-    <div>
-      <p> Anecdote has {anecdoteVotes} votes</p>
-    </div>
+    <>
+      Anecdote has {anecdoteVotes} votes
+    </>
+  )
+}
+
+const TopAnecdote = ({ anecdotes, votes }) => {
+  const mostVotedIndex = () => {
+    let index = 0
+
+    for (let i = 0; i < votes.length; i++) {
+      if (votes[i] > votes[index]) {
+        index = i
+      }
+    }
+
+    return index
+  }
+
+  console.log("Most voted anecdote index", mostVotedIndex()) 
+
+  const mostVotedAnecdote = anecdotes[mostVotedIndex()]
+
+  console.log("Most voted anecdote", mostVotedAnecdote)
+
+  return (
+    <>
+      <h1> Anecdote with most votes </h1>
+      <p> {mostVotedAnecdote} </p>
+    </>
   )
 }
 
@@ -65,10 +92,12 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
-      <Votes votes={votes} selected={selected} />
-      <Button onClick={addVoteToAnecdote} text={"Vote"} />
+      <p><Votes votes={votes} selected={selected} /></p>
+      <p><Button onClick={addVoteToAnecdote} text={"Vote"} /></p>
       <Button onClick={changeSelectedAnecdote} text={"Next anecdote"} />
+      <TopAnecdote anecdotes={anecdotes} votes={votes} />
     </div>
   )
 }
