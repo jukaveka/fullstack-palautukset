@@ -10,6 +10,16 @@ const Button = ({onClick, text}) => {
   )
 }
 
+const Votes = ({ votes, selected }) => {
+  const anecdoteVotes = votes[selected]
+
+  return (
+    <div>
+      <p> Anecdote has {anecdoteVotes} votes</p>
+    </div>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -23,6 +33,7 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
 
   const changeSelectedAnecdote = () => {
     console.log("Current selected index is", selected)
@@ -38,9 +49,25 @@ const App = () => {
     return Math.floor(Math.random() * (anecdotes.length))
   }
 
+  const addVoteToAnecdote = () => {
+    console.log("Votes are currently", votes)
+
+    const updatedVotes = votes.concat()
+
+    console.log("Updated votes list before updating values", updatedVotes)
+
+    updatedVotes[selected] = updatedVotes[selected] + 1
+
+    console.log("Updated votes list after updating value", updatedVotes)
+
+    setVotes(updatedVotes)
+  }
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <Votes votes={votes} selected={selected} />
+      <Button onClick={addVoteToAnecdote} text={"Vote"} />
       <Button onClick={changeSelectedAnecdote} text={"Next anecdote"} />
     </div>
   )
