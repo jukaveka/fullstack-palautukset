@@ -33,7 +33,7 @@ const Total = ({ parts }) => {
   console.log("Total exercises", totalExerciseCount)
   
   return (
-    <p>Number of exercises {totalExerciseCount} </p>
+    <p><b>Total of {totalExerciseCount} exercises</b></p>
   )
 }
 
