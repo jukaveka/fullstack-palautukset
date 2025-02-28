@@ -17,7 +17,7 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    console.log("Button clicked to add new person, value", event.target.value)
+    console.log("Button clicked to add new person, value", newName)
 
     const personObject = {
       name: newName
@@ -41,7 +41,8 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      ...
+        {persons.map(person => 
+          <p key={person.name}> {person.name} </p>)}
     </div>
   )
 
