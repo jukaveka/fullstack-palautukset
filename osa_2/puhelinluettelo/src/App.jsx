@@ -9,6 +9,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [showAll, setShowAll] = useState(true)
 
   const changeNameInput = (event) => {
     console.log("Input changed for name input element. Original value", newName, ", new value", event.target.value)
@@ -26,6 +27,10 @@ const App = () => {
     console.log("Input changed for phone input element. Original value", search, ", new value", event.target.value)
 
     setSearch(event.target.value)
+
+    event.target.value != ""
+      ? setShowAll(false)
+      : setShowAll(true)
   }
 
   const addPerson = (event) => {
@@ -49,6 +54,10 @@ const App = () => {
       setNewNumber("")
     }
   }
+
+  const filteredPersons = showAll
+    ? persons
+    : persons.filter(person => person.name.includes(search))
 
   return (
     <div>
@@ -82,7 +91,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-        {persons.map(person => 
+        {filteredPersons.map(person => 
           <p key={person.name}> {person.name} {person.number} </p>)}
     </div>
   )
