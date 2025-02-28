@@ -1,3 +1,5 @@
+import Person from "./Person"
+
 const Directory = ({ showAll, persons, search}) => {
     const filteredPersons = showAll
     ? persons
@@ -6,8 +8,8 @@ const Directory = ({ showAll, persons, search}) => {
     return (
     <div>
         <h2>Numbers</h2>
-        {filteredPersons.map(person => 
-          <p key={person.name}> {person.name} {person.number} </p>)}
+        {filteredPersons.map(person =>
+            <Person key={person.name} person={person} />)}
     </div>
     )
 }
