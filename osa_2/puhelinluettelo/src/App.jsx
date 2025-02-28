@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import PersonForm from "./components/PersonForm"
 import Directory from './components/Directory'
+import Search from './components/Search'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -64,14 +65,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <p>
-          <label htmlFor="search"> Search with name </label>
-        </p>
-        <p>
-          <input id="search" name="search" value={search} onChange={changeSearchInput} />
-        </p>
-      </form>
+      <Search search={search} onChange={changeSearchInput} />
       <PersonForm onSubmit={addPerson} newName={newName} onNameInputChange={changeNameInput} newNumber={newNumber} onNumberInputChange={changeNumberInput} />
       <Directory showAll={showAll} persons={persons} search={search} />
     </div>
