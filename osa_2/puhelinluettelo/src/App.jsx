@@ -2,17 +2,13 @@ import { useState } from 'react'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { 
-      name: 'Arto Hellas',
-      number: '040 1231244'
-    }
+    { name: 'Arto Hellas', number: '040 1231244' },
+    { name: 'Marko Makkara', number: '+358501234567' },
+    { name: 'Piia Paju', number: '040 0987654' }
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-
-  console.log("State variable persons", persons)
-  console.log("State variable newName", newName)
-  console.log("State variable newNumber", newNumber)
+  const [search, setSearch] = useState('')
 
   const changeNameInput = (event) => {
     console.log("Input changed for name input element. Original value", newName, ", new value", event.target.value)
@@ -20,10 +16,16 @@ const App = () => {
     setNewName(event.target.value)
   }
 
-  const changeNumberInput = event => {
+  const changeNumberInput = (event) => {
     console.log("Input changed for phone input element. Original value", newNumber, ", new value", event.target.value)
 
     setNewNumber(event.target.value)
+  }
+
+  const changeSearchInput = (event) => {
+    console.log("Input changed for phone input element. Original value", search, ", new value", event.target.value)
+
+    setSearch(event.target.value)
   }
 
   const addPerson = (event) => {
@@ -51,6 +53,15 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <form>
+        <p>
+          <label htmlFor="search"> Search with name </label>
+        </p>
+        <p>
+          <input id="search" name="search" value={search} onChange={changeSearchInput} />
+        </p>
+      </form>
+      <h2> Add new person to phonebook </h2>
       <form onSubmit={addPerson}>
         <div>
           <label htmlFor="name"> Name </label>
