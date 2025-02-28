@@ -19,14 +19,20 @@ const App = () => {
     event.preventDefault()
     console.log("Button clicked to add new person, value", newName)
 
-    const personObject = {
-      name: newName
+    const personNames = persons.map(person => person.name )
+
+    if (personNames.includes(newName)) {
+      alert(`${newName} is already in use`)
+    } else {
+      const personObject = {
+        name: newName
+      }
+  
+      console.log("Person object to be added to persons", personObject)
+  
+      setPersons(persons.concat(personObject))
+      setNewName("")
     }
-
-    console.log("Person object to be added to persons", personObject)
-
-    setPersons(persons.concat(personObject))
-    setNewName("")
   }
 
   return (
