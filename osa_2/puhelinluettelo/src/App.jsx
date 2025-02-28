@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import PersonForm from "./components/PersonForm"
+import Directory from './components/Directory'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -72,9 +73,7 @@ const App = () => {
         </p>
       </form>
       <PersonForm onSubmit={addPerson} newName={newName} onNameInputChange={changeNameInput} newNumber={newNumber} onNumberInputChange={changeNumberInput} />
-      <h2>Numbers</h2>
-        {filteredPersons.map(person => 
-          <p key={person.name}> {person.name} {person.number} </p>)}
+      <Directory showAll={showAll} persons={persons} search={search} />
     </div>
   )
 
