@@ -12,20 +12,10 @@ const App = () => {
   const [search, setSearch] = useState('')
   const [showAll, setShowAll] = useState(true)
 
-  const changeSearchInput = (event) => {
-    console.log("Input changed for phone input element. Original value", search, ", new value", event.target.value)
-
-    setSearch(event.target.value)
-
-    event.target.value != ""
-      ? setShowAll(false)
-      : setShowAll(true)
-  }
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <Search search={search} onChange={changeSearchInput} />
+      <Search search={search} setSearch={setSearch} setShowAll={setShowAll} />
       <PersonForm persons={persons} setPersons={setPersons} />
       <Directory showAll={showAll} persons={persons} search={search} />
     </div>
