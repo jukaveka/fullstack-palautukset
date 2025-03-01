@@ -22,10 +22,6 @@ const App = () => {
       : setShowAll(true)
   }
 
-  const filteredPersons = showAll
-    ? persons
-    : persons.filter(person => person.name.includes(search))
-
   return (
     <div>
       <h2>Phonebook</h2>
