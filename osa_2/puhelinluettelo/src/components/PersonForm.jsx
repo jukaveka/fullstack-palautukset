@@ -45,11 +45,11 @@ const PersonForm = ({ persons, setPersons }) => {
       <form onSubmit={addPerson}>
           <label htmlFor="name"> Name </label>
           <p>
-            <input id="name" name="name" value={newName} onChange={changeNameInput} />
+            <input id="name" name="name" value={newName} onChange={changeNameInput} required/>
           </p>
           <label htmlFor="number"> Phone number </label>
           <p>
-            <input id="number" name="number" value={newNumber} onChange={changeNumberInput} />
+            <input id="number" name="number" value={newNumber} onChange={changeNumberInput} required />
           </p>
           <p>
             <button type="submit"> Add </button>
