@@ -20,10 +20,11 @@ const PersonForm = ({ persons, setPersons }) => {
     event.preventDefault()
     console.log("Button clicked to add new person, value", newName)
 
-    const personNames = persons.map(person => person.name )
+    const personNames = persons.map(person => person.name.toLowerCase())
 
-    if (personNames.includes(newName)) {
+    if (personNames.includes(newName.toLowerCase())) {
       alert(`${newName} is already in use`)
+      console.log("Person with the name", newName, "already exists. Skipping addition of new person")
     } else {
       const personObject = {
         name: newName,
