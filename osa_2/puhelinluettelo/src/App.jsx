@@ -1,16 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 import PersonForm from "./components/PersonForm"
 import Directory from './components/Directory'
 import Search from './components/Search'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040 1231244' },
-    { name: 'Marko Makkara', number: '+358501234567' },
-    { name: 'Piia Paju', number: '040 0987654' }
-  ]) 
+  const [persons, setPersons] = useState([])
   const [search, setSearch] = useState('')
   const [showAll, setShowAll] = useState(true)
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/persons")
+      .then(response => {
+        console.log(response)
+        setPersons(response.data)
+      })
+  }, [])
 
   return (
     <div>
