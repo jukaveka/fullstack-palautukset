@@ -1,30 +1,31 @@
 import { useState } from 'react'
+import PersonService from '../services/persons'
 
 const PersonForm = ({ persons, setPersons }) => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  
   const changeNameInput = (event) => {
-    console.log("Input changed for name input element. Original value", newName, ", new value", event.target.value)
-
     setNewName(event.target.value)
   }
 
   const changeNumberInput = (event) => {
-    console.log("Input changed for phone input element. Original value", newNumber, ", new value", event.target.value)
-
     setNewNumber(event.target.value)
   }
 
   const addPerson = (event) => {
     event.preventDefault()
-    console.log("Button clicked to add new person, value", newName)
+    
+    console.log("Button clicked to add new person, values", newName, newNumber)
 
     const personNames = persons.map(person => person.name.toLowerCase())
 
     if (personNames.includes(newName.toLowerCase())) {
       alert(`${newName} is already in use`)
+
       console.log("Person with the name", newName, "already exists. Skipping addition of new person")
+
     } else {
       const personObject = {
         name: newName,
@@ -32,10 +33,16 @@ const PersonForm = ({ persons, setPersons }) => {
       }
   
       console.log("Person object to be added to persons", personObject)
-  
-      setPersons(persons.concat(personObject))
-      setNewName("")
-      setNewNumber("")
+
+      PersonService
+        .create(personObject)
+        .then(createdPerson => {
+          console.log("Created person returned by PersonService", createdPerson)
+
+          setPersons(persons.concat(personObject))
+          setNewName("")
+          setNewNumber("")
+        })
     }
   }
 

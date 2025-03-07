@@ -13,6 +13,7 @@ const getAll = () => {
 
 const create = newObject => {
     console.log("Request URL", baseUrl)
+    console.log("Object to be added", newObject)
 
     const request = axios.post(baseUrl, newObject)
 
