@@ -16,7 +16,9 @@ const Directory = ({ showAll, persons, setPersons, search }) => {
 
                 const arrayWithoutRemovedPerson = persons.filter(person => person.id !== id)
 
-                console.log(arrayWithoutRemovedPerson)
+                console.log("Array without the removed person")
+
+                setPersons(arrayWithoutRemovedPerson)
             })
     }
 
