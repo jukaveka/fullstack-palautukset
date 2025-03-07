@@ -23,7 +23,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Search search={search} setSearch={setSearch} setShowAll={setShowAll} />
       <PersonForm persons={persons} setPersons={setPersons} />
-      <Directory showAll={showAll} persons={persons} search={search} />
+      <Directory showAll={showAll} persons={persons} setPersons={setPersons} search={search} />
     </div>
   )
 
