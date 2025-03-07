@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import PersonForm from "./components/PersonForm"
 import Directory from './components/Directory'
 import Search from './components/Search'
+import PersonService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,11 +10,11 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => {
-        console.log(response)
-        setPersons(response.data)
+    PersonService
+      .getAll()
+      .then(allPersons => {
+        console.log("Data returned by PersonService", allPersons)
+        setPersons(allPersons)
       })
   }, [])
 
