@@ -11,4 +11,14 @@ const getAll = () => {
     return request.then(response => response.data)
 }
 
-export default { getAll }
+const create = newObject => {
+    console.log("Request URL", baseUrl)
+
+    const request = axios.post(baseUrl, newObject)
+
+    console.log("Request", request)
+
+    return request.then(response => response.data)
+}
+
+export default { getAll, create }
