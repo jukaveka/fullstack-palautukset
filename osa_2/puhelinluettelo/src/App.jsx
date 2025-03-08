@@ -14,6 +14,7 @@ const App = () => {
       .getAll()
       .then(allPersons => {
         console.log("Data returned by PersonService", allPersons)
+
         setPersons(allPersons)
       })
   }, [])

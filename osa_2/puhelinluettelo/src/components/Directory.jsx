@@ -8,6 +8,7 @@ const Directory = ({ showAll, persons, setPersons, search }) => {
 
     const removePersonBy = (id) => {
         const removedPerson = persons.find(person => person.id === id)
+
         if (window.confirm("Are you sure you want to remove", removedPerson.name)) {
             console.log("Person removal initiated. Person id", id)
 
