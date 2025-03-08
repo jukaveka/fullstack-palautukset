@@ -24,7 +24,7 @@ const PersonForm = ({ persons, setPersons }) => {
     if (personNames.includes(newName.toLowerCase())) {
       console.log("Person with the name", newName, "already exists. Requesting user to decide if number replaces the existing one")
       
-      const existingPerson = persons.find(person => person.name === newName)
+      const existingPerson = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
 
       if (window.confirm(`${existingPerson} is already in phonebook. Would you like to replace their number?`)) {
         console.log("Existing person object", existingPerson)
@@ -40,10 +40,10 @@ const PersonForm = ({ persons, setPersons }) => {
             console.log("Updated person returned by PersonService", updatedPerson)
 
             const updatedPersons = persons.map(person => 
-              person.name !== updatedPerson.name
+              person.name.toLowerCase() !== updatedPerson.name.toLowerCase()
                 ? person
                 : updatedPerson
-            )
+            )          
 
             console.log("Mapped array with updated person", updatedPersons)
 
@@ -64,7 +64,7 @@ const PersonForm = ({ persons, setPersons }) => {
         .then(createdPerson => {
           console.log("Created person returned by PersonService", createdPerson)
 
-          setPersons(persons.concat(personObject))
+          setPersons(persons.concat(createdPerson))
           setNewName("")
           setNewNumber("")
         })
