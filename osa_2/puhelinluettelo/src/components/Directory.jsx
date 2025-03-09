@@ -1,7 +1,7 @@
 import Person from "./Person"
 import PersonService from '../services/persons'
 
-const Directory = ({ showAll, persons, setPersons, search }) => {
+const Directory = ({ showAll, persons, setPersons, search, setSuccessMessage }) => {
     const filteredPersons = showAll
         ? persons
         : persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
@@ -22,6 +22,12 @@ const Directory = ({ showAll, persons, setPersons, search }) => {
                     console.log("Array without the removed person")
 
                     setPersons(arrayWithoutRemovedPerson)
+                    
+                    setSuccessMessage(`${deletedPerson.name} removed from phone book`)
+                    
+                    setTimeout(() => {
+                        setSuccessMessage(null)
+                    }, 2500)
                 })
         }
     }

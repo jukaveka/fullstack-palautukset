@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PersonService from '../services/persons'
 
-const PersonForm = ({ persons, setPersons }) => {
+const PersonForm = ({ persons, setPersons, setSuccessMessage}) => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -19,25 +19,27 @@ const PersonForm = ({ persons, setPersons }) => {
     
     console.log("Button clicked to add new person, values", newName, newNumber)
 
+    const newPersonObject = {
+      name: newName,
+      number: newNumber
+    }
+
+    console.log(`Checking if person ${newName} exists in phonebook`)
+
     const personNames = persons.map(person => person.name.toLowerCase())
 
     if (personNames.includes(newName.toLowerCase())) {
-      console.log("Person with the name", newName, "already exists. Requesting user to decide if number replaces the existing one")
+      console.log("Person with the name", newName, "already exists in phonebook. Requesting user to decide if number replaces the existing one")
       
       const existingPerson = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
 
-      if (window.confirm(`${existingPerson} is already in phonebook. Would you like to replace their number?`)) {
-        console.log("Existing person object", existingPerson)
-        
-        const personObject = {
-          name: newName,
-          number: newNumber
-        }
+      if (window.confirm(`${existingPerson.name} is already in phonebook. Would you like to replace their number?`)) {
+        console.log("User confirmed number should be updated for existing entry", existingPerson)
 
         PersonService
-          .update(existingPerson.id, personObject)
+          .update(existingPerson.id, newPersonObject)
           .then(updatedPerson => {
-            console.log("Updated person returned by PersonService", updatedPerson)
+            console.log("Existing entry updated successfully. Updated entry returned by PersonService", updatedPerson)
 
             const updatedPersons = persons.map(person => 
               person.name.toLowerCase() !== updatedPerson.name.toLowerCase()
@@ -48,25 +50,44 @@ const PersonForm = ({ persons, setPersons }) => {
             console.log("Mapped array with updated person", updatedPersons)
 
             setPersons(updatedPersons)
+
+            setSuccessMessage(`${updatedPerson.name} number updated to ${updatedPerson.number}`)
+
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 2500)
           })
+      } else {
+        console.log("User rejected updating number for existing entry", existingPerson)
       }
 
     } else {
-      const personObject = {
-        name: newName,
-        number: newNumber
-      }
-  
-      console.log("Person object to be added to persons", personObject)
+      console.log(`Person ${newName} doesn't exist in phonebook. Adding new entry to phonebook`)
+
+      console.log("Calling PersonService to create new entry with data", newPersonObject)
 
       PersonService
-        .create(personObject)
+        .create(newPersonObject)
         .then(createdPerson => {
-          console.log("Created person returned by PersonService", createdPerson)
+          console.log("New entry created successfully. Created entry returned by PersonService", createdPerson)
+
+          console.log("Updating state variable persons to include new entry")
 
           setPersons(persons.concat(createdPerson))
           setNewName("")
           setNewNumber("")
+
+          console.log("Setting success message to confirm creating entry was successful")
+
+          setSuccessMessage(`${createdPerson.name} number added to phonebook`)
+
+          console.log("Setting timeout for emptying success message")
+
+          setTimeout(() => {
+            console.log("Clearing success message")
+
+            setSuccessMessage(null)
+          }, 10000)
         })
     }
   }
