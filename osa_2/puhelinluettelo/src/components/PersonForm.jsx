@@ -47,13 +47,19 @@ const PersonForm = ({ persons, setPersons, setSuccessMessage}) => {
                 : updatedPerson
             )          
 
-            console.log("Mapped array with updated person", updatedPersons)
+            console.log("Updating persons with array containing updated object", updatedPersons)
 
             setPersons(updatedPersons)
 
+            console.log("Setting success message to confirm updating entry was successful")
+
             setSuccessMessage(`${updatedPerson.name} number updated to ${updatedPerson.number}`)
 
+            console.log("Setting timeout to clear success message")
+
             setTimeout(() => {
+              console.log("Clearing success message")
+
               setSuccessMessage(null)
             }, 2500)
           })
