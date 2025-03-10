@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Search from './components/Search'
+import CountryService from './services/countries'
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("")
