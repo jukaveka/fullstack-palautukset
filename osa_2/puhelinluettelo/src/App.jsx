@@ -10,6 +10,7 @@ const App = () => {
   const [search, setSearch] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     PersonService
@@ -24,10 +25,29 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification successMessage={successMessage} />
-      <Search search={search} setSearch={setSearch} setShowAll={setShowAll} />
-      <PersonForm persons={persons} setPersons={setPersons} setSuccessMessage={setSuccessMessage} />
-      <Directory showAll={showAll} persons={persons} setPersons={setPersons} search={search} setSuccessMessage={setSuccessMessage} />
+      <Notification 
+        successMessage={successMessage} 
+        errorMessage={errorMessage}
+      />
+      <Search 
+        search={search} 
+        setSearch={setSearch} 
+        setShowAll={setShowAll} 
+      />
+      <PersonForm 
+        persons={persons} 
+        setPersons={setPersons} 
+        setSuccessMessage={setSuccessMessage} 
+        setErrorMessage={setErrorMessage} 
+      />
+      <Directory 
+        showAll={showAll} 
+        persons={persons} 
+        setPersons={setPersons} 
+        search={search} 
+        setSuccessMessage={setSuccessMessage} 
+        setErrorMessage={setErrorMessage} 
+      />
     </div>
   )
 

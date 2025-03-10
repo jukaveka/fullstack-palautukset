@@ -1,7 +1,7 @@
 import Person from "./Person"
 import PersonService from '../services/persons'
 
-const Directory = ({ showAll, persons, setPersons, search, setSuccessMessage }) => {
+const Directory = ({ showAll, persons, setPersons, search, setSuccessMessage, setErrorMessage }) => {
     const filteredPersons = showAll
         ? persons
         : persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
@@ -43,6 +43,21 @@ const Directory = ({ showAll, persons, setPersons, search, setSuccessMessage }) 
                         console.log("Clearing success notification")
 
                         setSuccessMessage(null)
+                    }, 5000)
+                })
+                .catch(error => {
+                    console.log("Entry removal failed. Error message", error)
+
+                    console.log("Setting message notifying of error in removal of entry")
+
+                    setErrorMessage(`Removal of ${personToRemove.name} failed. Error message ${error.message}`)
+
+                    console.log("Setting timeout to clear error nofitication")
+
+                    setTimeout(() => {
+                        console.log("Clearing error message")
+
+                        setErrorMessage(null)
                     }, 5000)
                 })
         } else {

@@ -1,4 +1,4 @@
-const Notification = ({ successMessage }) => {
+const Notification = ({ successMessage, errorMessage }) => {
   const successMessageStyle = {
     color: "#285238",
     fontSize: "20px",
@@ -9,15 +9,25 @@ const Notification = ({ successMessage }) => {
     borderSize: "10px"
   }
 
-  if (successMessage === null) {
+  if (successMessage === null && errorMessage === null) {
     return null
   }
   
-  return (
-    <div style={successMessageStyle}>
-        <p> {successMessage} </p>
-    </div>
-  )
+  if (successMessage != null && errorMessage === null) {
+    return (
+      <div style={successMessageStyle}>
+          <p> {successMessage} </p>
+      </div>
+    )
+  }
+
+  if (successMessage === null && errorMessage != null) {
+    return (
+      <div>
+          <p> {errorMessage} </p>
+      </div>
+    )
+  }
 }
 
 export default Notification
