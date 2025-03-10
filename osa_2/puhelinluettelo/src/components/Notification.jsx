@@ -5,7 +5,17 @@ const Notification = ({ successMessage, errorMessage }) => {
     fontWeight: "bold",
     padding: "10px",
     border: "solid",
-    borderColor: "#729EA1",
+    borderColor: "#285238",
+    borderSize: "10px"
+  }
+
+  const errorMessageStyle = {
+    color: "#9E2B14",
+    fontSize: "20px",
+    fontWeight: "bold",
+    padding: "10px",
+    border: "solid",
+    borderColor: "#9E2B14",
     borderSize: "10px"
   }
 
@@ -23,7 +33,7 @@ const Notification = ({ successMessage, errorMessage }) => {
 
   if (successMessage === null && errorMessage != null) {
     return (
-      <div>
+      <div style={errorMessageStyle}>
           <p> {errorMessage} </p>
       </div>
     )
