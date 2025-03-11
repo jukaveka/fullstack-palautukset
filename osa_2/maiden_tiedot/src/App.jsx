@@ -15,6 +15,8 @@ function App() {
       .then(allCountries => {
         console.log(`Requesting all countries successful. Data returned by CountryService ${allCountries}`)
 
+        console.log(`Setting all countries to state variable "countries"`)
+
         setCountries(allCountries)
       })
   }, [])
@@ -26,7 +28,10 @@ function App() {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
       />
-      <Results countries={countries} />
+      <Results 
+        countries={countries} 
+        searchTerm={searchTerm} 
+      />
     </div>
   )
 }
