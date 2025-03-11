@@ -14,4 +14,4 @@ const getAll = () => {
     return request.then(response => response.data)
 }
 
-export { getAll }
+export default { getAll }
