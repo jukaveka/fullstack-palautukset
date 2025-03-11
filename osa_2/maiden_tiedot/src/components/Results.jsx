@@ -1,3 +1,5 @@
+import Country from './Country'
+
 const Results = ({ countries, searchTerm }) => {
     if (searchTerm === "") {
         return null
@@ -29,8 +31,16 @@ const Results = ({ countries, searchTerm }) => {
         )
     }
 
+    if (filteredCountries.length === 1) {
+        return (
+            <Country country={filteredCountries[0]} />
+        )
+    }
+
     return (
-        null // temp
+        <div>
+            <p> There's no countries that match your search term. </p>
+        </div>
     )
 }
 
