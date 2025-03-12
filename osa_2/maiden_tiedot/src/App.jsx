@@ -30,7 +30,8 @@ function App() {
       />
       <Results 
         countries={countries} 
-        searchTerm={searchTerm} 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
       />
     </div>
   )

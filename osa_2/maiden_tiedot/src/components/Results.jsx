@@ -1,6 +1,7 @@
 import Country from './Country'
+import Button from './Button'
 
-const Results = ({ countries, searchTerm }) => {
+const Results = ({ countries, searchTerm, setSearchTerm }) => {
     if (searchTerm === "") {
         return null
     }
@@ -13,6 +14,10 @@ const Results = ({ countries, searchTerm }) => {
 
     console.log(`Filtered countries with search term ${searchTerm}. Length of array ${filteredCountries.length}`)
 
+    const displaySelectedCountry = (commonName) => {
+        setSearchTerm(commonName)
+    }
+
     if (filteredCountries.length > 10) {
         return (
             <div>
@@ -24,9 +29,18 @@ const Results = ({ countries, searchTerm }) => {
     if (filteredCountries.length < 11 && filteredCountries.length > 1) {
         return (
             <div>
-                {filteredCountries.map(country =>
-                    <p key={country.cca2}> {country.name.common} </p>
-                )}
+                <ul>
+                    {filteredCountries.map(country =>
+                        <li key={country.cca2}> 
+                            {country.name.common} 
+                            <Button 
+                                onClick={() => displaySelectedCountry(country.name.common)} 
+                                text="Show" 
+                            />
+                        </li>
+                    )}
+                </ul>
+
             </div>
         )
     }
