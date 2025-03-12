@@ -4,37 +4,37 @@ import Results from './components/Results'
 import CountryService from './services/countries'
 
 function App() {
-  const [countries, setCountries] = useState([])
-  const [searchTerm, setSearchTerm] = useState("")
+	const [countries, setCountries] = useState([])
+	const [searchTerm, setSearchTerm] = useState("")
 
-  useEffect(() => {
-    console.log("Calling country service to fetch all data")
+	useEffect(() => {
+		console.log("Calling country service to fetch all data")
 
-    CountryService
-      .getAll()
-      .then(allCountries => {
-        console.log(`Requesting all countries successful. Data returned by CountryService ${allCountries}`)
+		CountryService
+			.getAll()
+			.then(allCountries => {
+				console.log(`Requesting all countries successful. Length of array returned by CountryService ${allCountries.length}`)
 
-        console.log(`Setting all countries to state variable "countries"`)
+				console.log(`Setting all countries to state variable "countries"`)
 
-        setCountries(allCountries)
-      })
-  }, [])
+				setCountries(allCountries)
+			})
+	}, [])
 
-  return (
-    <div>
-      <h1> Search for countries </h1>
-      <Search
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-      />
-      <Results 
-        countries={countries} 
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-      />
-    </div>
-  )
+	return (
+		<div>
+			<h1> Search for countries </h1>
+			<Search
+				searchTerm={searchTerm}
+				setSearchTerm={setSearchTerm}
+			/>
+			<Results
+				countries={countries}
+				searchTerm={searchTerm}
+				setSearchTerm={setSearchTerm}
+			/>
+		</div>
+	)
 }
 
 export default App
