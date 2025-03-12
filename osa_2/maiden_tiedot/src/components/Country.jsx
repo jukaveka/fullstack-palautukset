@@ -1,6 +1,8 @@
 const Country = ({ country }) => {
 	console.log("Prop passed to Country component", country)
 
+	console.log(`Rendering detailed information of ${country.name.common}`)
+
 	return (
 		<div>
 			<h1> {country.name.common} </h1>

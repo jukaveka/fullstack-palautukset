@@ -9,7 +9,7 @@ const getAll = () => {
 
     const request = axios.get(requestUrl)
 
-    console.log(`Request ${request}`)
+    console.log(`Request `, request)
 
     return request.then(response => response.data)
 }

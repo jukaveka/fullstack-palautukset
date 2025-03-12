@@ -12,8 +12,6 @@ const Results = ({ countries, searchTerm, setSearchTerm }) => {
 		country.name.common.includes(searchTerm)
 	)
 
-	console.log(`Filtered countries with search term ${searchTerm}. Length of array ${filteredCountries.length}`)
-
 	const displaySelectedCountry = (commonName) => {
 		console.log(`Button clicked to show full details of ${commonName}`)
 
