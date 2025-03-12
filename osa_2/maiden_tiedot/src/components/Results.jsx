@@ -15,6 +15,10 @@ const Results = ({ countries, searchTerm, setSearchTerm }) => {
 	console.log(`Filtered countries with search term ${searchTerm}. Length of array ${filteredCountries.length}`)
 
 	const displaySelectedCountry = (commonName) => {
+		console.log(`Button clicked to show full details of ${commonName}`)
+
+		console.log(`Setting search term to ${commonName}`)
+
 		setSearchTerm(commonName)
 	}
 
@@ -36,8 +40,8 @@ const Results = ({ countries, searchTerm, setSearchTerm }) => {
 				<table>
 					<tbody>
 						{filteredCountries.map(country =>
-							<tr>
-								<td key={country.cca2}>
+							<tr key={country.cca2}>
+								<td>
 									{country.name.common}
 								</td>
 								<td>
