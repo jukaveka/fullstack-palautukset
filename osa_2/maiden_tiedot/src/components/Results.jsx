@@ -19,6 +19,8 @@ const Results = ({ countries, searchTerm, setSearchTerm }) => {
     }
 
     if (filteredCountries.length > 10) {
+        console.log("Filtered countries contains over 10 countries. Rendering message")
+
         return (
             <div>
                 <p> There's more than 10 countries with matching search term. </p>
@@ -27,29 +29,34 @@ const Results = ({ countries, searchTerm, setSearchTerm }) => {
     }
 
     if (filteredCountries.length < 11 && filteredCountries.length > 1) {
+        console.log(`Filtered countries contains ${filteredCountries.length} countries. Rendering list of countries`)
+
         return (
             <div>
                 <ul>
                     {filteredCountries.map(country =>
-                        <li key={country.cca2}> 
-                            {country.name.common} 
-                            <Button 
-                                onClick={() => displaySelectedCountry(country.name.common)} 
-                                text="Show" 
+                        <li key={country.cca2}>
+                            {country.name.common}
+                            <Button
+                                onClick={() => displaySelectedCountry(country.name.common)}
+                                text="Show"
                             />
                         </li>
                     )}
                 </ul>
-
             </div>
         )
     }
 
     if (filteredCountries.length === 1) {
+        console.log("Filtered countries contains 1 country. Rendering detailed information of the country.")
+
         return (
             <Country country={filteredCountries[0]} />
         )
     }
+
+    console.log("Filtered countries contains 0 countries. Rendering message")
 
     return (
         <div>
