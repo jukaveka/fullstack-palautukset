@@ -33,17 +33,23 @@ const Results = ({ countries, searchTerm, setSearchTerm }) => {
 
         return (
             <div>
-                <ul>
-                    {filteredCountries.map(country =>
-                        <li key={country.cca2}>
-                            {country.name.common}
-                            <Button
-                                onClick={() => displaySelectedCountry(country.name.common)}
-                                text="Show"
-                            />
-                        </li>
-                    )}
-                </ul>
+                <table>
+                    <tbody>
+                        {filteredCountries.map(country =>
+                            <tr>
+                                <td key={country.cca2}>
+                                    {country.name.common}
+                                </td>
+                                <td>
+                                    <Button
+                                        onClick={() => displaySelectedCountry(country.name.common)}
+                                        text="Show"
+                                    />
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
         )
     }
