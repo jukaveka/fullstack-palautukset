@@ -1,7 +1,21 @@
+import { useState, useEffect } from 'react'
+import WeatherService from '../services/weather'
+
 const Country = ({ country }) => {
+    const [countryWeather, setCountryWeather] = useState([])
 	console.log("Prop passed to Country component", country)
 
 	console.log(`Rendering detailed information of ${country.name.common}`)
+
+    useEffect(() => {
+        WeatherService
+		.getWeather(country)
+		.then(weatherData => {
+			console.log(`Data returned by WeatherService`, weatherData)
+
+            setCountryWeather(weatherData)
+		})
+    }, [])
 
 	return (
 		<div>
