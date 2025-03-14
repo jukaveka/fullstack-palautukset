@@ -13,10 +13,14 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
+    console.log("Fetching contents of phonebook with Person service")
+
     PersonService
       .getAll()
       .then(allPersons => {
-        console.log("Data returned by PersonService", allPersons)
+        console.log("Data returned by Person service", allPersons)
+
+        console.log("Setting data returned by Person service to state variable 'persons'")
 
         setPersons(allPersons)
       })
