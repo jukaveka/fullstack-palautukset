@@ -9,8 +9,10 @@ const Results = ({ countries, searchTerm, setSearchTerm }) => {
 	console.log(`Filtering countries with search term ${searchTerm}`)
 
 	const filteredCountries = countries.filter(country =>
-		country.name.common.includes(searchTerm)
+		country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
 	)
+
+  console.log(`Filtered countries`, filteredCountries)
 
 	const displaySelectedCountry = (commonName) => {
 		console.log(`Button clicked to show full details of ${commonName}`)
