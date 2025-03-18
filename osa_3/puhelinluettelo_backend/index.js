@@ -71,6 +71,12 @@ app.post('/api/persons/', (request, response) => {
     })
   }
 
+  if (persons.map(person => person.name.toLowerCase()).includes(body.name.toLowerCase())) {
+    return response.status(400).json({
+      error: "The person you're adding already exists in phonebook."
+    })
+  }
+
   const person = {
     name: body.name,
     number: body.number,
