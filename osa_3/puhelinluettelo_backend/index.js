@@ -40,7 +40,12 @@ app.get('/api/persons/:id', (request, response) => {
 
   const person = persons.find(person => person.id === personId)
 
-  response.json(person)
+  if (person) {
+    response.json(person)
+  } else {
+    response.status(404).end()
+  }
+
 })
 
 app.delete('/api/persons/:id', (request, response) => {
