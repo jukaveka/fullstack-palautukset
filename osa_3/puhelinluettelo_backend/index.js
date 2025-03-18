@@ -80,8 +80,10 @@ app.post('/api/persons/', (request, response) => {
   const person = {
     name: body.name,
     number: body.number,
-    id: generateId(5, 100)
+    id: generateId(5, 100).toString()
   }
+
+  persons = persons.concat(person)
 
   response.json(person)
 })
