@@ -24,8 +24,8 @@ const Directory = ({ showAll, persons, setPersons, search, setSuccessMessage, se
 
             PersonService
                 .remove(id)
-                .then(deletedPerson => {
-                    console.log("Entry removed successfully. Removed person returned by PersonService", deletedPerson)
+                .then(() => {
+                    console.log("Entry removed successfully")
 
                     const arrayWithoutpersonToRemove = persons.filter(person => person.id !== id)
 
@@ -35,7 +35,7 @@ const Directory = ({ showAll, persons, setPersons, search, setSuccessMessage, se
 
                     console.log("Setting message nofitying successful removal of entry")
                     
-                    setSuccessMessage(`${deletedPerson.name} removed from phone book`)
+                    setSuccessMessage(`${personToRemove.name} removed from phone book`)
 
                     console.log("Setting timeout to clear success notification")
                     

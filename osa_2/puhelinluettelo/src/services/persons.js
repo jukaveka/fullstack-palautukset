@@ -2,22 +2,22 @@ import axios from 'axios'
 const baseUrl = 'http://localhost:3001/api/persons'
 
 const getAll = () => {
-    console.log("Request URL", baseUrl)
+    console.log("Fetch all request URL", baseUrl)
     
     const request = axios.get(baseUrl)
 
-    console.log("Request", request)
+    console.log("Fetch all request", request)
 
     return request.then(response => response.data)
 }
 
 const create = newObject => {
-    console.log("Request URL", baseUrl)
+    console.log("Create request URL", baseUrl)
     console.log("Object to be added", newObject)
 
     const request = axios.post(baseUrl, newObject)
 
-    console.log("Request", request)
+    console.log("Create request", request)
 
     return request.then(response => response.data)
 }
@@ -25,23 +25,23 @@ const create = newObject => {
 const remove = id => {
     const requestUrl = `${baseUrl}/${id}`
 
-    console.log("Request URL", requestUrl)
+    console.log("Removal Request URL", requestUrl)
 
     const request = axios.delete(requestUrl)
 
-    console.log("Request", request)
+    console.log("Removal Request", request)
 
-    return request.then(response => response.data)
+    return request.then(response)
 }
 
 const update = (id, newObject) => {
     const requestUrl = `${baseUrl}/${id}`
 
-    console.log("Request URL", requestUrl)
+    console.log("Update request URL", requestUrl)
 
     const request = axios.put(requestUrl, newObject)
 
-    console.log("Request", request)
+    console.log("Update request", request)
 
     return request.then(response => response.data)
 }

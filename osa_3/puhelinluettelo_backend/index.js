@@ -11,8 +11,6 @@ morgan.token('body', function (request, response) { return JSON.stringify(reques
 const morganTiny = morgan('tiny')
 const morganExtended = morgan(`:method :url :status :res[content-length] - :response-time ms :body`)
 
-
-
 const requestLogger = (request, response, next) => {
   if (request.method !== 'POST') {
     morganTiny(request, response, next)
