@@ -31,7 +31,7 @@ const remove = id => {
 
     console.log("Removal Request", request)
 
-    return request.then(response)
+    return request.then(response => response)
 }
 
 const update = (id, newObject) => {
