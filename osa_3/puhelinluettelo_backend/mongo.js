@@ -55,12 +55,14 @@ if (process.argv.length === 5) {
   console.log("Command has 1 argument. Fetching phonebook contents")
 
   Person.find({}).then(response =>{
+    console.log("")
     console.log("phonebook:")
 
     response.forEach(person => {
       console.log(person.name, person.number)
     })
-
+    
+    console.log("")
     console.log("Closing connectiong to MongoDB")
     mongoose.connection.close()
   })
