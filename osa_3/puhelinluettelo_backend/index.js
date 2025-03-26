@@ -2,8 +2,8 @@ require("dotenv").config()
 const express = require("express")
 const morgan = require("morgan")
 const Person = require("./modules/person")
-const app = express()
 
+const app = express()
 app.use(express.json())
 app.use(express.static('dist'))
 
@@ -66,29 +66,31 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons/', (request, response) => {
   const body = request.body
 
+  console.log("Confirming that request body contains necessary values")
+
   if (!body.name || !body.number) {
     return response.status(400).json({
       error: "Name or number missing. Both are required for adding new person"
     })
   }
 
-  if (persons.map(person => person.name.toLowerCase()).includes(body.name.toLowerCase())) {
-    return response.status(400).json({
-      error: "The person you're adding already exists in phonebook."
-    })
-  }
+  console.log("Generating new document based on request body")
 
-  const person = {
+  const newPerson = new Person({
     name: body.name,
-    number: body.number,
-    id: generateId(5, 100).toString()
-  }
+    number: body.number
+  })
 
-  persons = persons.concat(person)
+  console.log("Document generated", newPerson)
+  console.log("Storing generated document to database collection")
 
-  return response.json(person)
+  newPerson
+    .save()
+    .then(savedPerson => {
+      console.log("Person saved to database", savedPerson)
+      response.json(savedPerson)
+    })
 })
-
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
