@@ -1,6 +1,7 @@
+require("dotenv").config()
 const express = require("express")
 const morgan = require("morgan")
-
+const Person = require("./modules/person")
 const app = express()
 
 app.use(express.json())
@@ -8,55 +9,37 @@ app.use(express.static('dist'))
 
 morgan.token('body', function (request, response) { return JSON.stringify(request.body) })
 const morganTiny = morgan('tiny')
-const morganExtended = morgan(`:method :url :status :res[content-length] - :response-time ms :body`)
+const morganExtended = morgan(`:method :url :status :req[content-length] - :response-time ms :body`)
 
 const requestLogger = (request, response, next) => {
-  if (request.method !== 'POST') {
+  if (request.method !== "POST") {
     morganTiny(request, response, next)
   } else {
     morganExtended(request, response, next)
   }
-  next()
 }
 
 app.use(requestLogger)
 
-let persons = [
-  {
-    id: "1",
-    name: "Arto Hellas",
-    number: "040-123456"
-  },
-  {
-    id: "2",
-    name: "Ada Lovelace",
-    number: "39-44-5323523"
-  },
-  {
-    id: "3",
-    name: "Dan Abramov",
-    number: "12-43-234345"
-  },
-  {
-    id: "4",
-    name: "Mary Poppendieck",
-    number: "39-23-6423122"
-  }
-]
-
-const generateId = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min)
-}
 
 app.get('/info', (request, response) => {
-  const info = `Phonebook has info for ${persons.length} persons`
-  const date = new Date()
+  Person
+    .countDocuments({})
+    .then(documentCount => {
+      const info = `Phonebook has info for ${documentCount} persons`
+      const date = new Date()
 
-  response.send(`${info} <br> <br> ${date}`)
+      return response.send(`${info} <br> <br> ${date}`)
+    })
+
 })
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person
+    .find({})
+    .then(teams => {
+      return response.json(teams)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -65,9 +48,9 @@ app.get('/api/persons/:id', (request, response) => {
   const person = persons.find(person => person.id === personId)
 
   if (person) {
-    response.json(person)
+    return response.json(person)
   } else {
-    response.status(404).end()
+    return response.status(404).end()
   }
 
 })
@@ -77,7 +60,7 @@ app.delete('/api/persons/:id', (request, response) => {
 
   persons = persons.filter(person => person.id !== personId)
 
-  response.status(204).end()
+  return response.status(204).end()
 })
 
 app.post('/api/persons/', (request, response) => {
@@ -103,10 +86,11 @@ app.post('/api/persons/', (request, response) => {
 
   persons = persons.concat(person)
 
-  response.json(person)
+  return response.json(person)
 })
 
-const PORT = process.env.PORT || 3001
+
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
