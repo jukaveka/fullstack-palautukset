@@ -55,12 +55,14 @@ app.get('/api/persons/:id', (request, response) => {
 
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const personId = request.params.id
-
-  persons = persons.filter(person => person.id !== personId)
-
-  return response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person
+    .findByIdAndDelete(request.params.id)
+    .then(deletedPerson => {
+      console.log("Person deleted from database", deletedPerson)
+      return response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons/', (request, response) => {
@@ -91,6 +93,16 @@ app.post('/api/persons/', (request, response) => {
       response.json(savedPerson)
     })
 })
+
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message)
+
+  if (error.name === "CastError") {
+    return response.status(400).send({error: "Issues with format of provided ID"})
+  }
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
