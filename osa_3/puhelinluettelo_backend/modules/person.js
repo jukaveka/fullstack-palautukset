@@ -26,13 +26,13 @@ console.log("Generating person schema")
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: 3,
-    required: true
+    minlength: [3, "The name must be at least 3 characters long"],
+    required: [true, "Name can't be empty"]
   },
   number: {
     type: String,
-    required: true,
-    minlength: 8,
+    required: [true, "Number can't be empty"],
+    minlength: [8, "The number must have at least 8 characters (including -)"],
     validate: {
       validator: phoneNumberValidator,
       message: "Phone number must start with 2-3 digits, followed with '-', followed with 6+ digits"
