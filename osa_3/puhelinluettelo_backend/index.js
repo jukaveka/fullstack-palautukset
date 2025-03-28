@@ -81,14 +81,6 @@ app.post('/api/persons/', (request, response, next) => {
 
   const body = request.body
 
-  console.log("Confirming that request body contains necessary values", request.body)
-
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error: "Name or number missing. Both are required for adding new person"
-    })
-  }
-
   console.log("Generating new document based on request body")
 
   const newPerson = new Person({
@@ -112,16 +104,6 @@ app.put('/api/persons/:id', (request, response, next) => {
   console.log("Updating person information, id", request.params.id)
 
   const {name, number} = request.body
-
-  console.log("Confirming request body icludes required information")
-
-  if (!name || !number) {
-    console.log("Name or number missing from request body", name, number)
-
-    return request.status(400).json({
-      error: "Name or number missing. Both are required for adding new person"
-    })
-  }
 
   console.log("Fetching person to be updated from database")
 
@@ -151,7 +133,9 @@ const errorHandler = (error, request, response, next) => {
   console.log("Error message", error.message)
 
   if (error.name === "CastError") {
-    return response.status(400).send({error: "Issues with format of provided ID"})
+    return response.status(400).send({ error: "Issues with format of provided ID" })
+  } else if (error.name === "ValidationError") {
+    return response.status(400).send({ error: error.message })
   }
 
   next(error)
