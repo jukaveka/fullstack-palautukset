@@ -18,8 +18,15 @@ mongoose
 console.log("Generating person schema")
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String
+  name: {
+    type: String,
+    minlength: 3,
+    required: true
+  },
+  number: {
+    type: String,
+    required: true
+  }
 })
 
 console.log("Transforming JSON-object of generated schema")
