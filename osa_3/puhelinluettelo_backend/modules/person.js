@@ -18,7 +18,7 @@ mongoose
 console.log("Creating validator for phone numbers")
 
 const phoneNumberValidator = (value) => {
-  return /\d{2,3}-\d{5,}/.test(value)
+  return /\d{2,3}-\d{6,}/.test(value)
 }
 
 console.log("Generating person schema")
@@ -35,7 +35,7 @@ const personSchema = new mongoose.Schema({
     minlength: 8,
     validate: {
       validator: phoneNumberValidator,
-      message: "Phone number must start with 2-3 digits, followed with '-', followed with 5+ digits"
+      message: "Phone number must start with 2-3 digits, followed with '-', followed with 6+ digits"
     }
   }
 })
