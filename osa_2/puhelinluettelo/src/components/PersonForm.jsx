@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PersonService from '../services/persons'
 
-const PersonForm = ({ persons, setPersons, setSuccessMessage}) => {
+const PersonForm = ({ persons, setPersons, setSuccessMessage, setErrorMessage}) => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -63,6 +63,21 @@ const PersonForm = ({ persons, setPersons, setSuccessMessage}) => {
               setSuccessMessage(null)
             }, 2500)
           })
+          .catch(error => {
+            console.log(`Error with updating information of ${newName}`)
+            
+            console.log("Setting error message")
+
+            setErrorMessage(JSON.stringify(error.response.data))
+
+            console.log("Setting timeout to clear error message")
+
+            setTimeout(() => {
+              console.log("Clearing error message")
+
+              setErrorMessage(null)
+            }, 2500)
+          })
       } else {
         console.log("User rejected updating number for existing entry", existingPerson)
       }
@@ -77,7 +92,7 @@ const PersonForm = ({ persons, setPersons, setSuccessMessage}) => {
         .then(createdPerson => {
           console.log("New entry created successfully. Created entry returned by PersonService", createdPerson)
 
-          console.log("Updating state variable persons to include new entry")
+          console.log("Updating state variable persons to include new entry. Clearing out state variables newName and newNumber")
 
           setPersons(persons.concat(createdPerson))
           setNewName("")
@@ -87,13 +102,28 @@ const PersonForm = ({ persons, setPersons, setSuccessMessage}) => {
 
           setSuccessMessage(`${createdPerson.name} number added to phonebook`)
 
-          console.log("Setting timeout for emptying success message")
+          console.log("Setting timeout for clearing success message")
 
           setTimeout(() => {
             console.log("Clearing success message")
 
             setSuccessMessage(null)
-          }, 10000)
+          }, 2500)
+        })
+        .catch(error => {
+          console.log("Error with creating new entry", error.message)
+
+          console.log("Setting error message")
+
+          setErrorMessage(JSON.stringify(error.response.data))
+
+          console.log("Setting timeout for clearing error message")
+
+          setTimeout(() => {
+            console.log("Clearing error message")
+
+            setErrorMessage(null)
+          }, 2500)
         })
     }
   }
