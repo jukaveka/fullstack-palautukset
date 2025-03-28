@@ -5,11 +5,11 @@ const Person = require("./modules/person")
 
 const app = express()
 app.use(express.json())
-app.use(express.static('dist'))
+app.use(express.static("dist"))
 
-morgan.token('body', function (request, response) { return JSON.stringify(request.body) })
-const morganTiny = morgan('tiny')
-const morganExtended = morgan(`:method :url :status :req[content-length] - :response-time ms :body`)
+morgan.token("body", function (request) { return JSON.stringify(request.body) })
+const morganTiny = morgan("tiny")
+const morganExtended = morgan(":method :url :status :req[content-length] - :response-time ms :body")
 
 const requestLogger = (request, response, next) => {
   if (request.method !== "POST") {
@@ -21,7 +21,7 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger)
 
-app.get('/info', (request, response, next) => {
+app.get("/info", (request, response, next) => {
   console.log("Fetching information of phonebook")
 
   Person
@@ -36,7 +36,7 @@ app.get('/info', (request, response, next) => {
 
 })
 
-app.get('/api/persons', (request, response, next) => {
+app.get("/api/persons", (request, response, next) => {
   console.log("Fetching all persons from phonebook")
 
   Person
@@ -49,7 +49,7 @@ app.get('/api/persons', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', (request, response, next) => {
+app.get("/api/persons/:id", (request, response, next) => {
   console.log("Fetching person by id", request.params.id)
 
   Person
@@ -64,7 +64,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response, next) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   console.log("Deleting of person with id", request.params.id)
 
   Person
@@ -76,7 +76,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons/', (request, response, next) => {
+app.post("/api/persons/", (request, response, next) => {
   console.log("Adding new person to phonebook")
 
   const body = request.body
@@ -100,10 +100,10 @@ app.post('/api/persons/', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (request, response, next) => {
+app.put("/api/persons/:id", (request, response, next) => {
   console.log("Updating person information, id", request.params.id)
 
-  const {name, number} = request.body
+  const { name, number } = request.body
 
   console.log("Fetching person to be updated from database")
 
