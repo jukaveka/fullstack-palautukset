@@ -130,7 +130,6 @@ app.put("/api/persons/:id", (request, response, next) => {
 })
 
 const errorHandler = (error, request, response, next) => {
-  console.log("Error while handling request", request)
   console.log("Error message", error.message)
 
   if (error.name === "CastError") {

@@ -18,7 +18,7 @@ mongoose
 console.log("Creating validator for phone numbers")
 
 const phoneNumberValidator = (value) => {
-  return /\d{2,3}-\d{6,}/.test(value)
+  return /^\d{2,3}-\d{5,}$/.test(value)
 }
 
 console.log("Generating person schema")
