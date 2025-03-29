@@ -126,6 +126,7 @@ app.put("/api/persons/:id", (request, response, next) => {
         })
         .catch(error => next(error))
     })
+    .catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {
