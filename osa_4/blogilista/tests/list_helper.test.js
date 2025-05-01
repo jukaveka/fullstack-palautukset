@@ -100,6 +100,49 @@ const listWithTiedTopLikes =
       __v: 0
     }
   ]
+  const listWithTiedMostBlogs =
+  [
+    {
+      _id: "5a422a851b54a676234d17f7",
+      title: "React patterns",
+      author: "Michael Chan",
+      url: "https://reactpatterns.com/",
+      likes: 7,
+      __v: 0
+    },
+    {
+      _id: "5a422aa71b54a676234d17f8",
+      title: "Go To Statement Considered Harmful",
+      author: "Edsger W. Dijkstra",
+      url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+      likes: 5,
+      __v: 0
+    },
+    {
+      _id: "5a422b3a1b54a676234d17f9",
+      title: "Canonical string reduction",
+      author: "Edsger W. Dijkstra",
+      url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+      likes: 12,
+      __v: 0
+    },
+    {
+      _id: "5a422b891b54a676234d17fa",
+      title: "First class tests",
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+      likes: 10,
+      __v: 0
+    },
+    {
+      _id: "5a422ba71b54a676234d17fb",
+      title: "TDD harms architecture",
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+      likes: 0,
+      __v: 0
+    }
+  ]
 
 test("dummy returns one", () => {
   const blogs = []
@@ -152,5 +195,45 @@ describe("Favourite blog", () => {
     const result = listHelper.favouriteBlog(listWithTiedTopLikes)
 
     assert.deepStrictEqual(result, listWithTiedTopLikes[1])
+  })
+})
+
+describe("Author with most blogs", () => {
+  test("is 0 with empty array", () => {
+    const result = listHelper.mostBlogs(listWithoutBlogs)
+
+    assert.strictEqual(result, 0)
+  })
+
+  test("is one with array with one blog", () => {
+    const correctResult = {
+      author: "Edsger W. Dijkstra",
+      blogs: 1
+    }
+    const result = listHelper.mostBlogs(listWithOneBlog)
+
+    assert.deepStrictEqual(result, correctResult)
+  })
+
+  test("is author with most blogs in array with multiple blogs", () => {
+    const correctResult = {
+      author: "Robert C. Martin",
+      blogs: 3
+    }
+
+    const result = listHelper.mostBlogs(listWithManyBlogs)
+
+    assert.deepStrictEqual(result, correctResult)
+  })
+
+  test("is first appearing author with most blogs in array with multiple top bloggers", () => {
+    const correctResult = {
+      author: "Edsger W. Dijkstra",
+      blogs: 2
+    }
+
+    const result = listHelper.mostBlogs(listWithTiedMostBlogs)
+
+    assert.deepStrictEqual(result, correctResult)
   })
 })

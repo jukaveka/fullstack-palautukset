@@ -1,3 +1,5 @@
+const { countBy, groupBy, iteratee } = require("lodash")
+
 const dummy = (blogs) => {
   return 1
 }
@@ -23,5 +25,33 @@ const favouriteBlog = (blogs) => {
     ? 0
     : blogs.reduce(reducer, 0)
 }
+const findAuthorWithMostBlogs = (blogs) => {
+  const getName = iteratee("author")
+  const groupedAuthors = groupBy(blogs, getName)
+  
+  const authors = Object.keys(groupedAuthors)
+  
+  const authorsBlogCount = authors.map((author) => {
+    return {
+      "author": author,
+      "blogs": groupedAuthors[author].length
+    }
+  })
+  
+  const authorWithMostBlogs = authorsBlogCount.reduce((topAuthor, author) => {
+    return topAuthor.blogs >= author.blogs
+      ? topAuthor
+      : author
+  })
 
-module.exports = { dummy, totalLikes, favouriteBlog }
+return authorWithMostBlogs
+}
+
+
+const mostBlogs = (blogs) => {
+  return blogs.length === 0
+    ? 0
+    : findAuthorWithMostBlogs(blogs)
+}
+
+module.exports = { dummy, totalLikes, favouriteBlog, mostBlogs }
