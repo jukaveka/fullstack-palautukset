@@ -56,24 +56,14 @@ const mostBlogs = (blogs) => {
 const findAuthorWithMostLikes = (blogs) => {
   const groupedAuthors = groupBy(blogs, "author")
 
-  console.log("Object with authors and their blogs in array after grouping", groupedAuthors)
-
   const authors = Object.keys(groupedAuthors)
 
-  console.log("Authors array", authors)
-
   const authorsBlogLikeCount = authors.map((author) => {
-    console.log("Author during mapping of authors array", author)
-
     const authorsBlogs = groupedAuthors[author]
-
-    console.log("The array of blogs for author", authorsBlogs)
 
     const authorsBlogsLikes = authorsBlogs
       .map((blog) => blog.likes)
       .reduce((totalBlogLikes, blogLikes) => totalBlogLikes + blogLikes, 0)
-
-    console.log("Author blog likes after reduction", authorsBlogsLikes)
 
     return {
       "author": author,
@@ -81,16 +71,11 @@ const findAuthorWithMostLikes = (blogs) => {
     }
   })
 
-  console.log("Array with authors and count of the likes given to their blogs after mapping", authorsBlogLikeCount)
-
   const authorWithMostBlogLikes = authorsBlogLikeCount.reduce((topAuthor, author) => {
-    console.log("Most liked author during reduction", topAuthor, "current author", author)
     return topAuthor.likes >= author.likes
       ? topAuthor
       : author
   })
-
-  console.log("Object containing author with most likes after reduction", authorWithMostBlogLikes)
 
   return authorWithMostBlogLikes
 }
