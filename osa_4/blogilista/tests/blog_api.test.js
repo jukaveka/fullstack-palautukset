@@ -5,6 +5,7 @@ const mongoose = require("mongoose")
 const supertest = require("supertest")
 const Blog = require("../models/blog")
 const testBlogs = require("./test_blogs")
+const helper = require("./blog_test_helper")
 
 const api = supertest(app)
 
@@ -47,10 +48,10 @@ describe("With initial test blogs inserted", () => {
         .send(testBlog)
         .expect(201)
 
-      const allBlogs = await api.get("/api/blogs")
-      assert.strictEqual(allBlogs.body.length, testBlogs.listWithManyBlogs.length + 1)
+      const allBlogs = await helper.blogsInDb()
+      assert.strictEqual(allBlogs.length, testBlogs.listWithManyBlogs.length + 1)
 
-      const blogTitles = allBlogs.body.map(blog => blog.title)
+      const blogTitles = allBlogs.map(blog => blog.title)
       assert(blogTitles.includes(testBlog.title))
     })
 
@@ -89,8 +90,7 @@ describe("With initial test blogs inserted", () => {
 
   describe("Deleting blog", () => {
     test("succeeds with status 204 if blog exists", async () => {
-      const testBlogs = await api.get("/api/blogs")
-      const testBlog = testBlogs.body[0]
+      const testBlog = await helper.getSingleTestBlog()
 
       await api
         .delete(`/api/blogs/${testBlog.id}`)
@@ -100,8 +100,7 @@ describe("With initial test blogs inserted", () => {
 
   describe("Updating blog", () => {
     test("succeeds with status 200 if blog is valid", async () => {
-      const testBlogs = await api.get("/api/blogs")
-      const testBlog = testBlogs.body[0]
+      const testBlog = await helper.getSingleTestBlog()
 
       const originalLikes = testBlog.likes
 
