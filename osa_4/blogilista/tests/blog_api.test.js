@@ -103,11 +103,9 @@ describe("With initial test blogs inserted", () => {
       const testBlogs = await api.get("/api/blogs")
       const testBlog = testBlogs.body[0]
 
-      const originalTitle = testBlog.title
-      const originalAuthor = testBlog.author
+      const originalLikes = testBlog.likes
 
-      testBlog.title = "React Native Patterns"
-      testBlog.author = "Michael Chan Jr."
+      testBlog.likes += 1
 
       const updatedBlog = await api
         .put(`/api/blogs/${testBlog.id}`)
@@ -115,8 +113,7 @@ describe("With initial test blogs inserted", () => {
         .expect(200)
         .expect("Content-Type", /application\/json/)
 
-      assert.notStrictEqual(updatedBlog.title, originalTitle)
-      assert.notStrictEqual(updatedBlog.author, originalAuthor)
+      assert.strictEqual(testBlog.likes, originalLikes + 1)
     })
   })
 })
