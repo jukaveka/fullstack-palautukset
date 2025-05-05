@@ -37,6 +37,23 @@ describe("Fetching all blogs", () => {
   })
 })
 
+describe("Posting new blog", () => {
+  test("succeeds with valid blog", async () => {
+    const testBlog = testBlogs.newBlog
+
+    const addedBlog = await api
+      .post("/api/blogs")
+      .send(testBlog)
+      .expect(201)
+
+    const allBlogs = await api.get("/api/blogs")
+    assert.strictEqual(allBlogs.body.length, testBlogs.listWithManyBlogs.length + 1)
+    
+    const blogTitles = allBlogs.body.map(blog => blog.title)
+    assert(blogTitles.includes(testBlog.title))
+  })
+})
+
 after(async () => {
   mongoose.connection.close()
 })

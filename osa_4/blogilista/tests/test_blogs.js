@@ -98,7 +98,7 @@ const listWithTiedTopLikes =
       __v: 0
     }
   ]
-  const listWithTiedMostBlogs =
+const listWithTiedMostBlogs =
   [
     {
       _id: "5a422a851b54a676234d17f7",
@@ -141,8 +141,7 @@ const listWithTiedTopLikes =
       __v: 0
     }
   ]
-
-  const listWithTiedMostLikesForAuthor =
+const listWithTiedMostLikesForAuthor =
   [
     {
       _id: "5a422a851b54a676234d17f7",
@@ -185,6 +184,12 @@ const listWithTiedTopLikes =
       __v: 0
     }
   ]
+const newBlog = {
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5
+  }
 
 module.exports = {
   listWithoutBlogs,
@@ -192,5 +197,6 @@ module.exports = {
   listWithManyBlogs,
   listWithTiedTopLikes,
   listWithTiedMostBlogs,
-  listWithTiedMostLikesForAuthor
+  listWithTiedMostLikesForAuthor,
+  newBlog
 }
