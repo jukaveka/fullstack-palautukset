@@ -74,6 +74,16 @@ describe("Posting new blog", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
   })
+
+  test("fails if blog is missing url", async () => {
+    const testBlog = testBlogs.newBlogWithoutUrl
+
+    await api
+      .post("/api/blogs")
+      .send(testBlog)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+  })
 })
 
 after(async () => {
