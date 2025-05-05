@@ -64,6 +64,15 @@ describe("Posting new blog", () => {
 
     assert.strictEqual(addedBlog.body.likes, 0)
   })
+
+  test("fails if blog is missing title", async () => {
+    const testBlog = testBlogs.newBlogWithoutTitle
+
+    await api
+    .post("/api/blogs")
+    .send(testBlog)
+    .expect(400)
+  })
 })
 
 after(async () => {
