@@ -129,7 +129,7 @@ describe("Author with most blog likes", () => {
       author: "Edsger W. Dijkstra",
       likes: 17
     }
-
+    
     const result = listHelper.mostLikes(testBlogs.listWithTiedMostLikesForAuthor)
 
     assert.deepStrictEqual(result, correctResult)
