@@ -12,8 +12,8 @@ blogRouter.post('/', async (request, response) => {
   if (!blog.likes) {
     blog.likes = 0
   }
-  if (!blog.title) {
-    response.status(400).json({ error: "Blog is missing a title" })
+  if (!blog.title || !blog.url) {
+    response.status(400).json({ error: "Blog is missing required content, like title or url" })
   }
 
   const result = await blog.save()
