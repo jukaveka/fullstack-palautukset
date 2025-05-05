@@ -1,4 +1,6 @@
 const blogRouter = require("express").Router()
+const { update } = require("lodash")
+const blog = require("../models/blog")
 const Blog = require("../models/blog")
 
 blogRouter.get('/', async (request, response) => {
@@ -22,6 +24,27 @@ blogRouter.post('/', async (request, response) => {
 blogRouter.delete('/:id', async (request, response) => {
   await Blog.findByIdAndDelete(request.params.id)
   response.status(204).end()
+})
+
+blogRouter.put("/:id", async (request, response) => {
+  const { title, author, url, likes } = request.body
+
+  if (!title || !url) {
+    response.status(400).json({ error: "title and url can't be empty"})
+  }
+
+  const blog = await Blog.findById(request.params.id)
+
+  blog.title = title
+  blog.author = author
+  blog.url = url
+  blog.likes = !likes 
+    ? 0 
+    : likes
+  
+  const updatedBlog = await Blog.save()
+
+  response.json(updatedBlog)
 })
 
 module.exports = blogRouter
