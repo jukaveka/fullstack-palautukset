@@ -33,6 +33,7 @@ describe("Fetching all blogs", () => {
     const blogKeys = allBlogs.body.map(blog => Object.keys(blog))
 
     assert(blogKeys[0].includes("id"))
+    assert(!blogKeys[0].includes("_id"))
   })
 })
 
