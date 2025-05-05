@@ -97,6 +97,28 @@ describe("With initial test blogs inserted", () => {
         .expect(204)
     })
   })
+
+  describe("Updating blog", () => {
+    test("succeeds with status 200 if blog is valid", async () => {
+      const testBlogs = await api.get("/api/blogs")
+      const testBlog = testBlogs.body[0]
+
+      const originalTitle = testBlog.title
+      const originalAuthor = testBlog.author
+
+      testBlog.title = "React Native Patterns"
+      testBlog.author = "Michael Chan Jr."
+
+      const updatedBlog = await api
+        .put(`/api/blogs/${testBlog.id}`)
+        .send(testBlog)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+      assert.notStrictEqual(updatedBlog.title, originalTitle)
+      assert.notStrictEqual(updatedBlog.author, originalAuthor)
+    })
+  })
 })
 
 after(async () => {

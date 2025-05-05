@@ -30,7 +30,7 @@ blogRouter.put("/:id", async (request, response) => {
   const { title, author, url, likes } = request.body
 
   if (!title || !url) {
-    response.status(400).json({ error: "title and url can't be empty"})
+    response.status(400).json({ error: "title and url can't be empty" })
   }
 
   const blog = await Blog.findById(request.params.id)
@@ -38,11 +38,11 @@ blogRouter.put("/:id", async (request, response) => {
   blog.title = title
   blog.author = author
   blog.url = url
-  blog.likes = !likes 
-    ? 0 
+  blog.likes = !likes
+    ? 0
     : likes
-  
-  const updatedBlog = await Blog.save()
+
+  const updatedBlog = await blog.save()
 
   response.json(updatedBlog)
 })
