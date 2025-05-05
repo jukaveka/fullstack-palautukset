@@ -196,6 +196,18 @@ const newBlogWithoutLikes = {
   url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html'
 }
 
+const newBlogWithoutTitle = {
+  author: 'Edsger W. Dijkstra',
+  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+  likes: 5
+}
+
+const newBlogWithoutUrl = {
+  title: 'Go To Statement Considered Harmful',
+  author: 'Edsger W. Dijkstra',
+  likes: 5
+}
+
 module.exports = {
   listWithoutBlogs,
   listWithOneBlog,
@@ -204,5 +216,7 @@ module.exports = {
   listWithTiedMostBlogs,
   listWithTiedMostLikesForAuthor,
   newBlog,
-  newBlogWithoutLikes
+  newBlogWithoutLikes,
+  newBlogWithoutTitle,
+  newBlogWithoutUrl
 }
