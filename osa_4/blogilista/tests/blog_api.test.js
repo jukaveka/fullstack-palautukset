@@ -69,9 +69,10 @@ describe("Posting new blog", () => {
     const testBlog = testBlogs.newBlogWithoutTitle
 
     await api
-    .post("/api/blogs")
-    .send(testBlog)
-    .expect(400)
+      .post("/api/blogs")
+      .send(testBlog)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
   })
 })
 
