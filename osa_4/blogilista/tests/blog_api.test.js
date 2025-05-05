@@ -15,13 +15,24 @@ beforeEach(async () => {
 })
 
 describe("Fetching all blogs", () => {
-  test("Returns all blogs as JSON", async () => {
+  test("returns all blogs as JSON", async () => {
     const allBlogs = await api
       .get("/api/blogs")
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
     assert.strictEqual(allBlogs.body.length, testBlogs.listWithManyBlogs.length)
+  })
+
+  test("uses id as identifier instead of _id", async () => {
+    const allBlogs = await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+    
+    const blogKeys = allBlogs.body.map(blog => Object.keys(blog))
+
+    assert(blogKeys[0].includes("id"))
   })
 })
 
