@@ -113,7 +113,7 @@ describe("With initial test blogs inserted", () => {
         .expect(200)
         .expect("Content-Type", /application\/json/)
 
-      assert.strictEqual(testBlog.likes, originalLikes + 1)
+      assert.strictEqual(updatedBlog.body.likes, originalLikes + 1)
     })
   })
 })
