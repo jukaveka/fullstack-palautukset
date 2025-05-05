@@ -29,7 +29,7 @@ describe("Fetching all blogs", () => {
       .get("/api/blogs")
       .expect(200)
       .expect("Content-Type", /application\/json/)
-    
+
     const blogKeys = allBlogs.body.map(blog => Object.keys(blog))
 
     assert(blogKeys[0].includes("id"))
@@ -48,9 +48,21 @@ describe("Posting new blog", () => {
 
     const allBlogs = await api.get("/api/blogs")
     assert.strictEqual(allBlogs.body.length, testBlogs.listWithManyBlogs.length + 1)
-    
+
     const blogTitles = allBlogs.body.map(blog => blog.title)
     assert(blogTitles.includes(testBlog.title))
+  })
+
+  test("corrects likes to 0 if none are given", async () => {
+    const testBlog = testBlogs.newBlogWithoutLikes
+
+    const addedBlog = await api
+      .post("/api/blogs")
+      .send(testBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    assert.strictEqual(addedBlog.body.likes, 0)
   })
 })
 
