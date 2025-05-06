@@ -1,3 +1,4 @@
+const mongoose = require("mongoose")
 const blogRouter = require("express").Router()
 const { update } = require("lodash")
 const blog = require("../models/blog")
@@ -22,11 +23,19 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
+  if (!mongoose.Types.ObjectId.isValid(request.params.id)) {
+    response.status(400).json({ error: "Malformatted id"})
+  }
+
   await Blog.findByIdAndDelete(request.params.id)
   response.status(204).end()
 })
 
 blogRouter.put("/:id", async (request, response) => {
+  if (!mongoose.Types.ObjectId.isValid(request.params.id)) {
+    response.status(400).json({ error: "Malformatted id"})
+  } 
+
   const { title, author, url, likes, id } = request.body
 
   if (!title || !url) {

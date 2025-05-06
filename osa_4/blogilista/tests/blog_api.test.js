@@ -98,11 +98,19 @@ describe("With initial test blogs inserted", () => {
     })
 
     test("returns status 204 if blog doesn't exist", async () => {
-      const nonEistentBlogId = await helper.nonExistingId()
+      const nonExistentBlogId = await helper.nonExistingId()
 
       await api
-        .delete(`/api/blogs/${nonEistentBlogId}`)
+        .delete(`/api/blogs/${nonExistentBlogId}`)
         .expect(204)
+    })
+
+    test("fails with status 400 if id is malformatted", async () => {
+      const malformattedBlogId = 12345
+
+      await api
+        .delete(`/api/blogs/${malformattedBlogId}`)
+        .expect(400)
     })
   })
 
@@ -124,14 +132,25 @@ describe("With initial test blogs inserted", () => {
     })
 
     test("fails with status 404 if blog doesn't exist", async () => {
-      const nonEistentBlogId = await helper.nonExistingId()
+      const nonExistentBlogId = await helper.nonExistingId()
 
       const testBlog = testBlogs.newBlog
 
       await api
-        .put(`/api/blogs/${testBlog.id}`)
+        .put(`/api/blogs/${nonExistentBlogId}`)
         .send(testBlog)
         .expect(404)
+    })
+
+    test("fails with status 400 if id is malformatted", async () => {
+      const malformattedBlogId = 12345
+
+      const testBlog = testBlogs.newBlog
+
+      await api
+        .put(`/api/blogs/${malformattedBlogId}`)
+        .send(testBlog)
+        .expect(400)
     })
   })
 })
