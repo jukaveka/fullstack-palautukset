@@ -96,6 +96,14 @@ describe("With initial test blogs inserted", () => {
         .delete(`/api/blogs/${testBlog.id}`)
         .expect(204)
     })
+
+    test("returns status 204 if blog doesn't exist", async () => {
+      const nonEistentBlogId = await helper.nonExistingId()
+
+      await api
+        .delete(`/api/blogs/${nonEistentBlogId}`)
+        .expect(204)
+    })
   })
 
   describe("Updating blog", () => {
