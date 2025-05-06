@@ -122,6 +122,17 @@ describe("With initial test blogs inserted", () => {
 
       assert.strictEqual(updatedBlog.body.likes, originalLikes + 1)
     })
+
+    test("fails with status 404 if blog doesn't exist", async () => {
+      const nonEistentBlogId = await helper.nonExistingId()
+
+      const testBlog = testBlogs.newBlog
+
+      await api
+        .put(`/api/blogs/${testBlog.id}`)
+        .send(testBlog)
+        .expect(404)
+    })
   })
 })
 

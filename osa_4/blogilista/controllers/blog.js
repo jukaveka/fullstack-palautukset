@@ -27,10 +27,16 @@ blogRouter.delete('/:id', async (request, response) => {
 })
 
 blogRouter.put("/:id", async (request, response) => {
-  const { title, author, url, likes } = request.body
+  const { title, author, url, likes, id } = request.body
 
   if (!title || !url) {
     response.status(400).json({ error: "title and url can't be empty" })
+  }
+
+  const blogExists = await Blog.countDocuments({ _id: id })
+
+  if (blogExists === 0) {
+    response.status(404).json({ error: "Document with given ID doesn't exist " })
   }
 
   const blog = await Blog.findById(request.params.id)
