@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   passwordHash: String
 })
 
-userSchema("toJSON", () => {
+userSchema.set("toJSON", () => {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id
     delete returnedObject._id
@@ -15,4 +15,4 @@ userSchema("toJSON", () => {
   }
 })
 
-module.exports = mongoose.Model("User", userSchema)
+module.exports = mongoose.model("User", userSchema)
