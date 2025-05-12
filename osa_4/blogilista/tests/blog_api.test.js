@@ -7,7 +7,7 @@ const Blog = require("../models/blog")
 const User = require("../models/user")
 const testBlogs = require("./test_blogs")
 const testUsers = require("./test_users")
-const helper = require("./blog_test_helper")
+const helper = require("./helper_functions")
 const user = require("../models/user")
 
 const api = supertest(app)
@@ -50,9 +50,7 @@ describe("With initial test blogs inserted", () => {
     test("succeeds with valid blog", async () => {
       const testBlog = testBlogs.newBlog
 
-      const user = await User.findOne({})
-
-      testBlog.userId = user._id
+      testBlog.userId = await helper.getValidUserId()
 
       const addedBlog = await api
         .post("/api/blogs")
@@ -69,9 +67,7 @@ describe("With initial test blogs inserted", () => {
     test("corrects likes to 0 if none are given", async () => {
       const testBlog = testBlogs.newBlogWithoutLikes
  
-      const user = await User.findOne({})
-
-      testBlog.userId = user._id
+      testBlog.userId = await helper.getValidUserId()
 
       const addedBlog = await api
         .post("/api/blogs")
@@ -85,6 +81,8 @@ describe("With initial test blogs inserted", () => {
     test("fails with status 400 if blog is missing title", async () => {
       const testBlog = testBlogs.newBlogWithoutTitle
 
+      testBlog.userId = await helper.getValidUserId()
+
       await api
         .post("/api/blogs")
         .send(testBlog)
@@ -94,6 +92,8 @@ describe("With initial test blogs inserted", () => {
 
     test("fails with status 400 if blog is missing url", async () => {
       const testBlog = testBlogs.newBlogWithoutUrl
+
+      testBlog.userId = await helper.getValidUserId()
 
       await api
         .post("/api/blogs")

@@ -11,23 +11,15 @@ blogRouter.get('/', async (request, response) => {
 blogRouter.post('/', async (request, response) => {
   const body = request.body
 
-  console.log("Request body", body)
-
   const user = await User.findById(body.userId)
-
-  console.log("User who added blog", user)
 
   if (!body.title || !body.url || !user) {
     response.status(400).json({ error: "Blog is missing required content, like title or url" })
   }
 
-  console.log("Title, url and user present in the request")
-
   if (!body.likes) {
     body.likes = 0
   }
-
-  console.log("Body likes corrected to 0", body.likes)
 
   const blog = new Blog({
     title: body.title,
@@ -37,11 +29,7 @@ blogRouter.post('/', async (request, response) => {
     likes: body.likes
   })
 
-  console.log("New blog object created", blog)
-
   const result = await blog.save()
-
-  console.log("Blog saved", result)
 
   response.status(201).json(result)
 })
