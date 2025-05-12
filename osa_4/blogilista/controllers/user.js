@@ -22,7 +22,7 @@ userRouter.post("/", async (request, response ) => {
 
   const addedUser = await newUser.save()
 
-  response.json(addedUser)
+  response.status(201).json(addedUser)
 })
 
 module.exports = userRouter

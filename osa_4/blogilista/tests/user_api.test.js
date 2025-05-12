@@ -38,7 +38,7 @@ describe("With initial test user in database", () => {
       const addedUser = await api
         .post("/api/users")
         .send(newUser)
-        .expect(200)
+        .expect(201)
         .expect("Content-Type", /application\/json/)
 
       const usersAfterRequest = await User.find({})
