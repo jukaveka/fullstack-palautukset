@@ -2,7 +2,7 @@ const userRouter = require("express").Router()
 const bcrypt = require("bcrypt")
 const User = require("../models/user")
 
-const isUserNameValid = (username) => {
+const isUsernameValid = (username) => {
   return username.length >= 3
 }
 
@@ -18,7 +18,7 @@ userRouter.get("/", async (request, response) => {
 userRouter.post("/", async (request, response ) => {
   const { username, name, password } = request.body
 
-  if (!( isUserNameValid(username) && isPasswordValid(password) )) {
+  if (!( isUsernameValid(username) && isPasswordValid(password) )) {
     response.status(400).json({ error: "Username and password must be at least 3 characters" })
   }
 

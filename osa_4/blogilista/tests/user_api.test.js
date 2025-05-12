@@ -11,7 +11,7 @@ describe("With initial test user in database", () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
-    await User.insertOne({ username: "miketyson", name: "mike", password: "imabiternotafighter" })
+    await User.insertOne({ username: "miketyson", name: "mike", passwordHash: "imabiternotafighter" })
   })
 
   describe("Fetching users", () => {
@@ -88,6 +88,25 @@ describe("With initial test user in database", () => {
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
 
       assert(response.error.text.includes("Username and password must be at least 3 characters"))
+    })
+
+    test("fails with status 400 if username already exists", async () => {
+      const usersBeforeRequest = await User.find({})
+
+      const newUser = {
+        username: "miketyson",
+        name: "Mike tyson",
+        password: "imaafighternotabiter"
+      }
+
+      const response = await api
+        .post("/api/users")
+        .send(newUser)
+        .expect(400)
+        .expect("Content-Type", /application\/json/)
+
+      const usersAfterRequest = await User.find({})
+      assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
     })
   })
 })
