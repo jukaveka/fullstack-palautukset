@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const blogRouter = require("express").Router()
 const Blog = require("../models/blog")
+const User = require("../models/user")
 
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({})
@@ -8,15 +9,40 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.post('/', async (request, response) => {
-  const blog = new Blog(request.body)
+  const body = request.body
 
-  if (!blog.likes) {
-    blog.likes = 0
-  } else if (!blog.title || !blog.url) {
+  console.log("Request body", body)
+
+  const user = await User.findById(body.userId)
+
+  console.log("User who added blog", user)
+
+  if (!body.title || !body.url || !user) {
     response.status(400).json({ error: "Blog is missing required content, like title or url" })
   }
 
+  console.log("Title, url and user present in the request")
+
+  if (!body.likes) {
+    body.likes = 0
+  }
+
+  console.log("Body likes corrected to 0", body.likes)
+
+  const blog = new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    user: user._id,
+    likes: body.likes
+  })
+
+  console.log("New blog object created", blog)
+
   const result = await blog.save()
+
+  console.log("Blog saved", result)
+
   response.status(201).json(result)
 })
 
@@ -32,7 +58,7 @@ blogRouter.delete('/:id', async (request, response) => {
 blogRouter.put("/:id", async (request, response) => {
   if (!mongoose.Types.ObjectId.isValid(request.params.id)) {
     response.status(400).json({ error: "Malformatted id" })
-  } 
+  }
 
   const { title, author, url, likes, id } = request.body
 

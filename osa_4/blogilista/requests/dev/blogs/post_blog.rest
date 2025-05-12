@@ -2,8 +2,9 @@ POST http://localhost:3001/api/blogs/
 Content-Type: application/json
 
 {
-  "title": "Creating blog with express",
-  "author": "Shania Twain",
-  "url": "http://localhost:3001/api/blogs/",
+  "title": "A blog on OOPS in python:",
+  "author": "Singanavena Sathish",
+  "url": "https://medium.com/@sathishsinganavena1/a-blog-on-oops-in-python-c9c48831f3e",
+  "userId": "6821d8aee23d61e3fc8c5391",
   "likes": 10
 }

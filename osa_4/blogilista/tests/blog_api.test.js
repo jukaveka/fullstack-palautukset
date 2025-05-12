@@ -4,13 +4,20 @@ const app = require("../app")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
 const Blog = require("../models/blog")
+const User = require("../models/user")
 const testBlogs = require("./test_blogs")
+const testUsers = require("./test_users")
 const helper = require("./blog_test_helper")
+const user = require("../models/user")
 
 const api = supertest(app)
 
 describe("With initial test blogs inserted", () => {
   beforeEach(async () => {
+    await User.deleteMany({})
+
+    await User.insertMany(testUsers.listOfTestUsers)
+
     await Blog.deleteMany({})
 
     await Blog.insertMany(testBlogs.listWithManyBlogs)
@@ -43,6 +50,10 @@ describe("With initial test blogs inserted", () => {
     test("succeeds with valid blog", async () => {
       const testBlog = testBlogs.newBlog
 
+      const user = await User.findOne({})
+
+      testBlog.userId = user._id
+
       const addedBlog = await api
         .post("/api/blogs")
         .send(testBlog)
@@ -57,6 +68,10 @@ describe("With initial test blogs inserted", () => {
 
     test("corrects likes to 0 if none are given", async () => {
       const testBlog = testBlogs.newBlogWithoutLikes
+ 
+      const user = await User.findOne({})
+
+      testBlog.userId = user._id
 
       const addedBlog = await api
         .post("/api/blogs")
