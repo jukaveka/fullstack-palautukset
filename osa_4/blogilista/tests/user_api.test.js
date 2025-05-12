@@ -14,6 +14,17 @@ describe("With initial test user in database", () => {
     await User.insertOne({ username: "miketyson", name: "mike", password: "imabiternotafighter" })
   })
 
+  describe("Fetching users", () => {
+    test("fetches all users as JSON", async () => {
+      const users = await api
+        .get("/api/users")
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+      assert.strictEqual(users.body.length, 1)
+    })
+  })
+
   describe("Adding user", () => {
     test("succeeds with valid object", async () => {
       const usersBeforeRequest = await User.find({})
