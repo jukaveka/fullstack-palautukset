@@ -8,7 +8,7 @@ const User = require("../models/user")
 const api = supertest(app)
 
 describe("With initial test user in database", () => {
-  beforeEach( async () => {
+  beforeEach(async () => {
     await User.deleteMany({})
 
     await User.insertOne({ username: "miketyson", name: "mike", password: "imabiternotafighter" })
@@ -47,9 +47,51 @@ describe("With initial test user in database", () => {
       const usernames = usersAfterRequest.map(user => user.username)
       assert(usernames.includes(newUser.username))
     })
+
+    test("fails with status 400 if username is under 3 characters", async () => {
+      const usersBeforeRequest = await User.find({})
+
+      const newUser = {
+        username: "to",
+        name: "Tom",
+        password: "seunohdettutom"
+      }
+
+      const response = await api
+        .post("/api/users")
+        .send(newUser)
+        .expect(400)
+        .expect("Content-Type", /application\/json/)
+
+      const usersAfterRequest = await User.find({})
+      assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
+
+      assert(response.error.text.includes("Username and password must be at least 3 characters"))
+    })
+
+    test("fails with status 400 if password is under 3 characters", async () => {
+      const usersBeforeRequest = await User.find({})
+
+      const newUser = {
+        username: "Timur",
+        name: "Timur",
+        password: "ti"
+      }
+
+      const response = await api
+        .post("/api/users")
+        .send(newUser)
+        .expect(400)
+        .expect("Content-Type", /application\/json/)
+
+      const usersAfterRequest = await User.find({})
+      assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
+
+      assert(response.error.text.includes("Username and password must be at least 3 characters"))
+    })
   })
 })
 
-after( async () => {
+after(async () => {
   mongoose.connection.close()
 })
