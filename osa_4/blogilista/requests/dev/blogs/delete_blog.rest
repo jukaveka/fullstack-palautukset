@@ -1,0 +1,4 @@
+@userIdToRemove = TODO
+@userId = {{userIdToRemove}}
+
+DELETE http://localhost:3001/api/blogs/{{userId}}
