@@ -5,10 +5,9 @@ const mongoose = require("mongoose")
 const supertest = require("supertest")
 const Blog = require("../models/blog")
 const User = require("../models/user")
-const testBlogs = require("./test_blogs")
-const testUsers = require("./test_users")
+const testBlogData = require("./test_blogs")
+const testUserData = require("./test_users")
 const helper = require("./helper_functions")
-const user = require("../models/user")
 
 const api = supertest(app)
 
@@ -16,11 +15,11 @@ describe("With initial test blogs inserted", () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
-    await User.insertMany(testUsers.listOfTestUsers)
+    await User.insertMany(testUserData.listOfTestUsers)
 
     await Blog.deleteMany({})
 
-    await Blog.insertMany(testBlogs.listWithManyBlogs)
+    await Blog.insertMany(testBlogData.listWithManyBlogs)
   })
 
   describe("Fetching all blogs", () => {
@@ -30,7 +29,7 @@ describe("With initial test blogs inserted", () => {
         .expect(200)
         .expect("Content-Type", /application\/json/)
 
-      assert.strictEqual(allBlogs.body.length, testBlogs.listWithManyBlogs.length)
+      assert.strictEqual(allBlogs.body.length, testBlogData.listWithManyBlogs.length)
     })
 
     test("uses id as identifier instead of _id", async () => {
@@ -48,7 +47,7 @@ describe("With initial test blogs inserted", () => {
 
   describe("Posting new blog", () => {
     test("succeeds with valid blog", async () => {
-      const testBlog = testBlogs.newBlog
+      const testBlog = testBlogData.newBlog
 
       testBlog.userId = await helper.getValidUserId()
 
@@ -58,14 +57,14 @@ describe("With initial test blogs inserted", () => {
         .expect(201)
 
       const allBlogs = await helper.blogsInDb()
-      assert.strictEqual(allBlogs.length, testBlogs.listWithManyBlogs.length + 1)
+      assert.strictEqual(allBlogs.length, testBlogData.listWithManyBlogs.length + 1)
 
       const blogTitles = allBlogs.map(blog => blog.title)
       assert(blogTitles.includes(testBlog.title))
     })
 
     test("corrects likes to 0 if none are given", async () => {
-      const testBlog = testBlogs.newBlogWithoutLikes
+      const testBlog = testBlogData.newBlogWithoutLikes
  
       testBlog.userId = await helper.getValidUserId()
 
@@ -79,7 +78,7 @@ describe("With initial test blogs inserted", () => {
     })
 
     test("fails with status 400 if blog is missing title", async () => {
-      const testBlog = testBlogs.newBlogWithoutTitle
+      const testBlog = testBlogData.newBlogWithoutTitle
 
       testBlog.userId = await helper.getValidUserId()
 
@@ -91,7 +90,7 @@ describe("With initial test blogs inserted", () => {
     })
 
     test("fails with status 400 if blog is missing url", async () => {
-      const testBlog = testBlogs.newBlogWithoutUrl
+      const testBlog = testBlogData.newBlogWithoutUrl
 
       testBlog.userId = await helper.getValidUserId()
 
@@ -149,7 +148,7 @@ describe("With initial test blogs inserted", () => {
     test("fails with status 404 if blog doesn't exist", async () => {
       const nonExistentBlogId = await helper.nonExistingId()
 
-      const testBlog = testBlogs.newBlog
+      const testBlog = testBlogData.newBlog
 
       await api
         .put(`/api/blogs/${nonExistentBlogId}`)
@@ -160,7 +159,7 @@ describe("With initial test blogs inserted", () => {
     test("fails with status 400 if id is malformatted", async () => {
       const malformattedBlogId = 12345
 
-      const testBlog = testBlogs.newBlog
+      const testBlog = testBlogData.newBlog
 
       await api
         .put(`/api/blogs/${malformattedBlogId}`)

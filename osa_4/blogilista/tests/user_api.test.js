@@ -3,6 +3,8 @@ const assert = require("node:assert")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
 const app = require("../app")
+const testUserData = require("./test_users")
+const helper = require("./helper_functions")
 const User = require("../models/user")
 
 const api = supertest(app)
@@ -11,7 +13,7 @@ describe("With initial test user in database", () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
-    await User.insertOne({ username: "miketyson", name: "mike", passwordHash: "imabiternotafighter" })
+    await User.insertMany(testUserData.listOfTestUsers)
   })
 
   describe("Fetching users", () => {
@@ -21,13 +23,13 @@ describe("With initial test user in database", () => {
         .expect(200)
         .expect("Content-Type", /application\/json/)
 
-      assert.strictEqual(users.body.length, 1)
+      assert.strictEqual(users.body.length, testUserData.listOfTestUsers.length)
     })
   })
 
   describe("Adding user", () => {
     test("succeeds with valid object", async () => {
-      const usersBeforeRequest = await User.find({})
+      const usersBeforeRequest = await helper.usersInDb()
 
       const newUser = {
         username: "tomtailor",
@@ -41,7 +43,7 @@ describe("With initial test user in database", () => {
         .expect(201)
         .expect("Content-Type", /application\/json/)
 
-      const usersAfterRequest = await User.find({})
+      const usersAfterRequest = await helper.usersInDb()
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length + 1)
 
       const usernames = usersAfterRequest.map(user => user.username)
@@ -49,7 +51,7 @@ describe("With initial test user in database", () => {
     })
 
     test("fails with status 400 if username is under 3 characters", async () => {
-      const usersBeforeRequest = await User.find({})
+      const usersBeforeRequest = await helper.usersInDb()
 
       const newUser = {
         username: "to",
@@ -63,18 +65,18 @@ describe("With initial test user in database", () => {
         .expect(400)
         .expect("Content-Type", /application\/json/)
 
-      const usersAfterRequest = await User.find({})
+      const usersAfterRequest = await helper.usersInDb()
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
 
       assert(response.error.text.includes("Username and password must be at least 3 characters"))
     })
 
     test("fails with status 400 if password is under 3 characters", async () => {
-      const usersBeforeRequest = await User.find({})
+      const usersBeforeRequest = await helper.usersInDb()
 
       const newUser = {
-        username: "Timur",
-        name: "Timur",
+        username: "Testiorava",
+        name: "Orava",
         password: "ti"
       }
 
@@ -84,28 +86,28 @@ describe("With initial test user in database", () => {
         .expect(400)
         .expect("Content-Type", /application\/json/)
 
-      const usersAfterRequest = await User.find({})
+      const usersAfterRequest = await helper.usersInDb()
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
 
       assert(response.error.text.includes("Username and password must be at least 3 characters"))
     })
 
     test("fails with status 400 if username already exists", async () => {
-      const usersBeforeRequest = await User.find({})
+      const usersBeforeRequest = await helper.usersInDb()
 
       const newUser = {
-        username: "miketyson",
-        name: "Mike tyson",
-        password: "imaafighternotabiter"
+        username: "Testimies",
+        name: "Mies",
+        password: "Testimiehensalasana"
       }
 
-      const response = await api
+      await api
         .post("/api/users")
         .send(newUser)
         .expect(400)
         .expect("Content-Type", /application\/json/)
 
-      const usersAfterRequest = await User.find({})
+      const usersAfterRequest = await helper.usersInDb()
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
     })
   })
