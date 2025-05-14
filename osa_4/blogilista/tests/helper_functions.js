@@ -1,5 +1,6 @@
 const Blog = require("../models/blog")
 const User = require("../models/user")
+const bcrypt = require("bcrypt")
 
 const nonExistingId = async () => {
   const blog = new Blog({ title: "Temp title", author: "Temp author", url: "Temp URL", likes: 0 })
@@ -35,10 +36,31 @@ const getValidUserId = async () => {
   return user._id
 }
 
+const generateValidPasswordHash = async (password) => {
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+
+  return passwordHash
+}
+
+const generateUserObjectWithHashedPassword = async (testUserObject) => {
+  testUserObject.passwordHash = await generateValidPasswordHash(testUserObject.password)
+
+  return testUserObject
+}
+
+const generateTestUsersWithHashedPasswords = async (testUserArray) => {
+  const promiseArray = testUserArray.map(testUser => generateUserObjectWithHashedPassword(testUser))
+
+  return await Promise.all(promiseArray)
+}
+
 module.exports = {
   nonExistingId,
   blogsInDb,
   getSingleTestBlog,
   usersInDb,
-  getValidUserId
+  getValidUserId,
+  generateValidPasswordHash,
+  generateTestUsersWithHashedPasswords
 }
