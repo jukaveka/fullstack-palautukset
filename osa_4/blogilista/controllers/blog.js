@@ -43,8 +43,20 @@ blogRouter.post('/', async (request, response, next) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
+  const decodedToken = tokenUtil.decodeJwtToken(request.token)
+
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "invalid token" })
+  }
+
   if (!mongoose.Types.ObjectId.isValid(request.params.id)) {
     response.status(400).json({ error: "Malformatted id" })
+  }
+
+  const blog = await blog.findById(request.params.id)
+
+  if (!blog.user.toString() === decodedToken.id) {
+    return response.status(401).json({ error: "invalid token for deleting blog" })
   }
 
   await Blog.findByIdAndDelete(request.params.id)
