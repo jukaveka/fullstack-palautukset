@@ -62,15 +62,18 @@ describe("With initial test blogs inserted", () => {
 
       const blogTitles = allBlogs.map(blog => blog.title)
       assert(blogTitles.includes(testBlog.title))
+
+      assert.strictEqual(addedBlog.body.title, testBlog.title)
     })
 
     test("corrects likes to 0 if none are given", async () => {
       const testBlog = testBlogData.newBlogWithoutLikes
  
-      testBlog.userId = await helper.getValidUserId()
+      const validToken = await helper.generateTestUserToken()
 
       const addedBlog = await api
         .post("/api/blogs")
+        .set("authorization", `Bearer ${validToken}`)
         .send(testBlog)
         .expect(201)
         .expect("Content-Type", /application\/json/)
@@ -81,10 +84,11 @@ describe("With initial test blogs inserted", () => {
     test("fails with status 400 if blog is missing title", async () => {
       const testBlog = testBlogData.newBlogWithoutTitle
 
-      testBlog.userId = await helper.getValidUserId()
+      const validToken = await helper.generateTestUserToken()
 
       await api
         .post("/api/blogs")
+        .set("authorization", `Bearer ${validToken}`)
         .send(testBlog)
         .expect(400)
         .expect("Content-Type", /application\/json/)
@@ -93,10 +97,11 @@ describe("With initial test blogs inserted", () => {
     test("fails with status 400 if blog is missing url", async () => {
       const testBlog = testBlogData.newBlogWithoutUrl
 
-      testBlog.userId = await helper.getValidUserId()
+      const validToken = await helper.generateTestUserToken()
 
       await api
         .post("/api/blogs")
+        .set("authorization", `Bearer ${validToken}`)
         .send(testBlog)
         .expect(400)
         .expect("Content-Type", /application\/json/)
