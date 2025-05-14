@@ -49,10 +49,11 @@ describe("With initial test blogs inserted", () => {
     test("succeeds with valid blog", async () => {
       const testBlog = testBlogData.newBlog
 
-      testBlog.userId = await helper.getValidUserId()
+      const validToken = await helper.generateTestUserToken()
 
       const addedBlog = await api
         .post("/api/blogs")
+        .set("authorization", `Bearer ${validToken}`)
         .send(testBlog)
         .expect(201)
 
