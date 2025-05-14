@@ -14,11 +14,17 @@ userRouter.get("/", async (request, response) => {
   response.json(users)
 })
 
-userRouter.post("/", async (request, response ) => {
+userRouter.post("/", async (request, response) => {
   const { username, name, password } = request.body
 
-  if (!( isInputLengthValid(username, 3) && isInputLengthValid(password, 3) )) {
+  if ( !isInputLengthValid(username, 3) || !isInputLengthValid(password, 3) ) {
     response.status(400).json({ error: "Username and password must be at least 3 characters" })
+  }
+
+  const usernameExists = await User.findOne({ username: username })
+
+  if ( usernameExists ) {
+    response.status(400).json({ error: "Username already exists"})
   }
 
   const saltRounds = 10
