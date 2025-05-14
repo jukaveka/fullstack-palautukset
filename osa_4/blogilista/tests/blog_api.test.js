@@ -68,7 +68,7 @@ describe("With initial test blogs inserted", () => {
 
     test("corrects likes to 0 if none are given", async () => {
       const testBlog = testBlogData.newBlogWithoutLikes
- 
+
       const validToken = await helper.generateTestUserToken()
 
       const addedBlog = await api
@@ -106,72 +106,95 @@ describe("With initial test blogs inserted", () => {
         .expect(400)
         .expect("Content-Type", /application\/json/)
     })
-  })
 
-  describe("Deleting blog", () => {
-    test("succeeds with status 204 if blog exists", async () => {
-      const testBlog = await helper.getSingleTestBlog()
+    test("fails with status 401 if token is missing", async () => {
+      const testBlog = testBlogData.newBlogWithoutUrl
 
       await api
-        .delete(`/api/blogs/${testBlog.id}`)
-        .expect(204)
-    })
-
-    test("returns status 204 if blog doesn't exist", async () => {
-      const nonExistentBlogId = await helper.nonExistingId()
-
-      await api
-        .delete(`/api/blogs/${nonExistentBlogId}`)
-        .expect(204)
-    })
-
-    test("fails with status 400 if id is malformatted", async () => {
-      const malformattedBlogId = 12345
-
-      await api
-        .delete(`/api/blogs/${malformattedBlogId}`)
-        .expect(400)
-    })
-  })
-
-  describe("Updating blog", () => {
-    test("succeeds with status 200 if blog is valid", async () => {
-      const testBlog = await helper.getSingleTestBlog()
-
-      const originalLikes = testBlog.likes
-
-      testBlog.likes += 1
-
-      const updatedBlog = await api
-        .put(`/api/blogs/${testBlog.id}`)
+        .post("/api/blogs")
         .send(testBlog)
-        .expect(200)
+        .expect(401)
         .expect("Content-Type", /application\/json/)
-
-      assert.strictEqual(updatedBlog.body.likes, originalLikes + 1)
     })
 
-    test("fails with status 404 if blog doesn't exist", async () => {
-      const nonExistentBlogId = await helper.nonExistingId()
+    test("fails with status 401 if token is invalid", async () => {
+      const testBlog = testBlogData.newBlogWithoutUrl
 
-      const testBlog = testBlogData.newBlog
+      const invalidToken = "abcd1234"
 
       await api
-        .put(`/api/blogs/${nonExistentBlogId}`)
+        .post("/api/blogs")
+        .set("authorization", `Bearer ${invalidToken}`)
         .send(testBlog)
-        .expect(404)
+        .expect(401)
+        .expect("Content-Type", /application\/json/)
     })
+  })
+})
 
-    test("fails with status 400 if id is malformatted", async () => {
-      const malformattedBlogId = 12345
+describe("Deleting blog", () => {
+  test("succeeds with status 204 if blog exists", async () => {
+    const testBlog = await helper.getSingleTestBlog()
 
-      const testBlog = testBlogData.newBlog
+    await api
+      .delete(`/api/blogs/${testBlog.id}`)
+      .expect(204)
+  })
 
-      await api
-        .put(`/api/blogs/${malformattedBlogId}`)
-        .send(testBlog)
-        .expect(400)
-    })
+  test("returns status 204 if blog doesn't exist", async () => {
+    const nonExistentBlogId = await helper.nonExistingId()
+
+    await api
+      .delete(`/api/blogs/${nonExistentBlogId}`)
+      .expect(204)
+  })
+
+  test("fails with status 400 if id is malformatted", async () => {
+    const malformattedBlogId = 12345
+
+    await api
+      .delete(`/api/blogs/${malformattedBlogId}`)
+      .expect(400)
+  })
+})
+
+describe("Updating blog", () => {
+  test("succeeds with status 200 if blog is valid", async () => {
+    const testBlog = await helper.getSingleTestBlog()
+
+    const originalLikes = testBlog.likes
+
+    testBlog.likes += 1
+
+    const updatedBlog = await api
+      .put(`/api/blogs/${testBlog.id}`)
+      .send(testBlog)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    assert.strictEqual(updatedBlog.body.likes, originalLikes + 1)
+  })
+
+  test("fails with status 404 if blog doesn't exist", async () => {
+    const nonExistentBlogId = await helper.nonExistingId()
+
+    const testBlog = testBlogData.newBlog
+
+    await api
+      .put(`/api/blogs/${nonExistentBlogId}`)
+      .send(testBlog)
+      .expect(404)
+  })
+
+  test("fails with status 400 if id is malformatted", async () => {
+    const malformattedBlogId = 12345
+
+    const testBlog = testBlogData.newBlog
+
+    await api
+      .put(`/api/blogs/${malformattedBlogId}`)
+      .send(testBlog)
+      .expect(400)
   })
 })
 
