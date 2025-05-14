@@ -46,7 +46,11 @@ const getSingleTestUser = async () => {
 const generateTestUserToken = async () => {
   const user = await getSingleTestUser()
 
-  return await tokenUtil.generateJwtToken(user)
+  return tokenUtil.generateJwtToken(user)
+}
+
+const decodeTestUserToken = (token) => {
+  return tokenUtil.decodeJwtToken(token)
 }
 
 const generateValidPasswordHash = async (password) => {
@@ -77,5 +81,6 @@ module.exports = {
   generateValidPasswordHash,
   generateTestUsersWithHashedPasswords,
   getSingleTestUser,
-  generateTestUserToken
+  generateTestUserToken,
+  decodeTestUserToken
 }

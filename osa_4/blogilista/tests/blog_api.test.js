@@ -64,6 +64,9 @@ describe("With initial test blogs inserted", () => {
       assert(blogTitles.includes(testBlog.title))
 
       assert.strictEqual(addedBlog.body.title, testBlog.title)
+
+      const decodedToken = helper.decodeTestUserToken(validToken)
+      assert.strictEqual(addedBlog.body.user, decodedToken.id)
     })
 
     test("corrects likes to 0 if none are given", async () => {

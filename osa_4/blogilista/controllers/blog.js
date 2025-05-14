@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const blogRouter = require("express").Router()
 const Blog = require("../models/blog")
 const User = require("../models/user")
+const tokenUtil = require("../utils/token")
 const jwt = require("jsonwebtoken")
 
 const getTokenFrom = request => {
@@ -25,7 +26,7 @@ blogRouter.get('/', async (request, response) => {
 blogRouter.post('/', async (request, response, next) => {
   const body = request.body
 
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  const decodedToken = tokenUtil.decodeJwtToken(getTokenFrom(request))
   
   if (!decodedToken.id) {
     return response.status(401).json({ error: "invalid token" })
