@@ -138,91 +138,108 @@ describe("With initial test blogs inserted", () => {
         .expect("Content-Type", /application\/json/)
     })
   })
+
+  describe("Deleting blog", () => {
+    test("succeeds with status 204 if blog exists", async () => {
+      const blogsBeforeRequest = await helper.blogsInDb()
+
+      const testBlog = await helper.getSingleTestBlog()
+      const testUser = await User.findById(testBlog.user)
+      const validToken = await helper.generateTestToken(testUser)
+
+      await api
+        .delete(`/api/blogs/${testBlog.id}`)
+        .set(`authorization`, `Bearer ${validToken}`)
+        .expect(204)
+
+      const blogsAfterRequest = await helper.blogsInDb()
+
+      assert.strictEqual(blogsAfterRequest.length, blogsBeforeRequest.length - 1)
+    })
+
+    test("returns status 204 if blog doesn't exist", async () => {
+      const nonExistentBlogId = await helper.nonExistingId()
+
+      const testUser = await helper.getSingleTestUser()
+      const validToken = await helper.generateTestToken(testUser)
+
+      await api
+        .delete(`/api/blogs/${nonExistentBlogId}`)
+        .set(`authorization`, `Bearer ${validToken}`)
+        .expect(204)
+    })
+
+    test("fails with status 400 if id is malformatted", async () => {
+      const malformattedBlogId = 12345
+
+      const testUser = await helper.getSingleTestUser()
+      const validToken = await helper.generateTestToken(testUser)
+
+      await api
+        .delete(`/api/blogs/${malformattedBlogId}`)
+        .set(`authorization`, `Bearer ${validToken}`)
+        .expect(400)
+    })
+
+    test("fails with status 401 if deleting user is not creator of the blog", async () => {
+      const blogsBeforeRequest = await helper.blogsInDb()
+
+      const testBlog = await helper.getSingleTestBlog()
+      const authorizedUser = await User.findById(testBlog.user)
+      const unauthorizedUser = await User.findOne({ _id: { $ne: authorizedUser } })
+      const unauthorizedToken = helper.generateTestToken(unauthorizedUser)
+
+      await api
+        .delete(`/api/blogs/${testBlog.id}`)
+        .set(`authorization`, `Bearer ${unauthorizedToken}`)
+        .expect(401)
+        .expect("Content-Type", /application\/json/)
+
+      const blogsAfterRequest = await helper.blogsInDb()
+      assert.strictEqual(blogsAfterRequest.length, blogsBeforeRequest.length)
+    })
+  })
+
+  describe("Updating blog", () => {
+    test("succeeds with status 200 if blog is valid", async () => {
+      const testBlog = await helper.getSingleTestBlog()
+
+      const originalLikes = testBlog.likes
+
+      testBlog.likes += 1
+
+      const updatedBlog = await api
+        .put(`/api/blogs/${testBlog.id}`)
+        .send(testBlog)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+      assert.strictEqual(updatedBlog.body.likes, originalLikes + 1)
+    })
+
+    test("fails with status 404 if blog doesn't exist", async () => {
+      const nonExistentBlogId = await helper.nonExistingId()
+
+      const testBlog = testBlogData.newBlog
+
+      await api
+        .put(`/api/blogs/${nonExistentBlogId}`)
+        .send(testBlog)
+        .expect(404)
+    })
+
+    test("fails with status 400 if id is malformatted", async () => {
+      const malformattedBlogId = 12345
+
+      const testBlog = testBlogData.newBlog
+
+      await api
+        .put(`/api/blogs/${malformattedBlogId}`)
+        .send(testBlog)
+        .expect(400)
+    })
+  })
 })
-
-describe("Deleting blog", () => {
-  test("succeeds with status 204 if blog exists", async () => {
-    const blogsBeforeRequest = await helper.blogsInDb()
-
-    const testBlog = await helper.getSingleTestBlog()
-    const testUser = await User.findById(testBlog.user)
-    const validToken = await helper.generateTestToken(testUser)
-
-    await api
-      .delete(`/api/blogs/${testBlog.id}`)
-      .set(`authorization`, `Bearer ${validToken}`)
-      .expect(204)
-
-    const blogsAfterRequest = await helper.blogsInDb()
-
-    assert.strictEqual(blogsAfterRequest.length, blogsBeforeRequest.length - 1)
-  })
-
-  test("returns status 204 if blog doesn't exist", async () => {
-    const nonExistentBlogId = await helper.nonExistingId()
-
-    const testUser = await helper.getSingleTestUser()
-    const validToken = await helper.generateTestToken(testUser)
-
-    await api
-      .delete(`/api/blogs/${nonExistentBlogId}`)
-      .set(`authorization`, `Bearer ${validToken}`)
-      .expect(204)
-  })
-
-  test("fails with status 400 if id is malformatted", async () => {
-    const malformattedBlogId = 12345
-
-    const testUser = await helper.getSingleTestUser()
-    const validToken = await helper.generateTestToken(testUser)
-
-    await api
-      .delete(`/api/blogs/${malformattedBlogId}`)
-      .set(`authorization`, `Bearer ${validToken}`)
-      .expect(400)
-  })
-})
-
-describe("Updating blog", () => {
-  test("succeeds with status 200 if blog is valid", async () => {
-    const testBlog = await helper.getSingleTestBlog()
-
-    const originalLikes = testBlog.likes
-
-    testBlog.likes += 1
-
-    const updatedBlog = await api
-      .put(`/api/blogs/${testBlog.id}`)
-      .send(testBlog)
-      .expect(200)
-      .expect("Content-Type", /application\/json/)
-
-    assert.strictEqual(updatedBlog.body.likes, originalLikes + 1)
-  })
-
-  test("fails with status 404 if blog doesn't exist", async () => {
-    const nonExistentBlogId = await helper.nonExistingId()
-
-    const testBlog = testBlogData.newBlog
-
-    await api
-      .put(`/api/blogs/${nonExistentBlogId}`)
-      .send(testBlog)
-      .expect(404)
-  })
-
-  test("fails with status 400 if id is malformatted", async () => {
-    const malformattedBlogId = 12345
-
-    const testBlog = testBlogData.newBlog
-
-    await api
-      .put(`/api/blogs/${malformattedBlogId}`)
-      .send(testBlog)
-      .expect(400)
-  })
-})
-
 after(async () => {
   mongoose.connection.close()
 })
