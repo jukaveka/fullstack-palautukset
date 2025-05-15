@@ -26,6 +26,15 @@ const favouriteBlog = (blogs) => {
     : blogs.reduce(reducer, 0)
 }
 const findAuthorWithMostBlogs = (blogs) => {
+
+}
+
+
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) {
+    return 0
+  }
+
   const groupedAuthors = groupBy(blogs, "author")
 
   const authors = Object.keys(groupedAuthors)
@@ -44,13 +53,6 @@ const findAuthorWithMostBlogs = (blogs) => {
   })
 
   return authorWithMostBlogs
-}
-
-
-const mostBlogs = (blogs) => {
-  return blogs.length === 0
-    ? 0
-    : findAuthorWithMostBlogs(blogs)
 }
 
 const findAuthorWithMostLikes = (blogs) => {
