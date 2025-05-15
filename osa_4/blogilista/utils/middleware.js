@@ -1,3 +1,5 @@
+const tokenUtil = require("../utils/token")
+
 const errorHandler = (error, request, response, next) => {
   if (error.name === "MongoServerError" && error.message.includes("E11000 duplicate key error")) {
     return response.status(400).json({ error: "Username already exists" })
@@ -22,7 +24,16 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
-module.exports = { 
-  errorHandler, 
-  tokenExtractor
+const userExtractor = (request, response, next) => {
+  const decodedToken = tokenUtil.decodeJwtToken(request.token)
+
+  return !decodedToken.id
+    ? null
+    : decodedToken.id
+}
+
+module.exports = {
+  errorHandler,
+  tokenExtractor,
+  userExtractor
 }
