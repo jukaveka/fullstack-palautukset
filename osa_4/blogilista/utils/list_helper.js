@@ -55,7 +55,10 @@ const mostBlogs = (blogs) => {
   return authorWithMostBlogs
 }
 
-const findAuthorWithMostLikes = (blogs) => {
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return 0
+  }
   const groupedAuthors = groupBy(blogs, "author")
 
   const authors = Object.keys(groupedAuthors)
@@ -80,12 +83,6 @@ const findAuthorWithMostLikes = (blogs) => {
   })
 
   return authorWithMostBlogLikes
-}
-
-const mostLikes = (blogs) => {
-  return blogs.length === 0
-    ? 0
-    : findAuthorWithMostLikes(blogs)
 }
 
 module.exports = { dummy, totalLikes, favouriteBlog, mostBlogs, mostLikes }
