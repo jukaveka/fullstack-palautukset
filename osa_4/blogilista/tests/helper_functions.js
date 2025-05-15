@@ -1,7 +1,7 @@
 const Blog = require("../models/blog")
 const User = require("../models/user")
-const bcrypt = require("bcrypt")
 const tokenUtil = require("../utils/token")
+const hashUtil = require("../utils/hash")
 
 const nonExistingId = async () => {
   const blog = new Blog({ title: "Temp title", author: "Temp author", url: "Temp URL", likes: 0 })
@@ -18,11 +18,9 @@ const blogsInDb = async () => {
 }
 
 const getSingleTestBlog = async () => {
-  const blogs = await Blog.find({})
+  const testBlog = await Blog.findOne({})
 
-  const blogsInJson = blogs.map(blog => blog.toJSON())
-
-  return blogsInJson[0]
+  return testBlog.toJSON()
 }
 
 const usersInDb = async () => {
@@ -43,9 +41,7 @@ const getSingleTestUser = async () => {
   return user.toJSON()
 }
 
-const generateTestUserToken = async () => {
-  const user = await getSingleTestUser()
-
+const generateTestToken = async (user) => {
   return tokenUtil.generateJwtToken(user)
 }
 
@@ -53,21 +49,14 @@ const decodeTestUserToken = (token) => {
   return tokenUtil.decodeJwtToken(token)
 }
 
-const generateValidPasswordHash = async (password) => {
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
-
-  return passwordHash
-}
-
-const generateUserObjectWithHashedPassword = async (testUserObject) => {
-  testUserObject.passwordHash = await generateValidPasswordHash(testUserObject.password)
+const generateHashForUser = async (testUserObject) => {
+  testUserObject.passwordHash = await hashUtil.generatePasswordHash(testUserObject.password)
 
   return testUserObject
 }
 
-const generateTestUsersWithHashedPasswords = async (testUserArray) => {
-  const promiseArray = testUserArray.map(testUser => generateUserObjectWithHashedPassword(testUser))
+const addHashedPasswordsToUsers = async (testUserArray) => {
+  const promiseArray = testUserArray.map(testUser => generateHashForUser(testUser))
 
   return await Promise.all(promiseArray)
 }
@@ -78,9 +67,8 @@ module.exports = {
   getSingleTestBlog,
   usersInDb,
   getValidUserId,
-  generateValidPasswordHash,
-  generateTestUsersWithHashedPasswords,
+  addHashedPasswordsToUsers,
   getSingleTestUser,
-  generateTestUserToken,
+  generateTestToken,
   decodeTestUserToken
 }

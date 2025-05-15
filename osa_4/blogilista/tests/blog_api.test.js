@@ -8,18 +8,23 @@ const User = require("../models/user")
 const testBlogData = require("./test_blogs")
 const testUserData = require("./test_users")
 const helper = require("./helper_functions")
+const blog = require("../models/blog")
 
 const api = supertest(app)
 
 describe("With initial test blogs inserted", () => {
   beforeEach(async () => {
     await User.deleteMany({})
-
-    await User.insertMany(testUserData.listOfTestUsers)
-
     await Blog.deleteMany({})
 
-    await Blog.insertMany(testBlogData.listWithManyBlogs)
+    await User.insertMany(testUserData.listOfTestUsers)
+    const insertedBlogs = await Blog.insertMany(testBlogData.listWithManyBlogs)
+    const insertedBlogIds = insertedBlogs.map(blog => blog._id.toString())
+
+    const user = await User.findOne({})
+
+    await Blog.updateMany({}, { user: user._id })
+    await User.updateOne({ _id: user._id }, { blogs: insertedBlogIds })
   })
 
   describe("Fetching all blogs", () => {
@@ -48,8 +53,8 @@ describe("With initial test blogs inserted", () => {
   describe("Posting new blog", () => {
     test("succeeds with valid blog", async () => {
       const testBlog = testBlogData.newBlog
-
-      const validToken = await helper.generateTestUserToken()
+      const testUser = await helper.getSingleTestUser()
+      const validToken = await helper.generateTestToken(testUser)
 
       const addedBlog = await api
         .post("/api/blogs")
@@ -71,8 +76,8 @@ describe("With initial test blogs inserted", () => {
 
     test("corrects likes to 0 if none are given", async () => {
       const testBlog = testBlogData.newBlogWithoutLikes
-
-      const validToken = await helper.generateTestUserToken()
+      const testUser = await helper.getSingleTestUser()
+      const validToken = await helper.generateTestToken(testUser)
 
       const addedBlog = await api
         .post("/api/blogs")
@@ -86,8 +91,8 @@ describe("With initial test blogs inserted", () => {
 
     test("fails with status 400 if blog is missing title", async () => {
       const testBlog = testBlogData.newBlogWithoutTitle
-
-      const validToken = await helper.generateTestUserToken()
+      const testUser = await helper.getSingleTestUser()
+      const validToken = await helper.generateTestToken(testUser)
 
       await api
         .post("/api/blogs")
@@ -99,8 +104,8 @@ describe("With initial test blogs inserted", () => {
 
     test("fails with status 400 if blog is missing url", async () => {
       const testBlog = testBlogData.newBlogWithoutUrl
-
-      const validToken = await helper.generateTestUserToken()
+      const testUser = await helper.getSingleTestUser()
+      const validToken = await helper.generateTestToken(testUser)
 
       await api
         .post("/api/blogs")
@@ -137,26 +142,43 @@ describe("With initial test blogs inserted", () => {
 
 describe("Deleting blog", () => {
   test("succeeds with status 204 if blog exists", async () => {
+    const blogsBeforeRequest = await helper.blogsInDb()
+
     const testBlog = await helper.getSingleTestBlog()
+    const testUser = await User.findById(testBlog.user)
+    const validToken = await helper.generateTestToken(testUser)
 
     await api
       .delete(`/api/blogs/${testBlog.id}`)
+      .set(`authorization`, `Bearer ${validToken}`)
       .expect(204)
+
+    const blogsAfterRequest = await helper.blogsInDb()
+
+    assert.strictEqual(blogsAfterRequest.length, blogsBeforeRequest.length - 1)
   })
 
   test("returns status 204 if blog doesn't exist", async () => {
     const nonExistentBlogId = await helper.nonExistingId()
 
+    const testUser = await helper.getSingleTestUser()
+    const validToken = await helper.generateTestToken(testUser)
+
     await api
       .delete(`/api/blogs/${nonExistentBlogId}`)
+      .set(`authorization`, `Bearer ${validToken}`)
       .expect(204)
   })
 
   test("fails with status 400 if id is malformatted", async () => {
     const malformattedBlogId = 12345
 
+    const testUser = await helper.getSingleTestUser()
+    const validToken = await helper.generateTestToken(testUser)
+
     await api
       .delete(`/api/blogs/${malformattedBlogId}`)
+      .set(`authorization`, `Bearer ${validToken}`)
       .expect(400)
   })
 })

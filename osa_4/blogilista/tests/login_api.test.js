@@ -14,7 +14,7 @@ describe("With few test users in database", () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
-    const testUsers = await helper.generateTestUsersWithHashedPasswords(testUserData.listOfLoginTestUsers)
+    const testUsers = await helper.addHashedPasswordsToUsers(testUserData.listOfLoginTestUsers)
 
     await User.insertMany(testUsers)
   })

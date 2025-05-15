@@ -31,7 +31,7 @@ describe("With initial test user in database", () => {
     test("succeeds with valid object", async () => {
       const usersBeforeRequest = await helper.usersInDb()
 
-      const newUser = {
+      const validUser = {
         username: "tomtailor",
         name: "tom",
         password: "seunohdettutom"
@@ -39,7 +39,7 @@ describe("With initial test user in database", () => {
 
       const addedUser = await api
         .post("/api/users")
-        .send(newUser)
+        .send(validUser)
         .expect(201)
         .expect("Content-Type", /application\/json/)
 
@@ -47,13 +47,13 @@ describe("With initial test user in database", () => {
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length + 1)
 
       const usernames = usersAfterRequest.map(user => user.username)
-      assert(usernames.includes(newUser.username))
+      assert(usernames.includes(validUser.username))
     })
 
     test("fails with status 400 if username is under 3 characters", async () => {
       const usersBeforeRequest = await helper.usersInDb()
 
-      const newUser = {
+      const userWithInvalidUsername = {
         username: "to",
         name: "Tom",
         password: "seunohdettutom"
@@ -61,7 +61,7 @@ describe("With initial test user in database", () => {
 
       const response = await api
         .post("/api/users")
-        .send(newUser)
+        .send(userWithInvalidUsername)
         .expect(400)
         .expect("Content-Type", /application\/json/)
 
@@ -74,7 +74,7 @@ describe("With initial test user in database", () => {
     test("fails with status 400 if password is under 3 characters", async () => {
       const usersBeforeRequest = await helper.usersInDb()
 
-      const newUser = {
+      const userWithInvalidPassword = {
         username: "Testiorava",
         name: "Orava",
         password: "ti"
@@ -82,7 +82,7 @@ describe("With initial test user in database", () => {
 
       const response = await api
         .post("/api/users")
-        .send(newUser)
+        .send(userWithInvalidPassword)
         .expect(400)
         .expect("Content-Type", /application\/json/)
 
@@ -95,7 +95,7 @@ describe("With initial test user in database", () => {
     test("fails with status 400 if username already exists", async () => {
       const usersBeforeRequest = await helper.usersInDb()
 
-      const newUser = {
+      const userWIthExistingUsername = {
         username: "Testimies",
         name: "Mies",
         password: "Testimiehensalasana"
@@ -103,11 +103,12 @@ describe("With initial test user in database", () => {
 
       await api
         .post("/api/users")
-        .send(newUser)
+        .send(userWIthExistingUsername)
         .expect(400)
         .expect("Content-Type", /application\/json/)
 
       const usersAfterRequest = await helper.usersInDb()
+      console.log("Users after request", usersAfterRequest)
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
     })
   })

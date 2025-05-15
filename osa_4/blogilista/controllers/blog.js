@@ -53,7 +53,11 @@ blogRouter.delete('/:id', async (request, response) => {
     response.status(400).json({ error: "Malformatted id" })
   }
 
-  const blog = await blog.findById(request.params.id)
+  const blog = await Blog.findById(request.params.id)
+
+  if (!blog) {
+    response.status(204).end()
+  }
 
   if (!blog.user.toString() === decodedToken.id) {
     return response.status(401).json({ error: "invalid token for deleting blog" })
