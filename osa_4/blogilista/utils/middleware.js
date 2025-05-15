@@ -27,9 +27,11 @@ const tokenExtractor = (request, response, next) => {
 const userExtractor = (request, response, next) => {
   const decodedToken = tokenUtil.decodeJwtToken(request.token)
 
-  return !decodedToken.id
+  request.user = !decodedToken.id
     ? null
     : decodedToken.id
+
+  next()
 }
 
 module.exports = {

@@ -3,6 +3,7 @@ const blogRouter = require("express").Router()
 const Blog = require("../models/blog")
 const User = require("../models/user")
 const tokenUtil = require("../utils/token")
+const { userExtractor } = require("../utils/middleware")
 
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -12,7 +13,7 @@ blogRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogRouter.post('/', async (request, response, next) => {
+blogRouter.post('/', userExtractor, async (request, response, next) => {
   const decodedToken = tokenUtil.decodeJwtToken(request.token)
 
   if (!decodedToken.id) {
@@ -20,7 +21,7 @@ blogRouter.post('/', async (request, response, next) => {
   }
 
   const body = request.body
-  const user = await User.findById(decodedToken.id)
+  const user = await User.findById(request.user)
 
   if (!body.title || !body.url || !user) {
     response.status(400).json({ error: "Request is missing required content, like title or url" })
@@ -42,7 +43,7 @@ blogRouter.post('/', async (request, response, next) => {
   response.status(201).json(addedBlog)
 })
 
-blogRouter.delete('/:id', async (request, response) => {
+blogRouter.delete('/:id', userExtractor, async (request, response) => {
   const decodedToken = tokenUtil.decodeJwtToken(request.token)
 
   if (!decodedToken.id) {
@@ -59,7 +60,7 @@ blogRouter.delete('/:id', async (request, response) => {
     response.status(204).end()
   }
 
-  if (!blog.user.toString() === decodedToken.id) {
+  if (!blog.user.toString() === request.user) {
     return response.status(401).json({ error: "invalid token for deleting blog" })
   }
 
