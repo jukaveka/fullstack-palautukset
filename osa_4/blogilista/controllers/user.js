@@ -9,47 +9,32 @@ const isInputLengthValid = (input, minLength) => {
 userRouter.get("/", async (request, response) => {
   const users = await User
     .find({})
-    .populate("blogs", { url: 1, title: 1, author: 1})
+    .populate("blogs", { url: 1, title: 1, author: 1 })
 
   response.json(users)
 })
 
 userRouter.post("/", async (request, response, next) => {
   const { username, name, password } = request.body
-
-  console.log(username, "checking name and password length")
-
-  if ( !isInputLengthValid(username, 3) || !isInputLengthValid(password, 3) ) {
-    response.status(400).json({ error: "Username and password must be at least 3 characters" }).end()
-  }
-
-  console.log(username, "querying database for user ith same username")
-
   const usernameExists = await User.findOne({ username: username })
 
-  console.log(username, "checking if user already exists")
+  if (!isInputLengthValid(username, 3) || !isInputLengthValid(password, 3)) {
+    response.status(400).json({ error: "Username and password must be at least 3 characters" })
+  } else if (usernameExists) {
+    response.status(400).json({ error: "Username already exists" })
+  } else {
+    const passwordHash = await hashUtil.generatePasswordHash(password)
 
-  if ( usernameExists ) {
-    response.status(400).json({ error: "Username already exists"}).end()
+    const newUser = new User({
+      username: username,
+      name: name,
+      passwordHash: passwordHash
+    })
+
+    const addedUser = await newUser.save()
+
+    response.status(201).json(addedUser)
   }
-
-  console.log(username, "generating password hash")
-
-  const passwordHash = await hashUtil.generatePasswordHash(password)
-
-  console.log(username, "generating new user from model")
-
-  const newUser = new User({
-    username: username,
-    name: name,
-    passwordHash: passwordHash
-  })
-
-  console.log(username, "saving generated user to database")
-
-  const addedUser = await newUser.save()
-
-  response.status(201).json(addedUser)
 })
 
 module.exports = userRouter

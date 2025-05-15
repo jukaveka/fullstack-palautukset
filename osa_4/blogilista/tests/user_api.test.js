@@ -108,7 +108,6 @@ describe("With initial test user in database", () => {
         .expect("Content-Type", /application\/json/)
 
       const usersAfterRequest = await helper.usersInDb()
-      console.log("Users after request", usersAfterRequest)
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
     })
   })
