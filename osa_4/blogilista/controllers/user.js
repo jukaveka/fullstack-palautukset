@@ -19,9 +19,9 @@ userRouter.post("/", async (request, response, next) => {
   const usernameExists = await User.findOne({ username: username })
 
   if (!isInputLengthValid(username, 3) || !isInputLengthValid(password, 3)) {
-    response.status(400).json({ error: "Username and password must be at least 3 characters" })
+    return response.status(400).json({ error: "Username and password must be at least 3 characters" })
   } else if (usernameExists) {
-    response.status(400).json({ error: "Username already exists" })
+    return response.status(400).json({ error: "Username already exists" })
   } else {
     const passwordHash = await hashUtil.generatePasswordHash(password)
 

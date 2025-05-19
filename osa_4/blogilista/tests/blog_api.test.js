@@ -8,7 +8,6 @@ const User = require("../models/user")
 const testBlogData = require("./blog_test_data")
 const testUserData = require("./user_test_data")
 const helper = require("./test_functions")
-const blog = require("../models/blog")
 
 const api = supertest(app)
 

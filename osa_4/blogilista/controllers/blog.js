@@ -5,6 +5,108 @@ const User = require("../models/user")
 const tokenUtil = require("../utils/token")
 const { userExtractor } = require("../utils/middleware")
 
+const saveBlog = async (blog, request, user) => {
+  blog.title = request.title
+  blog.author = request.author
+  blog.url = request.url
+  blog.user = user
+  blog.likes = !request.likes
+    ? 0
+    : request.likes
+
+  return await blog.save()
+}
+
+const findBlog = async (id) => {
+  return await Blog.findById(id)
+}
+
+const findUser = async (id) => {
+  return await User.findById(id)
+}
+
+const requestIdIsInvalid = (id) => {
+  return !mongoose.Types.ObjectId.isValid(id)
+}
+
+const requestMissingRequiredInformation = (requestBody) => {
+  return !(requestBody.title && requestBody.url)
+}
+
+const invalidToken = (token) => {
+  const decodedToken = tokenUtil.decodeJwtToken(token)
+
+  return !decodedToken.id
+}
+
+const deleteBlog = async (id) => {
+  return await Blog.findByIdAndDelete(id)
+}
+
+const nonexistentBlog = async (id) => {
+  const blog = await findBlog(id)
+
+  return !blog
+}
+
+const invalidUserForDeletion = async (id, requestUser) => {
+  const blog = await findBlog(id)
+
+  return !blog.user.toString() === requestUser
+}
+
+const generateErrorResponseObject = (status, message) => {
+  return {
+    invalidRequest: true,
+    status: status,
+    error: message
+  }
+}
+
+const validResponseObject = { invalidRequest: false}
+
+const validateBlogDeletionRequest = async (request) => {
+  if (invalidToken(request.token)) {
+    return generateErrorResponseObject(401, "invalid token")
+  }
+
+  if ( requestIdIsInvalid(request.params.id) ) {
+    return generateErrorResponseObject(400, "Malformatted id") 
+  }
+
+  const blogIsNonexistent = await nonexistentBlog(request.params.id)
+  
+  if (blogIsNonexistent) {
+    return generateErrorResponseObject(204, "Blog with given id not found") 
+  }
+
+  const userIsNotAuthorizedForOperation = await invalidUserForDeletion(request.params.id, request.user)
+  
+  if (userIsNotAuthorizedForOperation) {
+    return generateErrorResponseObject(401, "Invalid token for deleting blog") 
+  }
+
+  return validResponseObject
+}
+
+const validateBlogUpdateRequest = async (request) => {
+  if ( requestIdIsInvalid(request.params.id) ) {
+    return generateErrorResponseObject(400, "Malformatted id")
+  }
+  
+  if ( requestMissingRequiredInformation(request.body) ) {
+    return generateErrorResponseObject(400, "title or url can't be empty")
+  }
+
+  const blogIsNonexistent = await nonexistentBlog(request.params.id)
+  
+  if (blogIsNonexistent) {
+    return generateErrorResponseObject(404, "Blog with given id not found")
+  }
+
+  return validResponseObject
+}
+
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
@@ -21,80 +123,44 @@ blogRouter.post('/', userExtractor, async (request, response, next) => {
   }
 
   const body = request.body
-  const user = await User.findById(request.user)
 
-  if (!body.title || !body.url || !user) {
-    response.status(400).json({ error: "Request is missing required content, like title or url" })
+  if (!body.title || !body.url) {
+    return response.status(400).json({ error: "Request is missing required content, like title or url" })
   }
 
-  const blog = new Blog({
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    user: user._id,
-    likes: body.likes || 0
-  })
+  const blog = new Blog()
 
-  const addedBlog = await blog.save()
+  const addedBlog = await saveBlog(blog, request.body, request.user)
 
-  user.blogs = user.blogs.concat(addedBlog._id)
-  await user.save()
+  const blogUser = await findUser(addedBlog.user)
+
+  blogUser.blogs = blogUser.blogs.concat(addedBlog._id)
+  await blogUser.save()
 
   response.status(201).json(addedBlog)
 })
 
-blogRouter.delete('/:id', userExtractor, async (request, response) => {
-  const decodedToken = tokenUtil.decodeJwtToken(request.token)
+blogRouter.delete('/:id', userExtractor, async (request, response, next) => {
+  const validatedRequest = await validateBlogDeletionRequest(request)
 
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "invalid token" })
+  if (validatedRequest.invalidRequest) {
+    return response.status(validatedRequest.status).json({ error: validatedRequest.error })
   }
 
-  if (!mongoose.Types.ObjectId.isValid(request.params.id)) {
-    response.status(400).json({ error: "Malformatted id" })
-  }
-
-  const blog = await Blog.findById(request.params.id)
-
-  if (!blog) {
-    response.status(204).end()
-  }
-
-  if (!blog.user.toString() === request.user) {
-    return response.status(401).json({ error: "invalid token for deleting blog" })
-  }
-
-  await Blog.findByIdAndDelete(request.params.id)
+  await deleteBlog(request.params.id)
   response.status(204).end()
 })
 
-blogRouter.put("/:id", async (request, response) => {
-  if (!mongoose.Types.ObjectId.isValid(request.params.id)) {
-    response.status(400).json({ error: "Malformatted id" })
+blogRouter.put("/:id", async (request, response, next) => {
+  const validatedRequest = await validateBlogUpdateRequest(request)
+
+  if (validatedRequest.invalidRequest) {
+    return response.status(validatedRequest.status).json({ error: validatedRequest.error })
   }
 
-  const { title, author, url, likes, id } = request.body
+  const blog = await findBlog(request.params.id)
 
-  if (!title || !url) {
-    response.status(400).json({ error: "title and url can't be empty" })
-  }
-
-  const blogExists = await Blog.countDocuments({ _id: id })
-
-  if (blogExists === 0) {
-    response.status(404).json({ error: "Document with given ID doesn't exist " })
-  }
-
-  const blog = await Blog.findById(request.params.id)
-
-  blog.title = title
-  blog.author = author
-  blog.url = url
-  blog.likes = !likes
-    ? 0
-    : likes
-
-  const updatedBlog = await blog.save()
+  const updatedBlog = await saveBlog(blog, request.body, blog.user)
 
   response.json(updatedBlog)
 })
