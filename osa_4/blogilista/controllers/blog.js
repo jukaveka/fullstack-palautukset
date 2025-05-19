@@ -107,6 +107,18 @@ const validateBlogUpdateRequest = async (request) => {
   return validResponseObject
 }
 
+const validateBlogPostRequest = (request) => {
+  if (invalidToken(request.token)) {
+    return generateErrorResponseObject(401, "invalid token")
+  }
+
+  if (requestMissingRequiredInformation(request.body)) {
+    return generateErrorResponseObject(400, "title or url can't be empty")
+  }
+
+  return validResponseObject
+}
+
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
@@ -116,21 +128,13 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.post('/', userExtractor, async (request, response, next) => {
-  const decodedToken = tokenUtil.decodeJwtToken(request.token)
+  const validatedRequest = validateBlogPostRequest(request)
 
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "invalid token" })
+  if (validatedRequest.invalidRequest) {
+    return response.status(validatedRequest.status).json({ error: validatedRequest.error })
   }
 
-  const body = request.body
-
-  if (!body.title || !body.url) {
-    return response.status(400).json({ error: "Request is missing required content, like title or url" })
-  }
-
-  const blog = new Blog()
-
-  const addedBlog = await saveBlog(blog, request.body, request.user)
+  const addedBlog = await saveBlog(new Blog(), request.body, request.user)
 
   const blogUser = await findUser(addedBlog.user)
 
