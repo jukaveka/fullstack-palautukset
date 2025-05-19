@@ -119,6 +119,17 @@ const validateBlogPostRequest = (request) => {
   return validResponseObject
 }
 
+const saveBlogAndUpdateUser = async (request) => {
+  const addedBlog = await saveBlog(new Blog(), request.body, request.user)
+
+  const blogUser = await findUser(addedBlog.user)
+
+  blogUser.blogs = blogUser.blogs.concat(addedBlog._id)
+  await blogUser.save()
+
+  return addedBlog
+}
+
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
@@ -134,12 +145,7 @@ blogRouter.post('/', userExtractor, async (request, response, next) => {
     return response.status(validatedRequest.status).json({ error: validatedRequest.error })
   }
 
-  const addedBlog = await saveBlog(new Blog(), request.body, request.user)
-
-  const blogUser = await findUser(addedBlog.user)
-
-  blogUser.blogs = blogUser.blogs.concat(addedBlog._id)
-  await blogUser.save()
+  const addedBlog = await saveBlogAndUpdateUser(request)
 
   response.status(201).json(addedBlog)
 })
