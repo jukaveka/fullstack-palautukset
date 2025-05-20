@@ -68,7 +68,7 @@ describe("With initial test user in database", () => {
       const usersAfterRequest = await helper.usersInDb()
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
 
-      assert(response.error.text.includes("Username and password must be at least 3 characters"))
+      assert(response.error.text.includes("Username must be at least 3 characters"))
     })
 
     test("fails with status 400 if password is under 3 characters", async () => {
@@ -89,7 +89,7 @@ describe("With initial test user in database", () => {
       const usersAfterRequest = await helper.usersInDb()
       assert.strictEqual(usersAfterRequest.length, usersBeforeRequest.length)
 
-      assert(response.error.text.includes("Username and password must be at least 3 characters"))
+      assert(response.error.text.includes("Password must be at least 3 characters"))
     })
 
     test("fails with status 400 if username already exists", async () => {

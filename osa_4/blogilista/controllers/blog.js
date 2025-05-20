@@ -63,7 +63,7 @@ const generateErrorResponseObject = (status, message) => {
   }
 }
 
-const validResponseObject = { invalidRequest: false}
+const validResponseObject = { invalidRequest: false }
 
 const validateBlogDeletionRequest = async (request) => {
   if (invalidToken(request.token)) {
@@ -130,10 +130,16 @@ const saveBlogAndUpdateUser = async (request) => {
   return addedBlog
 }
 
-blogRouter.get('/', async (request, response) => {
+const fetchAllBlogs = async () => {
   const blogs = await Blog
     .find({})
     .populate("user", { username: 1, name: 1 })
+
+  return blogs
+}
+
+blogRouter.get('/', async (request, response) => {
+  const blogs = await fetchAllBlogs()
 
   response.json(blogs)
 })
@@ -158,6 +164,7 @@ blogRouter.delete('/:id', userExtractor, async (request, response, next) => {
   }
 
   await deleteBlog(request.params.id)
+
   response.status(204).end()
 })
 
