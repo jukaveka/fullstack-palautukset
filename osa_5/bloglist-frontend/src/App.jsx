@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
+import LoggedUser from './components/LoggedUser'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -15,8 +16,11 @@ const App = () => {
 
   return (
     <div>
-      {!user && (<LoginForm />)}
-      {user && (<BlogList blogs={blogs}/>)}
+      {!user && (<LoginForm setUser={setUser} />)}
+      {user && [
+        <LoggedUser user={user} />,
+        <BlogList blogs={blogs} />
+        ]}
     </div>
   )
 }
