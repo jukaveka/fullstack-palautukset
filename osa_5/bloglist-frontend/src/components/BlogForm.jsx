@@ -3,12 +3,12 @@ import Input from "./Input"
 import Button from "./Button"
 import BlogService from "../services/blogs"
 
-const BlogForm = () => {
+const BlogForm = ({ blogs, setBlogs }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
 
-  const handleNewBlog = event => {
+  const handleNewBlog = async event => {
     event.preventDefault()
 
     console.log("Button clicked to add new blog")
@@ -22,8 +22,19 @@ const BlogForm = () => {
       author: author,
       url: url
     }
+    try {
+      const addedBlog = await BlogService.create(newBlog)
 
-    BlogService.create(newBlog)
+      const newBlogs = blogs.concat(addedBlog)
+      setBlogs(newBlogs)
+
+      setTitle("")
+      setAuthor("")
+      setUrl("")
+    } catch (exception) {
+      console.log("Error with adding blog")
+      console.log("Exception", exception.message)
+    }
   }
 
   return (
@@ -37,19 +48,19 @@ const BlogForm = () => {
           value={title}
           onChange={({ target }) => setTitle(target.value)}
         />
-        <Input 
+        <Input
           label="Author"
           type="text"
           value={author}
           onChange={({ target }) => setAuthor(target.value)}
         />
-        <Input 
+        <Input
           label="URL"
           type="text"
           value={url}
           onChange={({ target }) => setUrl(target.value)}
         />
-        <Button 
+        <Button
           text="Add blog"
           onClick={handleNewBlog}
         />

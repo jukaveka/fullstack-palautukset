@@ -31,8 +31,8 @@ const App = () => {
       {!user && (<LoginForm setUser={setUser} />)}
       {user && [
         <BlogList blogs={blogs} />,
-        <BlogForm />,
-        <LoggedUser user={user} setUser={setUser}/>
+        <BlogForm blogs={blogs} setBlogs={setBlogs} />,
+        <LoggedUser user={user} setUser={setUser} />
         ]}
     </div>
   )
