@@ -14,12 +14,22 @@ const App = () => {
     )
   }, [])
 
+  useEffect(() => {
+    const userInLocalStorage = window.localStorage.getItem("LoggedBlogUser")
+
+    if (userInLocalStorage) {
+      const user = JSON.parse(userInLocalStorage)
+
+      setUser(user)
+    }
+  }, [])
+
   return (
     <div>
       {!user && (<LoginForm setUser={setUser} />)}
       {user && [
         <BlogList blogs={blogs} />,
-        <LoggedUser user={user} />
+        <LoggedUser user={user} setUser={setUser}/>
         ]}
     </div>
   )
