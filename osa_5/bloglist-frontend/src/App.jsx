@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import LoggedUser from './components/LoggedUser'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
       {!user && (<LoginForm setUser={setUser} />)}
       {user && [
         <BlogList blogs={blogs} />,
+        <BlogForm />,
         <LoggedUser user={user} setUser={setUser}/>
         ]}
     </div>
