@@ -1,7 +1,8 @@
 const LoggedUser = ({ user }) => {
   return (
     <div>
-      <p> {user.name} logged in </p>
+      <hr/>
+      <p> Logged in as {user.name} </p>
     </div>
   )
 }
