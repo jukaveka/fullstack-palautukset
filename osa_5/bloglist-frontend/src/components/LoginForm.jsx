@@ -1,7 +1,7 @@
 import { useState } from "react"
 import loginService from "../services/login"
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
@@ -18,7 +18,16 @@ const LoginForm = ({ setUser }) => {
       setPassword("")
     } catch (exception) {
       console.log("error with logging in")
-      console.log("Exception", exception)
+      console.log("Exception", exception.message)
+
+      console.log("Setting error message")
+      setErrorMessage("Wrong username or password")
+
+      console.log("Setting timeout to clear error message in 5 seconds")
+      setTimeout(() => {
+        console.log("Clearing error message")
+        setErrorMessage(null)
+      }, 5000)
     }
   }
 
