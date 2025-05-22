@@ -3,7 +3,7 @@ import Input from "./Input"
 import Button from "./Button"
 import BlogService from "../services/blogs"
 
-const BlogForm = ({ blogs, setBlogs }) => {
+const BlogForm = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -31,9 +31,19 @@ const BlogForm = ({ blogs, setBlogs }) => {
       setTitle("")
       setAuthor("")
       setUrl("")
+
+      setSuccessMessage(`${addedBlog.title} added to list`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
     } catch (exception) {
       console.log("Error with adding blog")
       console.log("Exception", exception.message)
+
+      setErrorMessage("Adding blog failed")
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
   }
 
