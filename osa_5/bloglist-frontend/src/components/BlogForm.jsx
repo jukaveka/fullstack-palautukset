@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Input from "./Input"
 import Button from "./Button"
+import BlogService from "../services/blogs"
 
 const BlogForm = () => {
   const [title, setTitle] = useState("")
@@ -15,6 +16,14 @@ const BlogForm = () => {
     console.log("Title", title)
     console.log("Author", author)
     console.log("URL", url)
+
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url
+    }
+
+    BlogService.create(newBlog)
   }
 
   return (

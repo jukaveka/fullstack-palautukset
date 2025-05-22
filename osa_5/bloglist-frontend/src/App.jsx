@@ -22,6 +22,7 @@ const App = () => {
       const user = JSON.parse(userInLocalStorage)
 
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
