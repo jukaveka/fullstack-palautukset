@@ -16,16 +16,17 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
 
       setUsername("")
       setPassword("")
+
+      setSuccessMessage("Login successful")
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
     } catch (exception) {
       console.log("error with logging in")
       console.log("Exception", exception.message)
 
-      console.log("Setting error message")
       setErrorMessage("Wrong username or password")
-
-      console.log("Setting timeout to clear error message in 5 seconds")
       setTimeout(() => {
-        console.log("Clearing error message")
         setErrorMessage(null)
       }, 5000)
     }
