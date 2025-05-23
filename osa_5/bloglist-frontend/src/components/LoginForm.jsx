@@ -1,4 +1,6 @@
 import { useState } from "react"
+import Input from './Input'
+import Button from './Button'
 import loginService from "../services/login"
 
 const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
@@ -37,26 +39,25 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
       <form>
         <div>
           <h2> Login </h2>
-          <p> Username </p>
-          <input
+          <Input
+            label="Username"
             type="text"
             value={username}
             onChange={({ target }) => setUsername(target.value)}
-            name="login-username"
           />
         </div>
         <div>
-          <p> Password </p>
-          <input
+          <Input
+            label="Password"
             type="text"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
-            name="login-password"
           />
         </div>
-        <p>
-          <button type="submit" onClick={handleLogin}> Login </button>
-        </p>
+        <Button
+          text="Login"
+          onClick={handleLogin}
+        />
       </form>
     </div>
   )
