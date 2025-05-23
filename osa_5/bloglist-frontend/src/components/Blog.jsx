@@ -1,9 +1,14 @@
 import Togglable from "./Togglable"
 import Button from "./Button"
+import blogService from "../services/blogs"
 
-const Blog = ({ blog }) => {
-  const handleLike = () => {
-    console.log("Jeps")
+const Blog = ({ blog, updateBlogs }) => {
+  const handleLike = async () => {
+    const newLikes = blog.likes + 1
+    const updatedBlog = {...blog, likes: newLikes, user: blog.user.id}
+
+    const returnedBlog = await blogService.addLike(updatedBlog)
+    updateBlogs(returnedBlog)
   }
 
   return (
