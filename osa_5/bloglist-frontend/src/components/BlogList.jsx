@@ -1,5 +1,4 @@
 import Blog from './Blog'
-
 const BlogList = ({ blogs }) => {
 
   return (

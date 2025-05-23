@@ -36,7 +36,7 @@ const App = () => {
       {!user && (<LoginForm setUser={setUser} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />)}
       {user && [
         <BlogList blogs={blogs} />,
-        <Togglable buttonLabel="Add new blog">
+        <Togglable showLabel="Add new blog" hideLabel="Cancel" >
           <BlogForm blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />
         </Togglable>,
         <LoggedUser user={user} setUser={setUser} />
