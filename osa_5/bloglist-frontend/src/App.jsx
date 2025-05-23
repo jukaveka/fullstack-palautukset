@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm'
 import LoggedUser from './components/LoggedUser'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -31,13 +32,15 @@ const App = () => {
 
   return (
     <div>
-      {(successMessage || errorMessage) && ( <Notification successMessage={successMessage} errorMessage={errorMessage} />)}
+      {(successMessage || errorMessage) && (<Notification successMessage={successMessage} errorMessage={errorMessage} />)}
       {!user && (<LoginForm setUser={setUser} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />)}
       {user && [
         <BlogList blogs={blogs} />,
-        <BlogForm blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />,
+        <Togglable buttonLabel="Add new blog">
+          <BlogForm blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />
+        </Togglable>,
         <LoggedUser user={user} setUser={setUser} />
-        ]}
+      ]}
     </div>
   )
 }
