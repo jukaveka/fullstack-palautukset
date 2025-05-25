@@ -1,11 +1,13 @@
 const Button = ({ text, onClick }) => {
+  const buttonStyle = {
+    margin: "10px 2px"
+  }
+
   return (
     <>
-      <p>
-        <button onClick={onClick}>
-          {text}
-        </button>
-      </p>
+      <button style={buttonStyle} onClick={onClick}>
+        {text}
+      </button>
     </>
   )
 }
