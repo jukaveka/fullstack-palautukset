@@ -1,11 +1,7 @@
-const Button = ({ text, onClick }) => {
-  const buttonStyle = {
-    margin: "10px 2px"
-  }
-
+const Button = ({ text, onClick, style}) => {
   return (
     <>
-      <button style={buttonStyle} onClick={onClick}>
+      <button style={style} onClick={onClick}>
         {text}
       </button>
     </>
