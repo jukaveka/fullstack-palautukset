@@ -2,7 +2,7 @@ import Togglable from "./Togglable"
 import Button from "./Button"
 import blogService from "../services/blogs"
 
-const Blog = ({ blog, updateBlogs }) => {
+const Blog = ({ blog, updateBlogs, removeBlog}) => {
   const blogStyle = {
     padding: "5px",
     margin: "5px",
@@ -28,10 +28,6 @@ const Blog = ({ blog, updateBlogs }) => {
     updateBlogs(returnedBlog)
   }
 
-  const handleRemoval = async () => {
-
-  }
-
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
@@ -39,7 +35,7 @@ const Blog = ({ blog, updateBlogs }) => {
         <p>{blog.url}</p>
         <p>likes {blog.likes} <Button text="Like" onClick={handleLike} style={likeButtonStyle}/></p>
         <p>{blog.user.name}</p>
-        <Button text="Remove" onClick={handleRemoval} style={removalButtonStyle} />
+        <Button text="Remove" onClick={removeBlog} style={removalButtonStyle} />
       </Togglable>
     </div>
   )

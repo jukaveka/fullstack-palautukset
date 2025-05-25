@@ -35,7 +35,7 @@ const App = () => {
       {(successMessage || errorMessage) && (<Notification successMessage={successMessage} errorMessage={errorMessage} />)}
       {!user && (<LoginForm setUser={setUser} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />)}
       {user && [
-        <BlogList key="Bloglist" blogs={blogs} setBlogs={setBlogs} />,
+        <BlogList key="Bloglist" blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />,
         <Togglable key="BlogForm" showLabel="Add new blog" hideLabel="Cancel" >
           <BlogForm blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />
         </Togglable>,

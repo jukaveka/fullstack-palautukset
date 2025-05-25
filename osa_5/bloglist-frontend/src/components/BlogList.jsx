@@ -1,5 +1,7 @@
 import Blog from './Blog'
-const BlogList = ({ blogs, setBlogs }) => {
+import BlogService from '../services/blogs'
+
+const BlogList = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
   const updateBlogs = (updatedBlog) => {
     const blogIndex = blogs.findIndex((blog) => blog.id === updatedBlog.id)
 
@@ -8,13 +10,42 @@ const BlogList = ({ blogs, setBlogs }) => {
     setBlogs(updatedBlogs)
   }
 
+  const removeBlogBy = async (blogToRemove) => {
+    if (window.confirm(`Are you sure you want to remove blog ${blogToRemove.title} by ${blogToRemove.author}`)) {
+      try {
+        const response = await BlogService.remove(blogToRemove)
+
+        const removedBlogIndex = blogs.findIndex((blog) => blog.id === blogToRemove.id)
+        const blogsAfterRemoval = blogs.toSpliced(removedBlogIndex, 1)
+
+        setBlogs(blogsAfterRemoval)
+
+        setSuccessMessage(`Blog ${blogToRemove.title} from ${blogToRemove.author} removed from list.`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      } catch (exception) {
+        setErrorMessage(exception.message)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
+
+    }
+  }
+
   const sortedBlogs = blogs.toSorted((a, b) => a.likes > b.likes ? -1 : 1)
 
   return (
     <div>
       <h2>All blogs</h2>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlogs={updateBlogs} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          updateBlogs={updateBlogs}
+          removeBlog={() => removeBlogBy(blog)}
+        />
       )}
     </div>
   )
