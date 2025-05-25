@@ -8,10 +8,12 @@ const BlogList = ({ blogs, setBlogs }) => {
     setBlogs(updatedBlogs)
   }
 
+  const sortedBlogs = blogs.toSorted((a, b) => a.likes > b.likes ? -1 : 1)
+
   return (
     <div>
       <h2>All blogs</h2>
-      {blogs.map(blog =>
+      {sortedBlogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateBlogs={updateBlogs} />
       )}
     </div>
