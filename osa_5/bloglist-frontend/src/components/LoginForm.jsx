@@ -2,10 +2,17 @@ import { useState } from "react"
 import Input from './Input'
 import Button from './Button'
 import loginService from "../services/login"
+import PropTypes from "prop-types"
 
 const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+
+  const buttonStyle = {
+    color: "white",
+    backgroundColor: "#4C5C68",
+    margin: "2px"
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -54,13 +61,21 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
+        <br/>
         <Button
           text="Login"
           onClick={handleLogin}
+          style={buttonStyle}
         />
       </form>
     </div>
   )
+}
+
+LoginForm.propTypes = {
+  setUser: PropTypes.func.isRequired, 
+  setSuccessMessage: PropTypes.func.isRequired, 
+  setErrorMessage: PropTypes.func.isRequired
 }
 
 export default LoginForm

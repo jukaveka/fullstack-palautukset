@@ -1,8 +1,9 @@
 import Togglable from "./Togglable"
 import Button from "./Button"
 import blogService from "../services/blogs"
+import PropTypes from "prop-types"
 
-const Blog = ({ blog, updateBlogs, removeBlog}) => {
+const Blog = ({ blog, updateBlogs, removeBlog }) => {
   const blogStyle = {
     padding: "5px",
     margin: "5px",
@@ -43,5 +44,10 @@ const Blog = ({ blog, updateBlogs, removeBlog}) => {
   )
 }
 
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired, 
+  updateBlogs: PropTypes.func.isRequired, 
+  removeBlog: PropTypes.func.isRequired
+}
 
 export default Blog

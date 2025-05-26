@@ -1,5 +1,6 @@
 import Blog from './Blog'
 import BlogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const BlogList = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
   const updateBlogs = (updatedBlog) => {
@@ -49,6 +50,13 @@ const BlogList = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
       )}
     </div>
   )
+}
+
+BlogList.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  setSuccessMessage: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired
 }
 
 export default BlogList

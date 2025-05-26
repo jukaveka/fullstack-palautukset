@@ -1,4 +1,5 @@
 import Button from './Button'
+import PropTypes from 'prop-types'
 
 const LoggedUser = ({ user, setUser }) => {
   const logoutButtonStyle = {
@@ -23,6 +24,11 @@ const LoggedUser = ({ user, setUser }) => {
       <Button text="Logout" onClick={handleLogout} style={logoutButtonStyle}/>
     </div>
   )
+}
+
+LoggedUser.propTypes = {
+  user: PropTypes.object.isRequired,
+  setUser: PropTypes.func.isRequired
 }
 
 export default LoggedUser
