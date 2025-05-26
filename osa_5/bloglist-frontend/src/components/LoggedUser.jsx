@@ -3,7 +3,8 @@ import Button from './Button'
 const LoggedUser = ({ user, setUser }) => {
   const logoutButtonStyle = {
     color: "white",
-    backgroundColor: "#4C5C68"
+    backgroundColor: "#4C5C68",
+    margin: "2px"
   }
 
   const handleLogout = event => {

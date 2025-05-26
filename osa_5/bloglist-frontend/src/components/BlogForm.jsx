@@ -8,20 +8,21 @@ const BlogForm = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
 
+  const buttonStyle = {
+    color: "white",
+    backgroundColor: "#8FA998",
+    margin: "5px"
+  }
+
   const handleNewBlog = async event => {
     event.preventDefault()
-
-    console.log("Button clicked to add new blog")
-    console.log("User has inputted following for new blog")
-    console.log("Title", title)
-    console.log("Author", author)
-    console.log("URL", url)
 
     const newBlog = {
       title: title,
       author: author,
       url: url
     }
+
     try {
       const addedBlog = await BlogService.create(newBlog)
 
@@ -37,10 +38,7 @@ const BlogForm = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
         setSuccessMessage(null)
       }, 5000)
     } catch (exception) {
-      console.log("Error with adding blog")
-      console.log("Exception", exception.message)
-
-      setErrorMessage("Adding blog failed")
+      setErrorMessage(`Adding blog failed - ${exception.message}`)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -52,27 +50,30 @@ const BlogForm = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
       <hr />
       <h2> Add new blog </h2>
       <form>
-        <Input
-          label="Title"
-          type="text"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
-        <Input
-          label="Author"
-          type="text"
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-        <Input
-          label="URL"
-          type="text"
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
-        />
+        <p>
+          <Input
+            label="Title"
+            type="text"
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+          />
+          <Input
+            label="Author"
+            type="text"
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+          <Input
+            label="URL"
+            type="text"
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </p>
         <Button
           text="Add blog"
           onClick={handleNewBlog}
+          style={buttonStyle}
         />
       </form>
     </div>
