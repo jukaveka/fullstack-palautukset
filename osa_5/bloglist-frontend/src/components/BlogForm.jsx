@@ -14,6 +14,10 @@ const BlogForm = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
     margin: "5px"
   }
 
+  const hrStyle = {
+    border: "2px solid #CFD2CD"
+  }
+
   const handleNewBlog = async event => {
     event.preventDefault()
 
@@ -47,29 +51,28 @@ const BlogForm = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
 
   return (
     <div>
-      <hr />
+      <hr style={hrStyle} />
       <h2> Add new blog </h2>
       <form>
-        <p>
-          <Input
-            label="Title"
-            type="text"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-          <Input
-            label="Author"
-            type="text"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-          <Input
-            label="URL"
-            type="text"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </p>
+        <Input
+          label="Title"
+          type="text"
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+        />
+        <Input
+          label="Author"
+          type="text"
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+        <Input
+          label="URL"
+          type="text"
+          value={url}
+          onChange={({ target }) => setUrl(target.value)}
+        />
+        <br/><br/>
         <Button
           text="Add blog"
           onClick={handleNewBlog}
