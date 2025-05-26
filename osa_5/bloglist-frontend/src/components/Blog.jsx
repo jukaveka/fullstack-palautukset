@@ -28,6 +28,8 @@ const Blog = ({ blog, updateBlogs, removeBlog}) => {
     updateBlogs(returnedBlog)
   }
 
+  const userInLocalStorage = JSON.parse(window.localStorage.getItem("LoggedBlogUser")).username
+
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
@@ -35,7 +37,7 @@ const Blog = ({ blog, updateBlogs, removeBlog}) => {
         <p>{blog.url}</p>
         <p>likes {blog.likes} <Button text="Like" onClick={handleLike} style={likeButtonStyle}/></p>
         <p>{blog.user.name}</p>
-        <Button text="Remove" onClick={removeBlog} style={removalButtonStyle} />
+        {(blog.user.username === userInLocalStorage) && (<Button text="Remove" onClick={removeBlog} style={removalButtonStyle} />)}
       </Togglable>
     </div>
   )
