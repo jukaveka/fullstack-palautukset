@@ -1,10 +1,9 @@
 import { useState } from "react"
 import Input from "./Input"
 import Button from "./Button"
-import BlogService from "../services/blogs"
 import PropTypes from "prop-types"
 
-const BlogForm = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
+const BlogForm = ({ createNewBlog }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -28,26 +27,7 @@ const BlogForm = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
       url: url
     }
 
-    try {
-      const addedBlog = await BlogService.create(newBlog)
-
-      const newBlogs = blogs.concat(addedBlog)
-      setBlogs(newBlogs)
-
-      setTitle("")
-      setAuthor("")
-      setUrl("")
-
-      setSuccessMessage(`${addedBlog.title} added to list`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
-    } catch (exception) {
-      setErrorMessage(`Adding blog failed - ${exception.message}`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
+    await createNewBlog(newBlog)
   }
 
   return (
@@ -85,10 +65,7 @@ const BlogForm = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
 }
 
 BlogForm.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  setSuccessMessage: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired
+  createNewBlog: PropTypes.func.isRequired
 }
 
 export default BlogForm

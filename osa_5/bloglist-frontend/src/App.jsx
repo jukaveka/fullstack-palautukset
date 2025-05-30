@@ -5,7 +5,7 @@ import LoggedUser from "./components/LoggedUser"
 import BlogForm from "./components/BlogForm"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
-import blogService from "./services/blogs"
+import BlogService from "./services/blogs"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -14,7 +14,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    BlogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
   }, [])
@@ -26,9 +26,28 @@ const App = () => {
       const user = JSON.parse(userInLocalStorage)
 
       setUser(user)
-      blogService.setToken(user.token)
+      BlogService.setToken(user.token)
     }
   }, [])
+
+  const createNewBlog = async (newBlog) => {
+    try {
+      const addedBlog = await BlogService.create(newBlog)
+
+      const newBlogs = blogs.concat(addedBlog)
+      setBlogs(newBlogs)
+
+      setSuccessMessage(`${addedBlog.title} added to list`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setErrorMessage(`Adding blog failed - ${exception.message}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
 
   return (
     <div>
@@ -37,7 +56,7 @@ const App = () => {
       {user && [
         <BlogList key="Bloglist" user={user} blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />,
         <Togglable key="BlogForm" showLabel="Add new blog" hideLabel="Cancel" >
-          <BlogForm blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />
+          <BlogForm createNewBlog={createNewBlog} />
         </Togglable>,
         <LoggedUser key="LoggedUser" user={user} setUser={setUser} />
       ]}
