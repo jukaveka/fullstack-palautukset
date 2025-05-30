@@ -1,8 +1,8 @@
-import Blog from './Blog'
-import BlogService from '../services/blogs'
-import PropTypes from 'prop-types'
+import Blog from "./Blog"
+import BlogService from "../services/blogs"
+import PropTypes from "prop-types"
 
-const BlogList = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
+const BlogList = ({ user, blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
   const updateBlogs = (updatedBlog) => {
     const blogIndex = blogs.findIndex((blog) => blog.id === updatedBlog.id)
 
@@ -43,6 +43,7 @@ const BlogList = ({ blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
       {sortedBlogs.map(blog =>
         <Blog
           key={blog.id}
+          user={user}
           blog={blog}
           updateBlogs={updateBlogs}
           removeBlog={() => removeBlogBy(blog)}

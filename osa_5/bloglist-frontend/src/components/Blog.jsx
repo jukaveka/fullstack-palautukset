@@ -3,7 +3,7 @@ import Button from "./Button"
 import blogService from "../services/blogs"
 import PropTypes from "prop-types"
 
-const Blog = ({ blog, updateBlogs, removeBlog }) => {
+const Blog = ({ blog, user, updateBlogs, removeBlog }) => {
   const blogStyle = {
     padding: "5px",
     margin: "5px",
@@ -15,7 +15,7 @@ const Blog = ({ blog, updateBlogs, removeBlog }) => {
     backgroundColor: "#DB5461",
     margin: "5px"
   }
-  
+
   const likeButtonStyle = {
     color: "white",
     backgroundColor: "#8FA998"
@@ -29,8 +29,6 @@ const Blog = ({ blog, updateBlogs, removeBlog }) => {
     updateBlogs(returnedBlog)
   }
 
-  const userInLocalStorage = JSON.parse(window.localStorage.getItem("LoggedBlogUser")).username
-
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
@@ -38,15 +36,15 @@ const Blog = ({ blog, updateBlogs, removeBlog }) => {
         <p>{blog.url}</p>
         <p>likes {blog.likes} <Button text="Like" onClick={handleLike} style={likeButtonStyle}/></p>
         <p>{blog.user.name}</p>
-        {(blog.user.username === userInLocalStorage) && (<Button text="Remove" onClick={removeBlog} style={removalButtonStyle} />)}
+        {(blog.user.username === user.username) && (<Button text="Remove" onClick={removeBlog} style={removalButtonStyle} />)}
       </Togglable>
     </div>
   )
 }
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired, 
-  updateBlogs: PropTypes.func.isRequired, 
+  blog: PropTypes.object.isRequired,
+  updateBlogs: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired
 }
 

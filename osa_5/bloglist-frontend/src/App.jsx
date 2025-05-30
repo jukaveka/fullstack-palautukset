@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
-import BlogList from './components/BlogList'
-import LoginForm from './components/LoginForm'
-import LoggedUser from './components/LoggedUser'
-import BlogForm from './components/BlogForm'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-import blogService from './services/blogs'
+import { useState, useEffect } from "react"
+import BlogList from "./components/BlogList"
+import LoginForm from "./components/LoginForm"
+import LoggedUser from "./components/LoggedUser"
+import BlogForm from "./components/BlogForm"
+import Notification from "./components/Notification"
+import Togglable from "./components/Togglable"
+import blogService from "./services/blogs"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -35,7 +35,7 @@ const App = () => {
       {(successMessage || errorMessage) && (<Notification successMessage={successMessage} errorMessage={errorMessage} />)}
       {!user && (<LoginForm setUser={setUser} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />)}
       {user && [
-        <BlogList key="Bloglist" blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />,
+        <BlogList key="Bloglist" user={user} blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />,
         <Togglable key="BlogForm" showLabel="Add new blog" hideLabel="Cancel" >
           <BlogForm blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />
         </Togglable>,
