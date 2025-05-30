@@ -3,6 +3,11 @@ import BlogService from "../services/blogs"
 import PropTypes from "prop-types"
 
 const BlogList = ({ user, blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
+  const updateBlogLikes = async (blogWithUpdatedLikes) => {
+    const updatedBlog = await BlogService.addLike(blogWithUpdatedLikes)
+    updateBlogs(updatedBlog)
+  }
+
   const updateBlogs = (updatedBlog) => {
     const blogIndex = blogs.findIndex((blog) => blog.id === updatedBlog.id)
 
@@ -45,7 +50,7 @@ const BlogList = ({ user, blogs, setBlogs, setSuccessMessage, setErrorMessage })
           key={blog.id}
           user={user}
           blog={blog}
-          updateBlogs={updateBlogs}
+          updateBlogLikes={updateBlogLikes}
           removeBlog={() => removeBlogBy(blog)}
         />
       )}

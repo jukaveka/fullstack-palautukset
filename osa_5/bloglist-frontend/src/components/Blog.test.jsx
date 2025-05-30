@@ -4,6 +4,8 @@ import Blog from "./Blog"
 
 describe("<Blog />", () => {
   let container
+  const updateBlogLikes = vi.fn()
+  const removeBlog = vi.fn()
 
   beforeEach(() => {
     const blog = {
@@ -23,10 +25,7 @@ describe("<Blog />", () => {
       name: "Timo Takkunen"
     }
 
-    const updateBlogs = vi.fn()
-    const removeBlog = vi.fn()
-
-    container = render(<Blog blog={blog} user={user} updateBlogs={updateBlogs} removeBlog={removeBlog} />).container
+    container = render(<Blog blog={blog} user={user} updateBlogLikes={updateBlogLikes} removeBlog={removeBlog} />).container
   })
 
   test("displays only title and author at first", () => {
@@ -51,5 +50,18 @@ describe("<Blog />", () => {
 
     const togglableBlogContent = container.querySelector(".togglableContent")
     expect(togglableBlogContent).not.toHaveStyle("display: none")
+  })
+
+  test("like button event handler registers clicks correctly", async () => {
+    const user = userEvent.setup()
+
+    const viewButton = await screen.findByText("View")
+    await user.click(viewButton)
+
+    const likeButton = screen.getByText("Like")
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(updateBlogLikes.mock.calls).toHaveLength(2)
   })
 })
