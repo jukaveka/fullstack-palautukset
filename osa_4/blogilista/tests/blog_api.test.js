@@ -146,14 +146,19 @@ describe("With initial test blogs inserted", () => {
       const testUser = await User.findById(testBlog.user)
       const validToken = await helper.generateTestToken(testUser)
 
+      const userBlogsBeforeRequest = testUser.blogs
+
       await api
         .delete(`/api/blogs/${testBlog.id}`)
         .set(`authorization`, `Bearer ${validToken}`)
         .expect(204)
 
       const blogsAfterRequest = await helper.blogsInDb()
-
       assert.strictEqual(blogsAfterRequest.length, blogsBeforeRequest.length - 1)
+
+      const userAfterRequest = await User.findById(testUser.id)
+      assert.strictEqual(userAfterRequest.blogs.length, userBlogsBeforeRequest.length - 1)
+      assert(!userAfterRequest.blogs.includes(testBlog.id))
     })
 
     test("returns status 204 if blog doesn't exist", async () => {
@@ -239,6 +244,7 @@ describe("With initial test blogs inserted", () => {
     })
   })
 })
+
 after(async () => {
   mongoose.connection.close()
 })

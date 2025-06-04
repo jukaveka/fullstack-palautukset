@@ -1,18 +1,5 @@
 const userRouter = require("express").Router()
-const User = require("../models/user")
-const hashUtil = require("../utils/hash")
-
-const validateInputLength = (input, minLength) => {
-  return input.length >= minLength
-}
-
-const fetchAllUsers = async () => {
-  const users = await User
-    .find({})
-    .populate("blogs", { url: 1, title: 1, author: 1 })
-
-  return users
-}
+const userService = require("../services/userService")
 
 const generateErrorResponseObject = (status, message) => {
   return {
@@ -24,22 +11,16 @@ const generateErrorResponseObject = (status, message) => {
 
 const validResponseObject = { invalidRequest: false }
 
-const validateUsernameExistence = async (username) => {
-  const usersWithUsername = await User.countDocuments({ username: username })
-
-  return usersWithUsername > 0
-}
-
 const validateUserPostRequest = async (requestBody) => {
-  if (!validateInputLength(requestBody.username, 3)) {
+  if (!userService.validateInputLength(requestBody.username, 3)) {
     return generateErrorResponseObject(400, "Username must be at least 3 characters")
   }
 
-  if (!validateInputLength(requestBody.password, 3)) {
+  if (!userService.validateInputLength(requestBody.password, 3)) {
     return generateErrorResponseObject(400, "Password must be at least 3 characters")
   }
 
-  const usernameExists = await validateUsernameExistence(requestBody.username)
+  const usernameExists = await userService.validateUsernameExistence(requestBody.username)
 
   if (usernameExists) {
     return generateErrorResponseObject(400, "Username already exists")
@@ -48,24 +29,8 @@ const validateUserPostRequest = async (requestBody) => {
   return validResponseObject
 }
 
-const saveUser = async (user) => {
-  return await user.save()
-}
-
-const generateNewUser = async (requestBody) => {
-  const passwordHash = await hashUtil.generatePasswordHash(requestBody.password)
-
-  const newUser = new User({
-    username: requestBody.username,
-    name: requestBody.name,
-    passwordHash: passwordHash
-  })
-
-  return newUser
-}
-
 userRouter.get("/", async (request, response) => {
-  const users = await fetchAllUsers()
+  const users = await userService.fetchAllUsers()
 
   response.json(users)
 })
@@ -77,9 +42,9 @@ userRouter.post("/", async (request, response, next) => {
     return response.status(validatedRequest.status).json({ error: validatedRequest.error })
   }
 
-  const newUser = await generateNewUser(request.body)
+  const newUser = await userService.generateNewUser(request.body)
 
-  const addedUser = await saveUser(newUser)
+  const addedUser = await userService.saveUser(newUser)
 
   response.status(201).json(addedUser)
 })
