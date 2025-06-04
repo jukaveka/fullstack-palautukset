@@ -43,7 +43,7 @@ const saveBlogAndUpdateUser = async (request) => {
   blogUser.blogs = blogUser.blogs.concat(addedBlog._id)
   await blogUser.save()
 
-  return addedBlog
+  return addedBlog.populate("user", { username: 1, name: 1 })
 }
 
 module.exports = {

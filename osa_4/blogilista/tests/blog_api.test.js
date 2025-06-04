@@ -71,6 +71,9 @@ describe("With initial test blogs inserted", () => {
 
       const decodedToken = helper.decodeTestUserToken(validToken)
       assert.strictEqual(addedBlog.body.user, decodedToken.id)
+
+      const userAfterRequest = await User.findById(testUser._id)
+      assert.strictEqual(userAfterRequest.blogs.length, testUser.blogs.length + 1)
     })
 
     test("corrects likes to 0 if none are given", async () => {

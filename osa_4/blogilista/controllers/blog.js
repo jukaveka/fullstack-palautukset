@@ -127,7 +127,7 @@ blogRouter.put("/:id", async (request, response, next) => {
 
   const blog = await blogService.findBlog(request.params.id)
   const updatedBlog = await blogService.saveBlog(blog, request.body, blog.user)
-  await updatedBlog.populate("user", {username: 1, name: 1})
+  await updatedBlog.populate("user", { username: 1, name: 1 })
 
   response.json(updatedBlog)
 })
