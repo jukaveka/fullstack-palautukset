@@ -13,7 +13,14 @@ const decodeJwtToken = (token) => {
   return jwt.verify(token, process.env.SECRET)
 }
 
+const invalidToken = (token) => {
+  const decodedToken = decodeJwtToken(token)
+
+  return !decodedToken.id
+}
+
 module.exports = {
   generateJwtToken,
-  decodeJwtToken
+  decodeJwtToken,
+  invalidToken
 }

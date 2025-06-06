@@ -1,7 +1,7 @@
 const loginRouter = require("express").Router()
 const bcrypt = require("bcrypt")
 const User = require("../models/user")
-const tokenUtil = require("../utils/token")
+const tokenService = require("../services/tokenService")
 
 loginRouter.post("/", async (request, response) => {
   const { username, password } = request.body
@@ -20,7 +20,7 @@ loginRouter.post("/", async (request, response) => {
     response.status(401).json({ error: "Username or password is incorrect "})
   }
 
-  const token = tokenUtil.generateJwtToken(user)
+  const token = tokenService.generateJwtToken(user)
 
   response
     .status(200)

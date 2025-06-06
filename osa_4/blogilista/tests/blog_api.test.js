@@ -70,7 +70,7 @@ describe("With initial test blogs inserted", () => {
       assert.strictEqual(addedBlog.body.title, testBlog.title)
 
       const decodedToken = helper.decodeTestUserToken(validToken)
-      assert.strictEqual(addedBlog.body.user, decodedToken.id)
+      assert.strictEqual(addedBlog.body.user._id, decodedToken.id)
 
       const userAfterRequest = await User.findById(testUser._id)
       assert.strictEqual(userAfterRequest.blogs.length, testUser.blogs.length + 1)

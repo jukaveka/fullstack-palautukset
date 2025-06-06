@@ -1,6 +1,6 @@
 const User = require("../models/user")
 const hashUtil = require("../utils/hash")
-const blogService = require("../services/blogService")
+const validatorService = require("../services/requestValidatorService")
 
 const fetchAllUsers = async () => {
   const users = await User
@@ -40,6 +40,8 @@ const removeBlogFromUser = async (blogId, userId) => {
   await saveUser(user)
 }
 
+// Request validation functions
+
 const validateUsernameExistence = async (username) => {
   const usersWithUsername = await User.countDocuments({ username: username })
 
@@ -50,12 +52,28 @@ const validateInputLength = (input, minLength) => {
   return input.length >= minLength
 }
 
+const validateUserPostRequest = async (requestBody) => {
+  if (!validateInputLength(requestBody.username, 3)) {
+    return validatorService.generateInvalidRequestObject(400, "Username must be at least 3 characters")
+  }
+
+  if (!validateInputLength(requestBody.password, 3)) {
+    return validatorService.generateInvalidRequestObject(400, "Password must be at least 3 characters")
+  }
+
+  const usernameExists = await validateUsernameExistence(requestBody.username)
+  if (usernameExists) {
+    return validatorService.generateInvalidRequestObject(400, "Username already exists")
+  }
+
+  return validatorService.generateValidRequestObject()
+}
+
 module.exports = {
   fetchAllUsers,
   findUser,
   generateNewUser,
   saveUser,
   removeBlogFromUser,
-  validateUsernameExistence,
-  validateInputLength
+  validateUserPostRequest
 }

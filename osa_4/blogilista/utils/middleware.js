@@ -1,4 +1,4 @@
-const tokenUtil = require("../utils/token")
+const tokenService = require("../services/tokenService")
 
 const errorHandler = (error, request, response, next) => {
   if (error.name === "MongoServerError" && error.message.includes("E11000 duplicate key error")) {
@@ -25,7 +25,7 @@ const tokenExtractor = (request, response, next) => {
 }
 
 const userExtractor = (request, response, next) => {
-  const decodedToken = tokenUtil.decodeJwtToken(request.token)
+  const decodedToken = tokenService.decodeJwtToken(request.token)
 
   request.user = !decodedToken.id
     ? null

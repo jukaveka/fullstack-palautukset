@@ -1,6 +1,6 @@
 const Blog = require("../models/blog")
 const User = require("../models/user")
-const tokenUtil = require("../utils/token")
+const tokenService = require("../services/tokenService")
 const hashUtil = require("../utils/hash")
 
 const nonExistingId = async () => {
@@ -42,11 +42,11 @@ const getSingleTestUser = async () => {
 }
 
 const generateTestToken = async (user) => {
-  return tokenUtil.generateJwtToken(user)
+  return tokenService.generateJwtToken(user)
 }
 
 const decodeTestUserToken = (token) => {
-  return tokenUtil.decodeJwtToken(token)
+  return tokenService.decodeJwtToken(token)
 }
 
 const generateHashForUser = async (testUserObject) => {
