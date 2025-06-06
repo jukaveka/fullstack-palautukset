@@ -43,25 +43,21 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
 
   return (
     <div>
-      <form>
-        <div>
-          <h2> Login </h2>
-          <Input
-            label="Username"
-            type="text"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          <Input
-            label="Password"
-            type="text"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <br/>
+      <h2> Login </h2>
+      <form data-testid="loginform">
+        <Input
+          label="Username"
+          type="text"
+          value={username}
+          onChange={({ target }) => setUsername(target.value)}
+        />
+        <Input
+          label="Password"
+          type="text"
+          value={password}
+          onChange={({ target }) => setPassword(target.value)}
+        />
+        <br /><br />
         <Button
           text="Login"
           onClick={handleLogin}
@@ -73,8 +69,8 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
 }
 
 LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired, 
-  setSuccessMessage: PropTypes.func.isRequired, 
+  setUser: PropTypes.func.isRequired,
+  setSuccessMessage: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired
 }
 
