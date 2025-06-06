@@ -9,6 +9,7 @@ const Input = ({ label, type, value, onChange }) => {
       </p>
       <input
         id={label}
+        data-testid={`${label}Input`}
         type={type}
         value={value}
         onChange={onChange}
