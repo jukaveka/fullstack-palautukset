@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require("@playwright/test")
-const { attemptLogin } = require("./helper")
+const { attemptLogin, createBlog } = require("./helper")
 
 describe("Blog app", () => {
   beforeEach(async ({ page, request }) => {
@@ -39,5 +39,26 @@ describe("Blog app", () => {
     await attemptLogin(page, "jarkko", "sanasala")
 
     await expect(page.getByText("wrong username or password")).toBeVisible()
+  })
+
+  describe("as logged in user", () => {
+    beforeEach(async ({ page }) => {
+      attemptLogin(page, "jarkko", "salasana")
+    })
+
+    test("blog form can be opened", async ({ page }) => {
+      await page.getByRole("button", { name: "Add new blog" }).click()
+
+      await expect(page.getByRole("heading", { name: "Add new blog"})).toBeVisible()
+      await expect(page.getByTestId("blogform")).toBeVisible()
+    })
+
+    test("valid blog can be added", async ({ page }) => {
+      await page.getByRole("button", { name: "Add new blog" }).click()
+
+      await createBlog(page, "Stack overflow is almost dead", "Gergely Orosz", "https://blog.pragmaticengineer.com/stack-overflow-is-almost-dead/")
+
+      await expect(page.getByText("Stack overflow is almost dead Gergely Orosz")).toBeVisible()
+    })
   })
 })
