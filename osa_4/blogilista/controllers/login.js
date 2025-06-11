@@ -7,7 +7,7 @@ loginRouter.post("/", async (request, response) => {
   const { username, password } = request.body
 
   if (!( username && password )) {
-    response.status(400).json({ error: "Username and password required "})
+    return response.status(400).json({ error: "Username and password required "})
   }
 
   const user = await User.findOne({ username: username})
@@ -17,7 +17,7 @@ loginRouter.post("/", async (request, response) => {
     : await bcrypt.compare(password, user.passwordHash)
 
   if (!(user && correctPassword)) {
-    response.status(401).json({ error: "Username or password is incorrect "})
+    return response.status(401).json({ error: "Username or password is incorrect "})
   }
 
   const token = tokenService.generateJwtToken(user)
