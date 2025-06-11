@@ -34,7 +34,7 @@ const BlogForm = ({ createNewBlog }) => {
     <div>
       <hr style={hrStyle} />
       <h2> Add new blog </h2>
-      <form>
+      <form data-testid="blogform">
         <Input
           label="Title"
           type="text"

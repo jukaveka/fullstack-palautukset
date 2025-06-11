@@ -1,7 +1,8 @@
 import { useState } from "react"
-import Input from './Input'
-import Button from './Button'
+import Input from "./Input"
+import Button from "./Button"
 import loginService from "../services/login"
+import blogService from "../services/blogs"
 import PropTypes from "prop-types"
 
 const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
@@ -21,6 +22,7 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
       const user = await loginService.login({ username, password })
 
       window.localStorage.setItem("LoggedBlogUser", JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
 
       setUsername("")
