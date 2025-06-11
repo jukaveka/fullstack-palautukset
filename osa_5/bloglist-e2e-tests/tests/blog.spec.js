@@ -49,7 +49,7 @@ describe("Blog app", () => {
     test("blog form can be opened", async ({ page }) => {
       await page.getByRole("button", { name: "Add new blog" }).click()
 
-      await expect(page.getByRole("heading", { name: "Add new blog"})).toBeVisible()
+      await expect(page.getByRole("heading", { name: "Add new blog" })).toBeVisible()
       await expect(page.getByTestId("blogform")).toBeVisible()
     })
 
@@ -59,6 +59,39 @@ describe("Blog app", () => {
       await createBlog(page, "Stack overflow is almost dead", "Gergely Orosz", "https://blog.pragmaticengineer.com/stack-overflow-is-almost-dead/")
 
       await expect(page.getByText("Stack overflow is almost dead Gergely Orosz")).toBeVisible()
+    })
+
+    describe("with blog added", () => {
+      beforeEach(async ({ page }) => {
+        await page.getByRole("button", { name: "Add new blog" }).click()
+
+        await createBlog(page, "Survey: What's in your tech stack?", "Gergely Orosz", "https://blog.pragmaticengineer.com/survey-whats-in-your-tech-stack/")
+
+        await page.getByRole("button", { name: "View" }).click()
+      })
+
+      test("blog has 0 likes initially", async ({ page }) => {
+        await expect(page.getByText("likes 0")).toBeVisible()
+      })
+
+      test("blog has 1 like after liking it once", async ({ page }) => {
+        await page.getByRole("button", { name: "Like" }).click()
+
+        await expect(page.getByText("likes 1")).toBeVisible()
+      })
+
+      test("blog likes increment by 1 for each click", async ({ page }) => {
+        const likeButton = page.getByRole("button", { name: "Like" })
+
+        await likeButton.click()
+        await expect(page.getByText("likes 1")).toBeVisible()
+
+        await likeButton.click()
+        await expect(page.getByText("likes 2")).toBeVisible()
+
+        await likeButton.click()
+        await expect(page.getByText("likes 3")).toBeVisible()
+      })
     })
   })
 })
