@@ -29,7 +29,7 @@ const Blog = ({ blog, user, updateBlogLikes, removeBlog }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author}
+      {blog.title} by {blog.author}
       <Togglable showLabel="View" hideLabel="Hide">
         <p>{blog.url}</p>
         <p>likes {blog.likes} <Button text="Like" onClick={handleLike} style={likeButtonStyle}/></p>
