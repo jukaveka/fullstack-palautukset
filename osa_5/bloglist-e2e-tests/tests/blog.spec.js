@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require("@playwright/test")
-const { attemptLogin, createBlog } = require("./helper")
+const { attemptLogin, createBlog, likeBlog } = require("./helper")
 
 describe("Blog app", () => {
   beforeEach(async ({ page, request }) => {
@@ -8,6 +8,13 @@ describe("Blog app", () => {
       data: {
         username: "jarkko",
         name: "Jarkko Mikkonen",
+        password: "salasana"
+      }
+    })
+    await request.post("/api/users", {
+      data: {
+        username: "pilvi",
+        name: "Pilvi Mäkinen",
         password: "salasana"
       }
     })
@@ -58,39 +65,62 @@ describe("Blog app", () => {
 
       await createBlog(page, "Stack overflow is almost dead", "Gergely Orosz", "https://blog.pragmaticengineer.com/stack-overflow-is-almost-dead/")
 
-      await expect(page.getByText("Stack overflow is almost dead Gergely Orosz")).toBeVisible()
+      await expect(page.getByText("Stack overflow is almost dead by Gergely Orosz")).toBeVisible()
     })
 
     describe("with blog added", () => {
+      const title = "Software engineering job openings hit five-year low?"
+      const author = "Gergely Orosz"
+      const url = "https://blog.pragmaticengineer.com/software-engineer-jobs-five-year-low/"
+
       beforeEach(async ({ page }) => {
         await page.getByRole("button", { name: "Add new blog" }).click()
 
-        await createBlog(page, "Survey: What's in your tech stack?", "Gergely Orosz", "https://blog.pragmaticengineer.com/survey-whats-in-your-tech-stack/")
-
-        await page.getByRole("button", { name: "View" }).click()
+        await createBlog(page, title, author, url)
       })
 
       test("blog has 0 likes initially", async ({ page }) => {
+        await page.getByRole("button", { name: "View" }).click()
         await expect(page.getByText("likes 0")).toBeVisible()
       })
 
       test("blog has 1 like after liking it once", async ({ page }) => {
-        await page.getByRole("button", { name: "Like" }).click()
-
+        await likeBlog(page, title, author)
+        await page.getByText(`${title} by ${author}`).getByRole("button", { name: "View" }).click()
         await expect(page.getByText("likes 1")).toBeVisible()
       })
 
       test("blog likes increment by 1 for each click", async ({ page }) => {
-        const likeButton = page.getByRole("button", { name: "Like" })
+        await likeBlog(page, title, author)
+        await likeBlog(page, title, author)
+        await likeBlog(page, title, author)
 
-        await likeButton.click()
-        await expect(page.getByText("likes 1")).toBeVisible()
-
-        await likeButton.click()
-        await expect(page.getByText("likes 2")).toBeVisible()
-
-        await likeButton.click()
+        await page.getByText(`${title} by ${author}`).getByRole("button", { name: "View" }).click()
         await expect(page.getByText("likes 3")).toBeVisible()
+      })
+
+      test("blog removal button is visible if user added the blog", async ({ page }) => {
+        await page.getByText(`${title} by ${author}`).getByRole("button", { name: "View" }).click()
+        expect(page.getByRole("button", { name: "Remove" })).toBeVisible()
+      })
+
+      test("blog removal button is invisible if user didn't add the blog", async ({ page }) => {
+        await page.getByRole("button", { name: "Logout" }).click()
+        await attemptLogin(page, "pilvi", "salasana")
+        await page.getByText(`${title} by ${author}`).getByRole("button", { name: "View" }).click()
+
+        expect(page.getByRole("button", { name: "Hide" })).toBeVisible()
+        expect(page.getByRole("button", { name: "Remove" })).not.toBeVisible()
+      })
+
+      test("blog can be removed by user who added the blog", async ({ page }) => {
+        await expect(page.getByText(`${title} by ${author}`)).toBeVisible()
+
+        await page.getByText(`${title} by ${author}`).getByRole("button", { name: "View" }).click()
+        page.on("dialog", dialog => dialog.accept())
+        await page.getByRole("button", { name: "Remove" }).click()
+
+        await expect(page.getByText(`${title} by ${author}`)).not.toBeVisible()
       })
     })
   })

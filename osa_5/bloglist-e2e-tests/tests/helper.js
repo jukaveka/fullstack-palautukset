@@ -10,7 +10,18 @@ const createBlog = async (page, title, author, url) => {
   await page.getByTestId("URLInput").fill(url)
   await page.getByRole("button", { name: "Add blog" }).click()
 
-  await page.getByText(`${title} ${author}`).waitFor()
+  await page.getByText(`${title} by ${author}`).waitFor()
 }
 
-export { attemptLogin, createBlog }
+const likeBlog = async (page, title, author) => {
+  const blog = page.getByText(`${title} by ${author}`)
+  await blog.getByRole("button", { name: "View" }).click()
+  await blog.getByRole("button", { name: "Like" }).click()
+  await blog.getByRole("button", { name: "Hide" }).click()
+}
+
+export {
+  attemptLogin,
+  createBlog,
+  likeBlog
+}
