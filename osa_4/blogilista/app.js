@@ -19,7 +19,7 @@ app.use("/api/blogs", blogRouter)
 app.use("/api/users", userRouter)
 app.use("/api/login", loginRouter)
 
-if (process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") {
   const testingRouter = require("./controllers/testing")
   app.use("/api/testing", testingRouter)
 }
