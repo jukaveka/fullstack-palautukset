@@ -69,24 +69,82 @@ describe("Blog app", () => {
     })
 
     describe("with blogs added", () => {
-      const firstBlog = {
+      const blog = {
         title: "Software engineering job openings hit five-year low?",
         author: "Gergely Orosz",
         url: "https://blog.pragmaticengineer.com/software-engineer-jobs-five-year-low/"
       }
 
-      const secondBlog = {
-        title: "Tech hiring: is this an inflection point?",
+      beforeEach(async ({ page }) => {
+        await page.getByRole("button", { name: "Add new blog" }).click()
+
+        await createBlog(page, blog.title, blog.author, blog.url)
+      })
+
+      test("blog has 0 likes initially", async ({ page }) => {
+        const blogElement = page.getByText(`${blog.title} by ${blog.author}`)
+        await blogElement.getByRole("button", { name: "View" }).click()
+        await expect(blogElement.getByText("likes 0")).toBeVisible()
+      })
+
+      test("blog has 1 like after liking it once", async ({ page }) => {
+        await likeBlog(page, blog.title, blog.author)
+        await page.getByText(`${blog.title} by ${blog.author}`).getByRole("button", { name: "View" }).click()
+        await expect(page.getByText("likes 1")).toBeVisible()
+      })
+
+      test("blog likes increment by 1 for each click", async ({ page }) => {
+        await likeBlog(page, blog.title, blog.author)
+        await likeBlog(page, blog.title, blog.author)
+        await likeBlog(page, blog.title, blog.author)
+
+        await page.getByText(`${blog.title} by ${blog.author}`).getByRole("button", { name: "View" }).click()
+        await expect(page.getByText("likes 3")).toBeVisible()
+      })
+
+      test("blog removal button is visible if user added the blog", async ({ page }) => {
+        await page.getByText(`${blog.title} by ${blog.author}`).getByRole("button", { name: "View" }).click()
+        expect(page.getByRole("button", { name: "Remove" })).toBeVisible()
+      })
+
+      test("blog removal button is invisible if user didn't add the blog", async ({ page }) => {
+        await page.getByRole("button", { name: "Logout" }).click()
+        await attemptLogin(page, "pilvi", "salasana")
+        await page.getByText(`${blog.title} by ${blog.author}`).getByRole("button", { name: "View" }).click()
+
+        expect(page.getByRole("button", { name: "Hide" })).toBeVisible()
+        expect(page.getByRole("button", { name: "Remove" })).not.toBeVisible()
+      })
+
+      test("blog can be removed by user who added the blog", async ({ page }) => {
+        await expect(page.getByText(`${blog.title} by ${blog.author}`)).toBeVisible()
+
+        await page.getByText(`${blog.title} by ${blog.author}`).getByRole("button", { name: "View" }).click()
+        page.on("dialog", dialog => dialog.accept())
+        await page.getByRole("button", { name: "Remove" }).click()
+
+        await expect(page.getByText(`${blog.title} by ${blog.author}`)).not.toBeVisible()
+      })
+    })
+
+    describe("with multiple blogs added", async () => {
+      const firstBlog = {
+        title: "Survey: What's in your tech stack?",
         author: "Gergely Orosz",
-        url: "https://blog.pragmaticengineer.com/tech-hiring-is-this-an-inflection-point/",
+        url: "https://blog.pragmaticengineer.com/survey-whats-in-your-tech-stack/",
       }
 
-      const thirdBlog = {
+      const secondBlog = {
         title: "Stack overflow is almost dead",
         author: "Gergely Orosz",
         url: "https://blog.pragmaticengineer.com/stack-overflow-is-almost-dead/",
       }
 
+      const thirdBlog = {
+        title: "Builder.ai did not “fake AI with 700 engineers”",
+        author: "Gergely Orosz",
+        url: "https://blog.pragmaticengineer.com/builder-ai-did-not-fake-ai/",
+      }
 
       beforeEach(async ({ page }) => {
         await page.getByRole("button", { name: "Add new blog" }).click()
@@ -96,49 +154,27 @@ describe("Blog app", () => {
         await createBlog(page, thirdBlog.title, thirdBlog.author, thirdBlog.url)
       })
 
-      test("blog has 0 likes initially", async ({ page }) => {
-        const firstBlogElement = page.getByText(`${firstBlog.title} by ${firstBlog.author}`)
-        await firstBlogElement.getByRole("button", { name: "View" }).click()
-        await expect(firstBlogElement.getByText("likes 0")).toBeVisible()
-      })
+      test("blogs are displayed by their likes, in descending order", async ({ page }) => {
+        await likeBlog(page, secondBlog.title, secondBlog.author)
+        await likeBlog(page, secondBlog.title, secondBlog.author)
+        await likeBlog(page, secondBlog.title, secondBlog.author)
+        await likeBlog(page, secondBlog.title, secondBlog.author)
+        await likeBlog(page, secondBlog.title, secondBlog.author)
 
-      test("blog has 1 like after liking it once", async ({ page }) => {
-        await likeBlog(page, firstBlog.title, firstBlog.author)
-        await page.getByText(`${firstBlog.title} by ${firstBlog.author}`).getByRole("button", { name: "View" }).click()
-        await expect(page.getByText("likes 1")).toBeVisible()
-      })
+        await likeBlog(page, thirdBlog.title, thirdBlog.author)
+        await likeBlog(page, thirdBlog.title, thirdBlog.author)
+        await likeBlog(page, thirdBlog.title, thirdBlog.author)
 
-      test("blog likes increment by 1 for each click", async ({ page }) => {
-        await likeBlog(page, firstBlog.title, firstBlog.author)
-        await likeBlog(page, firstBlog.title, firstBlog.author)
-        await likeBlog(page, firstBlog.title, firstBlog.author)
+        await page.getByRole("button", { name: "View" }).first().click()
+        await expect(page.getByText(secondBlog.url)).toBeVisible()
+        await expect(page.getByText(firstBlog.url)).not.toBeVisible()
+        await expect(page.getByText(thirdBlog.url)).not.toBeVisible()
+        await page.getByRole("button", { name: "Hide" }).click()
 
-        await page.getByText(`${firstBlog.title} by ${firstBlog.author}`).getByRole("button", { name: "View" }).click()
-        await expect(page.getByText("likes 3")).toBeVisible()
-      })
-
-      test("blog removal button is visible if user added the blog", async ({ page }) => {
-        await page.getByText(`${firstBlog.title} by ${firstBlog.author}`).getByRole("button", { name: "View" }).click()
-        expect(page.getByRole("button", { name: "Remove" })).toBeVisible()
-      })
-
-      test("blog removal button is invisible if user didn't add the blog", async ({ page }) => {
-        await page.getByRole("button", { name: "Logout" }).click()
-        await attemptLogin(page, "pilvi", "salasana")
-        await page.getByText(`${firstBlog.title} by ${firstBlog.author}`).getByRole("button", { name: "View" }).click()
-
-        expect(page.getByRole("button", { name: "Hide" })).toBeVisible()
-        expect(page.getByRole("button", { name: "Remove" })).not.toBeVisible()
-      })
-
-      test("blog can be removed by user who added the blog", async ({ page }) => {
-        await expect(page.getByText(`${firstBlog.title} by ${firstBlog.author}`)).toBeVisible()
-
-        await page.getByText(`${firstBlog.title} by ${firstBlog.author}`).getByRole("button", { name: "View" }).click()
-        page.on("dialog", dialog => dialog.accept())
-        await page.getByRole("button", { name: "Remove" }).click()
-
-        await expect(page.getByText(`${firstBlog.title} by ${firstBlog.author}`)).not.toBeVisible()
+        await page.getByRole("button", { name: "View" }).last().click()
+        await expect(page.getByText(firstBlog.url)).toBeVisible()
+        await expect(page.getByText(secondBlog.url)).not.toBeVisible()
+        await expect(page.getByText(thirdBlog.url)).not.toBeVisible()
       })
     })
   })

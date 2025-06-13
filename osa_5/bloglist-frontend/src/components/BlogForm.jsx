@@ -28,6 +28,10 @@ const BlogForm = ({ createNewBlog }) => {
     }
 
     await createNewBlog(newBlog)
+
+    setTitle("")
+    setAuthor("")
+    setUrl("")
   }
 
   return (
