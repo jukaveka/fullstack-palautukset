@@ -15,9 +15,20 @@ const createBlog = async (page, title, author, url) => {
 
 const likeBlog = async (page, title, author) => {
   const blog = page.getByText(`${title} by ${author}`)
+  const likeElement = await blog.getByTestId("blogLikes").textContent()
+  const expectedLikes = getExpectedLikes(likeElement)
+
   await blog.getByRole("button", { name: "View" }).click()
   await blog.getByRole("button", { name: "Like" }).click()
+  await blog.getByText(expectedLikes).waitFor()
   await blog.getByRole("button", { name: "Hide" }).click()
+}
+
+const getExpectedLikes = (element) => {
+  const likesString = element.substring(0, element.length - 5).replace("likes ", "")
+  const likesInteger = parseInt(likesString)
+
+  return `likes ${likesInteger + 1}`
 }
 
 export {

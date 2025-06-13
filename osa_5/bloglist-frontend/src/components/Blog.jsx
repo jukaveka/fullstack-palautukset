@@ -32,7 +32,7 @@ const Blog = ({ blog, user, updateBlogLikes, removeBlog }) => {
       {blog.title} by {blog.author}
       <Togglable showLabel="View" hideLabel="Hide">
         <p>{blog.url}</p>
-        <p>likes {blog.likes} <Button text="Like" onClick={handleLike} style={likeButtonStyle}/></p>
+        <p data-testid="blogLikes">likes {blog.likes} <Button text="Like" onClick={handleLike} style={likeButtonStyle}/></p>
         <p>{blog.user.name}</p>
         {(blog.user.username === user.username) && (<Button text="Remove" onClick={removeBlog} style={removalButtonStyle} />)}
       </Togglable>
