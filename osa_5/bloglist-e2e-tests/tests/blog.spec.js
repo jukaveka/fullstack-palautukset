@@ -104,7 +104,7 @@ describe("Blog app", () => {
 
       test("blog removal button is visible if user added the blog", async ({ page }) => {
         await page.getByText(`${blog.title} by ${blog.author}`).getByRole("button", { name: "View" }).click()
-        expect(page.getByRole("button", { name: "Remove" })).toBeVisible()
+        await expect(page.getByRole("button", { name: "Remove" })).toBeVisible()
       })
 
       test("blog removal button is invisible if user didn't add the blog", async ({ page }) => {
@@ -112,8 +112,8 @@ describe("Blog app", () => {
         await attemptLogin(page, "pilvi", "salasana")
         await page.getByText(`${blog.title} by ${blog.author}`).getByRole("button", { name: "View" }).click()
 
-        expect(page.getByRole("button", { name: "Hide" })).toBeVisible()
-        expect(page.getByRole("button", { name: "Remove" })).not.toBeVisible()
+        await expect(page.getByRole("button", { name: "Hide" })).toBeVisible()
+        await expect(page.getByRole("button", { name: "Remove" })).not.toBeVisible()
       })
 
       test("blog can be removed by user who added the blog", async ({ page }) => {
