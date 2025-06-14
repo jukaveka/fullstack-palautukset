@@ -59,6 +59,7 @@ const BlogList = ({ user, blogs, setBlogs, setSuccessMessage, setErrorMessage })
 }
 
 BlogList.propTypes = {
+  user: PropTypes.object.isRequired,
   blogs: PropTypes.array.isRequired,
   setBlogs: PropTypes.func.isRequired,
   setSuccessMessage: PropTypes.func.isRequired,

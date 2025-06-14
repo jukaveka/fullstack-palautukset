@@ -41,7 +41,7 @@ const Notification = ({ successMessage, errorMessage }) => {
 }
 
 Notification.propTypes = {
-  successMessage: PropTypes.string, 
+  successMessage: PropTypes.string,
   errorMessage: PropTypes.string
 }
 
