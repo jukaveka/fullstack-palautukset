@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import BlogList from "./components/BlogList"
 import LoginForm from "./components/LoginForm"
 import LoggedUser from "./components/LoggedUser"
@@ -30,12 +30,17 @@ const App = () => {
     }
   }, [])
 
+  const blogFormRef = useRef()
+  const togglableBlogFormRef = useRef()
+
   const createNewBlog = async (newBlog) => {
     try {
       const addedBlog = await BlogService.create(newBlog)
 
       const newBlogs = blogs.concat(addedBlog)
       setBlogs(newBlogs)
+      togglableBlogFormRef.current.toggleVisibility()
+      blogFormRef.current.emptyBlogForm()
 
       setSuccessMessage(`${addedBlog.title} added to list`)
       setTimeout(() => {
@@ -55,8 +60,8 @@ const App = () => {
       {!user && (<LoginForm setUser={setUser} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />)}
       {user && [
         <BlogList key="Bloglist" user={user} blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />,
-        <Togglable key="BlogForm" showLabel="Add new blog" hideLabel="Cancel" >
-          <BlogForm createNewBlog={createNewBlog} />
+        <Togglable key="BlogForm" showLabel="Add new blog" hideLabel="Cancel" ref={togglableBlogFormRef}>
+          <BlogForm createNewBlog={createNewBlog} ref={blogFormRef}/>
         </Togglable>,
         <LoggedUser key="LoggedUser" user={user} setUser={setUser} />
       ]}

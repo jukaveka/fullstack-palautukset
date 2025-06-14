@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useState, forwardRef, useImperativeHandle } from "react"
 import Input from "./Input"
 import Button from "./Button"
 import PropTypes from "prop-types"
 
-const BlogForm = ({ createNewBlog }) => {
+const BlogForm = forwardRef((props, ref) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -18,6 +18,18 @@ const BlogForm = ({ createNewBlog }) => {
     border: "2px solid #CFD2CD"
   }
 
+  const emptyBlogForm = () => {
+    setTitle("")
+    setAuthor("")
+    setUrl("")
+  }
+
+  useImperativeHandle(ref, () => {
+    return {
+      emptyBlogForm
+    }
+  })
+
   const handleNewBlog = async event => {
     event.preventDefault()
 
@@ -27,11 +39,7 @@ const BlogForm = ({ createNewBlog }) => {
       url: url
     }
 
-    await createNewBlog(newBlog)
-
-    setTitle("")
-    setAuthor("")
-    setUrl("")
+    await props.createNewBlog(newBlog)
   }
 
   return (
@@ -57,7 +65,7 @@ const BlogForm = ({ createNewBlog }) => {
           value={url}
           onChange={({ target }) => setUrl(target.value)}
         />
-        <br/><br/>
+        <br /><br />
         <Button
           text="Add blog"
           onClick={handleNewBlog}
@@ -66,10 +74,12 @@ const BlogForm = ({ createNewBlog }) => {
       </form>
     </div>
   )
-}
+})
 
 BlogForm.propTypes = {
   createNewBlog: PropTypes.func.isRequired
 }
+
+BlogForm.displayName = "BlogForm"
 
 export default BlogForm
