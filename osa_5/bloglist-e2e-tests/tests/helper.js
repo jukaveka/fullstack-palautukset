@@ -5,6 +5,8 @@ const attemptLogin = async (page, username, password) => {
 }
 
 const createBlog = async (page, title, author, url) => {
+  await page.getByRole("button", { name: "Add new blog" }).click()
+
   await page.getByTestId("TitleInput").fill(title)
   await page.getByTestId("AuthorInput").fill(author)
   await page.getByTestId("URLInput").fill(url)

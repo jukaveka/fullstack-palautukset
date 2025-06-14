@@ -61,8 +61,6 @@ describe("Blog app", () => {
     })
 
     test("valid blog can be added", async ({ page }) => {
-      await page.getByRole("button", { name: "Add new blog" }).click()
-
       await createBlog(page, "Stack overflow is almost dead", "Gergely Orosz", "https://blog.pragmaticengineer.com/stack-overflow-is-almost-dead/")
 
       await expect(page.getByText("Stack overflow is almost dead by Gergely Orosz")).toBeVisible()
@@ -76,8 +74,6 @@ describe("Blog app", () => {
       }
 
       beforeEach(async ({ page }) => {
-        await page.getByRole("button", { name: "Add new blog" }).click()
-
         await createBlog(page, blog.title, blog.author, blog.url)
       })
 
@@ -147,8 +143,6 @@ describe("Blog app", () => {
       }
 
       beforeEach(async ({ page }) => {
-        await page.getByRole("button", { name: "Add new blog" }).click()
-
         await createBlog(page, firstBlog.title, firstBlog.author, firstBlog.url)
         await createBlog(page, secondBlog.title, secondBlog.author, secondBlog.url)
         await createBlog(page, thirdBlog.title, thirdBlog.author, thirdBlog.url)
