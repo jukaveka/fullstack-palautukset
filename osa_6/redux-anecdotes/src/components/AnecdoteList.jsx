@@ -3,7 +3,6 @@ import { addVote } from "../reducers/anecdoteReducer"
 import PropTypes from "prop-types"
 
 const Anecdote = ({ anecdote, onClick }) => {
-
   return (
     <div key={anecdote.id}>
       <div>
@@ -22,7 +21,7 @@ Anecdote.propTypes = {
   onClick: PropTypes.func.isRequired
 }
 
-const Anecdotes = () => {
+const AnecdoteList = () => {
   const dispatch = useDispatch()
   const anecdotes = useSelector(state => state.toSorted((a, b) => b.votes - a.votes))
 
@@ -40,7 +39,6 @@ const Anecdotes = () => {
 
   return (
     <>
-      <h2>Anecdotes</h2>
       {
         anecdotes.map(anecdote =>
           <Anecdote 
@@ -54,4 +52,4 @@ const Anecdotes = () => {
   )
 }
 
-export default Anecdotes
+export default AnecdoteList
