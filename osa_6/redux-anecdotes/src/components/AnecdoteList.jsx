@@ -23,7 +23,9 @@ Anecdote.propTypes = {
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state.anecdotes.toSorted((a, b) => b.votes - a.votes))
+  const anecdotes = useSelector(({ anecdotes }) => anecdotes.toSorted((a, b) => b.votes - a.votes))
+  const filter = useSelector(({ filter }) => filter)
+  const filteredAnecdotes = anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
 
   const vote = (id) => {
     const votedAnecdote = anecdotes.find(anecdote => anecdote.id === id)
@@ -40,9 +42,9 @@ const AnecdoteList = () => {
   return (
     <>
       {
-        anecdotes.map(anecdote =>
-          <Anecdote 
-            key={anecdote.id} 
+        filteredAnecdotes.map(anecdote =>
+          <Anecdote
+            key={anecdote.id}
             anecdote={anecdote}
             onClick={vote}
           />
