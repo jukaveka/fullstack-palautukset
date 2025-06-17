@@ -23,7 +23,7 @@ Anecdote.propTypes = {
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state.toSorted((a, b) => b.votes - a.votes))
+  const anecdotes = useSelector(state => state.anecdotes.toSorted((a, b) => b.votes - a.votes))
 
   const vote = (id) => {
     const votedAnecdote = anecdotes.find(anecdote => anecdote.id === id)
