@@ -9,8 +9,7 @@ const Anecdote = ({ anecdote, onClick }) => {
         {anecdote.content}
       </div>
       <div>
-        has {anecdote.votes}
-        <button onClick={() => onClick(anecdote.id)}>vote</button>
+        has {anecdote.votes} <button onClick={() => onClick(anecdote.id)}>vote</button>
       </div>
     </div>
   )
