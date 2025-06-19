@@ -32,14 +32,12 @@ const AnecdoteList = () => {
 
   const vote = (id) => {
     const votedAnecdote = anecdotes.find(anecdote => anecdote.id === id)
-    const newAnecdote = {
+    const updatedAnecdote = {
       ...votedAnecdote,
       votes: votedAnecdote.votes + 1
     }
-    const updatedAnecdotes = anecdotes.map(anecdote =>
-      anecdote.id !== id ? anecdote : newAnecdote
-    )
-    dispatch(addVote(updatedAnecdotes))
+
+    dispatch(addVote(updatedAnecdote))
     dispatch(setNotification(`You voted "${votedAnecdote.content}"`))
     setTimeout(() => {
       dispatch(clearNotification())
