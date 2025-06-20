@@ -6,3 +6,8 @@ export const getAnecdotes = () =>
   axios
     .get(baseUrl)
     .then(response => response.data)
+
+export const createAnecdote = (newAnecdote) =>
+  axios
+    .post(baseUrl, newAnecdote)
+    .then(res => res.data)
