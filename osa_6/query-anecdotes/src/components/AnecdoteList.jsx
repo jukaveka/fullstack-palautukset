@@ -19,12 +19,12 @@ const AnecdoteList = () => {
       )
 
       queryClient.setQueryData(["anecdotes"], updatedAnecdotes)
+      setNotification(notificationDispatch, "VOTE", updatedAnecdote.content, 5)
     }
   })
 
   const handleVote = (anecdote) => {
     newVoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
-    setNotification(notificationDispatch, "VOTE", anecdote.content, 5)
   }
 
   const result = useQuery({
