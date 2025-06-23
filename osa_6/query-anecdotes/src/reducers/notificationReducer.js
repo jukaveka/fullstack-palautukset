@@ -1,7 +1,7 @@
 const notificationReducer = (state, action) => {
   switch (action.type) {
     case "NEW_ANECDOTE":
-      return `Anecdote "${action.payload}" added to anecdotes`
+      return `Anecdote "${action.payload}" added to the list`
     case "VOTE":
       return `Anecdote "${action.payload}" voted`
     case "CLEAR":
