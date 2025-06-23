@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { getAnecdotes, updateAnecdote } from "../requests"
 import { useNotificationDispatch } from "../context/NotificationContext"
 import { setNotification } from "../reducers/notificationReducer"
+import Anecdote from "./Anecdote"
 
 const AnecdoteList = () => {
   const queryClient = useQueryClient()
@@ -44,15 +45,7 @@ const AnecdoteList = () => {
     <div>
       {
         anecdotes.map(anecdote =>
-          <div key={anecdote.id}>
-            <div>
-              {anecdote.content}
-            </div>
-            <div>
-              has {anecdote.votes}
-              <button onClick={() => handleVote(anecdote)}>vote</button>
-            </div>
-          </div>
+          <Anecdote key={anecdote.id} anecdote={anecdote} handleClick={handleVote} />
         )
       }
     </div>
