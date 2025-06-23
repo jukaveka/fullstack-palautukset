@@ -11,4 +11,11 @@ const notificationReducer = (state, action) => {
   }
 }
 
+export const setNotification = (dispatch, type, message, timeoutInSeconds) => {
+  dispatch({ type: type, payload: message })
+  setTimeout(() => {
+    dispatch({ type: "CLEAR" })
+  }, timeoutInSeconds * 1000)
+}
+
 export default notificationReducer

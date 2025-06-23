@@ -21,7 +21,6 @@ export const useNotificationState = () => {
 
 export const useNotificationDispatch = () => {
   const notificationContext = useContext(NotificationContext)
-  console.log("useNotificationDispatch context", notificationContext)
   return notificationContext[1]
 }
 
