@@ -3,8 +3,6 @@ import { useNotificationState } from "../context/NotificationContext"
 const Notification = () => {
   const notification = useNotificationState()
 
-  console.log("Notification state", notification)
-
   const style = {
     border: 'solid',
     padding: 10,
