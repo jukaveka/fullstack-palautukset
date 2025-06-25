@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Menu from './components/Menu'
 import Footer from './components/Footer'
+import Notification from './components/Notification'
 import Anecdote from './components/Anecdote'
 import AnecdoteList from './components/AnecdoteList'
 import AnecdoteForm from './components/AnecdoteForm'
@@ -25,13 +26,17 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+  const [notification, setNotification] = useState(null)
 
   const anecdoteMatch = useMatch("/anecdote/:id")
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`Anecdote ${ anecdote.content } added to list`)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
 
   const anecdoteById = (id) =>
@@ -56,8 +61,9 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification} />
       <Routes>
-        <Route path="/anecdote/:id" element={<Anecdote anecdote={anecdote} /> } />
+        <Route path="/anecdote/:id" element={ <Anecdote anecdote={anecdote} /> } />
         <Route path="/" element={ <AnecdoteList anecdotes={anecdotes} /> } />
         <Route path="/create" element={ <AnecdoteForm addNew={addNew} /> } />
         <Route path="/about" element={ <About /> } />
