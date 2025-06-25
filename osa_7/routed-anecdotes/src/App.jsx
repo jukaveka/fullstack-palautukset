@@ -6,7 +6,7 @@ import Anecdote from './components/Anecdote'
 import AnecdoteList from './components/AnecdoteList'
 import AnecdoteForm from './components/AnecdoteForm'
 import About from './components/About'
-import { Route, Routes, useMatch} from 'react-router-dom'
+import { Route, Routes, useMatch, useNavigate} from 'react-router-dom'
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -30,9 +30,12 @@ const App = () => {
 
   const anecdoteMatch = useMatch("/anecdote/:id")
 
+  const navigate = useNavigate()
+
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    navigate("/")
     setNotification(`Anecdote ${ anecdote.content } added to list`)
     setTimeout(() => {
       setNotification(null)
