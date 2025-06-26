@@ -1,10 +1,13 @@
 import { useField } from "../hooks"
 
 const AnecdoteForm = (props) => {
+  const buttonStyle = {
+    margin: "5px 0px"
+  }
+
   const content = useField("text")
   const author = useField("text")
   const info = useField("text")
-
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -16,26 +19,31 @@ const AnecdoteForm = (props) => {
     })
   }
 
-  
+  const resetInputs = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
 
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content
-          <input { ...content }/>
+          Content <br/>
+          <input {...content.attributes} />
         </div>
         <div>
-          author
-          <input { ...author } />
+          Author <br/>
+          <input {...author.attributes} />
         </div>
         <div>
-          url for more info
-          <input { ...info } />
+          URL for more info <br/>
+          <input {...info.attributes} />
         </div>
-        <button>create</button>
+        <button style={buttonStyle}> Create </button>
       </form>
+      <button style={buttonStyle} onClick={resetInputs}> Reset </button>
     </div>
   )
 
