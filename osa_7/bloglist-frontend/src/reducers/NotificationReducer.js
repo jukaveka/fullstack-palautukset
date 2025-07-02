@@ -1,11 +1,16 @@
 const NotificationReducer = (state, action) => {
   switch (action.type) {
-    case "SUCCESS_LOGIN":
+    case "LOGIN":
       return {
         message: `${action.payload} logged in`,
         type: "SUCCESS",
       }
-    case "ERROR_LOGIN":
+    case "NEW_BLOG":
+      return {
+        message: `${action.payload} added to blogs`,
+        type: "SUCCESS",
+      }
+    case "ERROR":
       return {
         message: `${action.payload}`,
         type: "ERROR",

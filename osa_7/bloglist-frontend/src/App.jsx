@@ -6,13 +6,16 @@ import BlogForm from "./components/BlogForm"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import BlogService from "./services/blogs"
-import { NotificationContextProvider } from "./context/NotificationContext"
+import {
+  NotificationContextProvider,
+  useNotificationDispatch,
+} from "./context/NotificationContext"
+import { setNotification } from "./reducers/NotificationReducer"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const notificationDispatch = useNotificationDispatch()
 
   useEffect(() => {
     BlogService.getAll().then((blogs) => setBlogs(blogs))
@@ -40,50 +43,33 @@ const App = () => {
       setBlogs(newBlogs)
       togglableBlogFormRef.current.toggleVisibility()
       blogFormRef.current.emptyBlogForm()
-
-      setSuccessMessage(`${addedBlog.title} added to list`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+      setNotification(notificationDispatch, "NEW_BLOG", addedBlog.title, 5)
     } catch (exception) {
-      setErrorMessage(`Adding blog failed - ${exception.message}`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      setNotification(notificationDispatch, "ERROR", exception.message, 5)
     }
   }
 
   return (
     <div>
-      <NotificationContextProvider>
-        <Notification />
-        {!user && (
-          <LoginForm
-            setUser={setUser}
-            setSuccessMessage={setSuccessMessage}
-            setErrorMessage={setErrorMessage}
-          />
-        )}
-        {user && [
-          <BlogList
-            key="Bloglist"
-            user={user}
-            blogs={blogs}
-            setBlogs={setBlogs}
-            setSuccessMessage={setSuccessMessage}
-            setErrorMessage={setErrorMessage}
-          />,
-          <Togglable
-            key="BlogForm"
-            showLabel="Add new blog"
-            hideLabel="Cancel"
-            ref={togglableBlogFormRef}
-          >
-            <BlogForm createNewBlog={createNewBlog} ref={blogFormRef} />
-          </Togglable>,
-          <LoggedUser key="LoggedUser" user={user} setUser={setUser} />,
-        ]}
-      </NotificationContextProvider>
+      <Notification />
+      {!user && <LoginForm setUser={setUser} />}
+      {user && [
+        <BlogList
+          key="Bloglist"
+          user={user}
+          blogs={blogs}
+          setBlogs={setBlogs}
+        />,
+        <Togglable
+          key="BlogForm"
+          showLabel="Add new blog"
+          hideLabel="Cancel"
+          ref={togglableBlogFormRef}
+        >
+          <BlogForm createNewBlog={createNewBlog} ref={blogFormRef} />
+        </Togglable>,
+        <LoggedUser key="LoggedUser" user={user} setUser={setUser} />,
+      ]}
     </div>
   )
 }
