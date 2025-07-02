@@ -16,16 +16,23 @@ describe("<Blog />", () => {
       user: {
         id: 1,
         username: "timo",
-        name: "Timo Takkunen"
-      }
+        name: "Timo Takkunen",
+      },
     }
     const user = {
       id: 1,
       username: "timo",
-      name: "Timo Takkunen"
+      name: "Timo Takkunen",
     }
 
-    container = render(<Blog blog={blog} user={user} updateBlogLikes={updateBlogLikes} removeBlog={removeBlog} />).container
+    container = render(
+      <Blog
+        blog={blog}
+        user={user}
+        updateBlogLikes={updateBlogLikes}
+        removeBlog={removeBlog}
+      />
+    ).container
   })
 
   test("displays only title and author at first", () => {

@@ -2,7 +2,13 @@ import Blog from "./Blog"
 import BlogService from "../services/blogs"
 import PropTypes from "prop-types"
 
-const BlogList = ({ user, blogs, setBlogs, setSuccessMessage, setErrorMessage }) => {
+const BlogList = ({
+  user,
+  blogs,
+  setBlogs,
+  setSuccessMessage,
+  setErrorMessage,
+}) => {
   const updateBlogLikes = async (blogWithUpdatedLikes) => {
     const updatedBlog = await BlogService.addLike(blogWithUpdatedLikes)
     updateBlogs(updatedBlog)
@@ -17,16 +23,24 @@ const BlogList = ({ user, blogs, setBlogs, setSuccessMessage, setErrorMessage })
   }
 
   const removeBlogBy = async (blogToRemove) => {
-    if (window.confirm(`Are you sure you want to remove blog ${blogToRemove.title} by ${blogToRemove.author}`)) {
+    if (
+      window.confirm(
+        `Are you sure you want to remove blog ${blogToRemove.title} by ${blogToRemove.author}`
+      )
+    ) {
       try {
         const response = await BlogService.remove(blogToRemove)
 
-        const removedBlogIndex = blogs.findIndex((blog) => blog.id === blogToRemove.id)
+        const removedBlogIndex = blogs.findIndex(
+          (blog) => blog.id === blogToRemove.id
+        )
         const blogsAfterRemoval = blogs.toSpliced(removedBlogIndex, 1)
 
         setBlogs(blogsAfterRemoval)
 
-        setSuccessMessage(`Blog ${blogToRemove.title} from ${blogToRemove.author} removed from list.`)
+        setSuccessMessage(
+          `Blog ${blogToRemove.title} from ${blogToRemove.author} removed from list.`
+        )
         setTimeout(() => {
           setSuccessMessage(null)
         }, 5000)
@@ -36,16 +50,15 @@ const BlogList = ({ user, blogs, setBlogs, setSuccessMessage, setErrorMessage })
           setErrorMessage(null)
         }, 5000)
       }
-
     }
   }
 
-  const sortedBlogs = blogs.toSorted((a, b) => a.likes > b.likes ? -1 : 1)
+  const sortedBlogs = blogs.toSorted((a, b) => (a.likes > b.likes ? -1 : 1))
 
   return (
     <div>
       <h2>All blogs</h2>
-      {sortedBlogs.map(blog =>
+      {sortedBlogs.map((blog) => (
         <Blog
           key={blog.id}
           user={user}
@@ -53,7 +66,7 @@ const BlogList = ({ user, blogs, setBlogs, setSuccessMessage, setErrorMessage })
           updateBlogLikes={updateBlogLikes}
           removeBlog={() => removeBlogBy(blog)}
         />
-      )}
+      ))}
     </div>
   )
 }
@@ -63,7 +76,7 @@ BlogList.propTypes = {
   blogs: PropTypes.array.isRequired,
   setBlogs: PropTypes.func.isRequired,
   setSuccessMessage: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired
+  setErrorMessage: PropTypes.func.isRequired,
 }
 
 export default BlogList

@@ -8,7 +8,7 @@ const Notification = ({ successMessage, errorMessage }) => {
     padding: "10px",
     border: "solid",
     borderColor: "#285238",
-    borderSize: "10px"
+    borderSize: "10px",
   }
 
   const errorMessageStyle = {
@@ -18,7 +18,7 @@ const Notification = ({ successMessage, errorMessage }) => {
     padding: "10px",
     border: "solid",
     borderColor: "#9E2B14",
-    borderSize: "10px"
+    borderSize: "10px",
   }
 
   if (successMessage) {
@@ -42,7 +42,7 @@ const Notification = ({ successMessage, errorMessage }) => {
 
 Notification.propTypes = {
   successMessage: PropTypes.string,
-  errorMessage: PropTypes.string
+  errorMessage: PropTypes.string,
 }
 
 export default Notification

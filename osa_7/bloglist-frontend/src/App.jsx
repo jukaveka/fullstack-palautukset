@@ -14,9 +14,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    BlogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    BlogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -56,14 +54,37 @@ const App = () => {
 
   return (
     <div>
-      {(successMessage || errorMessage) && (<Notification successMessage={successMessage} errorMessage={errorMessage} />)}
-      {!user && (<LoginForm setUser={setUser} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />)}
+      {(successMessage || errorMessage) && (
+        <Notification
+          successMessage={successMessage}
+          errorMessage={errorMessage}
+        />
+      )}
+      {!user && (
+        <LoginForm
+          setUser={setUser}
+          setSuccessMessage={setSuccessMessage}
+          setErrorMessage={setErrorMessage}
+        />
+      )}
       {user && [
-        <BlogList key="Bloglist" user={user} blogs={blogs} setBlogs={setBlogs} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage} />,
-        <Togglable key="BlogForm" showLabel="Add new blog" hideLabel="Cancel" ref={togglableBlogFormRef}>
-          <BlogForm createNewBlog={createNewBlog} ref={blogFormRef}/>
+        <BlogList
+          key="Bloglist"
+          user={user}
+          blogs={blogs}
+          setBlogs={setBlogs}
+          setSuccessMessage={setSuccessMessage}
+          setErrorMessage={setErrorMessage}
+        />,
+        <Togglable
+          key="BlogForm"
+          showLabel="Add new blog"
+          hideLabel="Cancel"
+          ref={togglableBlogFormRef}
+        >
+          <BlogForm createNewBlog={createNewBlog} ref={blogFormRef} />
         </Togglable>,
-        <LoggedUser key="LoggedUser" user={user} setUser={setUser} />
+        <LoggedUser key="LoggedUser" user={user} setUser={setUser} />,
       ]}
     </div>
   )

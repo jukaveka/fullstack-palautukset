@@ -12,7 +12,7 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
   const buttonStyle = {
     color: "white",
     backgroundColor: "#4C5C68",
-    margin: "2px"
+    margin: "2px",
   }
 
   const handleLogin = async (event) => {
@@ -59,12 +59,9 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />
-        <br /><br />
-        <Button
-          text="Login"
-          onClick={handleLogin}
-          style={buttonStyle}
-        />
+        <br />
+        <br />
+        <Button text="Login" onClick={handleLogin} style={buttonStyle} />
       </form>
     </div>
   )
@@ -73,7 +70,7 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
 LoginForm.propTypes = {
   setUser: PropTypes.func.isRequired,
   setSuccessMessage: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired
+  setErrorMessage: PropTypes.func.isRequired,
 }
 
 export default LoginForm

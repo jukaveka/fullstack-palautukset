@@ -11,11 +11,11 @@ const BlogForm = forwardRef((props, ref) => {
   const buttonStyle = {
     color: "white",
     backgroundColor: "#8FA998",
-    margin: "5px"
+    margin: "5px",
   }
 
   const hrStyle = {
-    border: "2px solid #CFD2CD"
+    border: "2px solid #CFD2CD",
   }
 
   const emptyBlogForm = () => {
@@ -26,17 +26,17 @@ const BlogForm = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => {
     return {
-      emptyBlogForm
+      emptyBlogForm,
     }
   })
 
-  const handleNewBlog = async event => {
+  const handleNewBlog = async (event) => {
     event.preventDefault()
 
     const newBlog = {
       title: title,
       author: author,
-      url: url
+      url: url,
     }
 
     await props.createNewBlog(newBlog)
@@ -65,19 +65,16 @@ const BlogForm = forwardRef((props, ref) => {
           value={url}
           onChange={({ target }) => setUrl(target.value)}
         />
-        <br /><br />
-        <Button
-          text="Add blog"
-          onClick={handleNewBlog}
-          style={buttonStyle}
-        />
+        <br />
+        <br />
+        <Button text="Add blog" onClick={handleNewBlog} style={buttonStyle} />
       </form>
     </div>
   )
 })
 
 BlogForm.propTypes = {
-  createNewBlog: PropTypes.func.isRequired
+  createNewBlog: PropTypes.func.isRequired,
 }
 
 BlogForm.displayName = "BlogForm"
