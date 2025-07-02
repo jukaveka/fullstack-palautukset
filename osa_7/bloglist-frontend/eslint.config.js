@@ -5,6 +5,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import stylisticJs from '@stylistic/eslint-plugin-js';
 import vitestGlobals from "eslint-config-vitest-globals/flat";
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
   js.configs.recommended,
@@ -55,4 +56,5 @@ export default [
       "no-unused-vars": 0
     }
   },
+  eslintConfigPrettier
 ];
