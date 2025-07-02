@@ -31,12 +31,12 @@ const LoginForm = ({ setUser }) => {
       setUsername("")
       setPassword("")
 
-      setNotification(notificationDispatch, "SUCCESS_LOGIN", user.username, 5)
+      setNotification(notificationDispatch, "LOGIN", user.username, 5)
     } catch (exception) {
       console.log("error with logging in")
       console.log("Exception", exception.message)
 
-      setNotification(notificationDispatch, "ERROR_LOGIN", exception.message, 5)
+      setNotification(notificationDispatch, "ERROR", exception.message, 5)
     }
   }
 
@@ -66,8 +66,6 @@ const LoginForm = ({ setUser }) => {
 
 LoginForm.propTypes = {
   setUser: PropTypes.func.isRequired,
-  setSuccessMessage: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired,
 }
 
 export default LoginForm
