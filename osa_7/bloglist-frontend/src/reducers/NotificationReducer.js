@@ -10,6 +10,11 @@ const NotificationReducer = (state, action) => {
         message: `${action.payload} added to blogs`,
         type: "SUCCESS",
       }
+    case "DELETE_BLOG":
+      return {
+        message: `${action.payload} removed from blogs`,
+        type: "SUCCESS",
+      }
     case "ERROR":
       return {
         message: `${action.payload}`,

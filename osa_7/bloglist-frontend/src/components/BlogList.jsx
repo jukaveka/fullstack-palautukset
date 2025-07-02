@@ -1,14 +1,12 @@
 import Blog from "./Blog"
 import BlogService from "../services/blogs"
 import PropTypes from "prop-types"
+import { setNotification } from "../reducers/NotificationReducer"
+import { useNotificationDispatch } from "../context/NotificationContext"
 
-const BlogList = ({
-  user,
-  blogs,
-  setBlogs,
-  setSuccessMessage,
-  setErrorMessage,
-}) => {
+const BlogList = ({ user, blogs, setBlogs }) => {
+  const notificationDispatch = useNotificationDispatch()
+
   const updateBlogLikes = async (blogWithUpdatedLikes) => {
     const updatedBlog = await BlogService.addLike(blogWithUpdatedLikes)
     updateBlogs(updatedBlog)
@@ -38,17 +36,14 @@ const BlogList = ({
 
         setBlogs(blogsAfterRemoval)
 
-        setSuccessMessage(
-          `Blog ${blogToRemove.title} from ${blogToRemove.author} removed from list.`
+        setNotification(
+          notificationDispatch,
+          "DELETE_BLOG",
+          `${blogToRemove.title} by ${blogToRemove.author}`,
+          5
         )
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
       } catch (exception) {
-        setErrorMessage(exception.message)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        setNotification(notificationDispatch, "ERROR", exception.message, 5)
       }
     }
   }
@@ -75,8 +70,6 @@ BlogList.propTypes = {
   user: PropTypes.object.isRequired,
   blogs: PropTypes.array.isRequired,
   setBlogs: PropTypes.func.isRequired,
-  setSuccessMessage: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired,
 }
 
 export default BlogList
