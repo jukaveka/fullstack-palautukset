@@ -1,43 +1,50 @@
 import PropTypes from "prop-types"
+import { useNotificationState } from "../context/NotificationContext"
 
-const Notification = ({ successMessage, errorMessage }) => {
-  const successMessageStyle = {
-    color: "#285238",
+const Notification = () => {
+  const notification = useNotificationState()
+
+  const messageStyle = {
     fontSize: "20px",
     fontWeight: "bold",
-    padding: "10px",
+    padding: "2px",
     border: "solid",
-    borderColor: "#285238",
     borderSize: "10px",
+    width: "25em",
+    textAlign: "center",
+  }
+
+  const successMessageStyle = {
+    color: "white",
+    backgroundColor: "#285238",
+    borderColor: "#285238",
   }
 
   const errorMessageStyle = {
-    color: "#9E2B14",
-    fontSize: "20px",
-    fontWeight: "bold",
-    padding: "10px",
-    border: "solid",
+    color: "white",
+    backgroundColor: "#9E2B14",
     borderColor: "#9E2B14",
-    borderSize: "10px",
   }
 
-  if (successMessage) {
+  if (!notification) {
+    return null
+  }
+
+  if (notification.type === "SUCCESS") {
     return (
-      <div style={successMessageStyle}>
-        <p> {successMessage} </p>
+      <div style={{ ...messageStyle, ...successMessageStyle }}>
+        <p> {notification.message} </p>
       </div>
     )
   }
 
-  if (errorMessage) {
+  if (notification.type === "ERROR") {
     return (
-      <div style={errorMessageStyle}>
-        <p> {errorMessage} </p>
+      <div style={{ ...messageStyle, ...errorMessageStyle }}>
+        <p> {notification.message} </p>
       </div>
     )
   }
-
-  return null
 }
 
 Notification.propTypes = {

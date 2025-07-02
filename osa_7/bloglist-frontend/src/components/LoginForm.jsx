@@ -4,10 +4,13 @@ import Button from "./Button"
 import loginService from "../services/login"
 import blogService from "../services/blogs"
 import PropTypes from "prop-types"
+import { useNotificationDispatch } from "../context/NotificationContext"
+import { setNotification } from "../reducers/NotificationReducer"
 
-const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
+const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const notificationDispatch = useNotificationDispatch()
 
   const buttonStyle = {
     color: "white",
@@ -28,18 +31,12 @@ const LoginForm = ({ setUser, setSuccessMessage, setErrorMessage }) => {
       setUsername("")
       setPassword("")
 
-      setSuccessMessage("Login successful")
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+      setNotification(notificationDispatch, "SUCCESS_LOGIN", user.username, 5)
     } catch (exception) {
       console.log("error with logging in")
       console.log("Exception", exception.message)
 
-      setErrorMessage("Wrong username or password")
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      setNotification(notificationDispatch, "ERROR_LOGIN", exception.message, 5)
     }
   }
 

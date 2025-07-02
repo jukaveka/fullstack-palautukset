@@ -6,6 +6,7 @@ import BlogForm from "./components/BlogForm"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import BlogService from "./services/blogs"
+import { NotificationContextProvider } from "./context/NotificationContext"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -54,38 +55,35 @@ const App = () => {
 
   return (
     <div>
-      {(successMessage || errorMessage) && (
-        <Notification
-          successMessage={successMessage}
-          errorMessage={errorMessage}
-        />
-      )}
-      {!user && (
-        <LoginForm
-          setUser={setUser}
-          setSuccessMessage={setSuccessMessage}
-          setErrorMessage={setErrorMessage}
-        />
-      )}
-      {user && [
-        <BlogList
-          key="Bloglist"
-          user={user}
-          blogs={blogs}
-          setBlogs={setBlogs}
-          setSuccessMessage={setSuccessMessage}
-          setErrorMessage={setErrorMessage}
-        />,
-        <Togglable
-          key="BlogForm"
-          showLabel="Add new blog"
-          hideLabel="Cancel"
-          ref={togglableBlogFormRef}
-        >
-          <BlogForm createNewBlog={createNewBlog} ref={blogFormRef} />
-        </Togglable>,
-        <LoggedUser key="LoggedUser" user={user} setUser={setUser} />,
-      ]}
+      <NotificationContextProvider>
+        <Notification />
+        {!user && (
+          <LoginForm
+            setUser={setUser}
+            setSuccessMessage={setSuccessMessage}
+            setErrorMessage={setErrorMessage}
+          />
+        )}
+        {user && [
+          <BlogList
+            key="Bloglist"
+            user={user}
+            blogs={blogs}
+            setBlogs={setBlogs}
+            setSuccessMessage={setSuccessMessage}
+            setErrorMessage={setErrorMessage}
+          />,
+          <Togglable
+            key="BlogForm"
+            showLabel="Add new blog"
+            hideLabel="Cancel"
+            ref={togglableBlogFormRef}
+          >
+            <BlogForm createNewBlog={createNewBlog} ref={blogFormRef} />
+          </Togglable>,
+          <LoggedUser key="LoggedUser" user={user} setUser={setUser} />,
+        ]}
+      </NotificationContextProvider>
     </div>
   )
 }
