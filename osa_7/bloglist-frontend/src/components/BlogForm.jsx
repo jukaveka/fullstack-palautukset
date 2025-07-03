@@ -8,7 +8,7 @@ import { useBlogsDispatch } from "../context/BlogContext"
 import { useNotificationDispatch } from "../context/NotificationContext"
 import { setNotification } from "../reducers/NotificationReducer"
 
-const BlogForm = (props) => {
+const BlogForm = ({ togglableBlogFormRef }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
@@ -53,6 +53,7 @@ const BlogForm = (props) => {
     }
 
     newBlogMutation.mutate(newBlog)
+    togglableBlogFormRef.current.toggleVisibility()
   }
 
   return (
@@ -87,7 +88,7 @@ const BlogForm = (props) => {
 }
 
 BlogForm.propTypes = {
-  createNewBlog: PropTypes.func.isRequired,
+  togglableBlogFormRef: PropTypes.object.isRequired,
 }
 
 export default BlogForm

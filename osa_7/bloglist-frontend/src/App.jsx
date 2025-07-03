@@ -23,8 +23,7 @@ const App = () => {
     }
   }, [])
 
-  const togglableBlogFormRef = useRef()
-
+  const togglableBlogFormRef = useRef({ toggleVisibility: () => {} })
   // Move toggle visibility to BlogForm component
   // togglableBlogFormRef.current.toggleVisibility()
 
@@ -41,7 +40,7 @@ const App = () => {
             hideLabel="Cancel"
             ref={togglableBlogFormRef}
           >
-            <BlogForm />
+            <BlogForm togglableBlogFormRef={togglableBlogFormRef} />
           </Togglable>,
           <LoggedUser key="LoggedUser" user={user} setUser={setUser} />,
         ]}
