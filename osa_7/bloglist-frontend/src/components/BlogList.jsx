@@ -3,16 +3,27 @@ import BlogService from "../services/blogs"
 import PropTypes from "prop-types"
 import { setNotification } from "../reducers/NotificationReducer"
 import { useNotificationDispatch } from "../context/NotificationContext"
+import { useQuery } from "@tanstack/react-query"
 
-const BlogList = ({ user, blogs, setBlogs }) => {
+const BlogList = ({ user, setBlogs }) => {
   const notificationDispatch = useNotificationDispatch()
+  const result = useQuery({ queryKey: "blogs", queryFn: BlogService.getAll })
+
+  if (result.isPending) {
+    return <div> Loading blog data </div>
+  }
+
+  if (result.isError) {
+    return <div> Error fetching blogs. ${result.error}</div>
+  }
+
+  const blogs = result.data
+
+  const sortedBlogs = blogs.toSorted((a, b) => (a.likes > b.likes ? -1 : 1))
 
   const updateBlogLikes = async (blogWithUpdatedLikes) => {
     const updatedBlog = await BlogService.addLike(blogWithUpdatedLikes)
-    updateBlogs(updatedBlog)
-  }
 
-  const updateBlogs = (updatedBlog) => {
     const blogIndex = blogs.findIndex((blog) => blog.id === updatedBlog.id)
 
     const updatedBlogs = blogs.toSpliced(blogIndex, 1, updatedBlog)
@@ -47,8 +58,6 @@ const BlogList = ({ user, blogs, setBlogs }) => {
       }
     }
   }
-
-  const sortedBlogs = blogs.toSorted((a, b) => (a.likes > b.likes ? -1 : 1))
 
   return (
     <div>

@@ -18,10 +18,6 @@ const App = () => {
   const notificationDispatch = useNotificationDispatch()
 
   useEffect(() => {
-    BlogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
-
-  useEffect(() => {
     const userInLocalStorage = window.localStorage.getItem("LoggedBlogUser")
 
     if (userInLocalStorage) {
@@ -54,12 +50,7 @@ const App = () => {
       <Notification />
       {!user && <LoginForm setUser={setUser} />}
       {user && [
-        <BlogList
-          key="Bloglist"
-          user={user}
-          blogs={blogs}
-          setBlogs={setBlogs}
-        />,
+        <BlogList key="Bloglist" user={user} setBlogs={setBlogs} />,
         <Togglable
           key="BlogForm"
           showLabel="Add new blog"
