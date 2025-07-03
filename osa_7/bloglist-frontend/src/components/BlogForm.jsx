@@ -1,12 +1,37 @@
-import { useState, forwardRef, useImperativeHandle } from "react"
+import { useState } from "react"
 import Input from "./Input"
 import Button from "./Button"
 import PropTypes from "prop-types"
+import { useMutation } from "@tanstack/react-query"
+import BlogService from "../services/blogs"
+import { useBlogsDispatch } from "../context/BlogContext"
+import { useNotificationDispatch } from "../context/NotificationContext"
+import { setNotification } from "../reducers/NotificationReducer"
 
-const BlogForm = forwardRef((props, ref) => {
+const BlogForm = (props) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+  const blogsDispatch = useBlogsDispatch()
+  const notificationDispatch = useNotificationDispatch()
+
+  const newBlogMutation = useMutation({
+    mutationFn: BlogService.create,
+    onSuccess: (newBlog) => {
+      emptyBlogForm()
+      blogsDispatch({ type: "NEW_BLOG", payload: newBlog })
+      setNotification(notificationDispatch, "NEW_BLOG", newBlog.title, 5)
+    },
+    onError: (error) => {
+      setNotification(notificationDispatch, "ERROR", error.message, 5)
+    },
+  })
+
+  const emptyBlogForm = () => {
+    setTitle("")
+    setAuthor("")
+    setUrl("")
+  }
 
   const buttonStyle = {
     color: "white",
@@ -18,18 +43,6 @@ const BlogForm = forwardRef((props, ref) => {
     border: "2px solid #CFD2CD",
   }
 
-  const emptyBlogForm = () => {
-    setTitle("")
-    setAuthor("")
-    setUrl("")
-  }
-
-  useImperativeHandle(ref, () => {
-    return {
-      emptyBlogForm,
-    }
-  })
-
   const handleNewBlog = async (event) => {
     event.preventDefault()
 
@@ -39,7 +52,7 @@ const BlogForm = forwardRef((props, ref) => {
       url: url,
     }
 
-    await props.createNewBlog(newBlog)
+    newBlogMutation.mutate(newBlog)
   }
 
   return (
@@ -71,12 +84,10 @@ const BlogForm = forwardRef((props, ref) => {
       </form>
     </div>
   )
-})
+}
 
 BlogForm.propTypes = {
   createNewBlog: PropTypes.func.isRequired,
 }
-
-BlogForm.displayName = "BlogForm"
 
 export default BlogForm

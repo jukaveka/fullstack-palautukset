@@ -6,16 +6,11 @@ import BlogForm from "./components/BlogForm"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import BlogService from "./services/blogs"
-import {
-  NotificationContextProvider,
-  useNotificationDispatch,
-} from "./context/NotificationContext"
-import { setNotification } from "./reducers/NotificationReducer"
+import { BlogContextProvider } from "./context/BlogContext"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const notificationDispatch = useNotificationDispatch()
 
   useEffect(() => {
     const userInLocalStorage = window.localStorage.getItem("LoggedBlogUser")
@@ -28,39 +23,29 @@ const App = () => {
     }
   }, [])
 
-  const blogFormRef = useRef()
   const togglableBlogFormRef = useRef()
 
-  const createNewBlog = async (newBlog) => {
-    try {
-      const addedBlog = await BlogService.create(newBlog)
-
-      const newBlogs = blogs.concat(addedBlog)
-      setBlogs(newBlogs)
-      togglableBlogFormRef.current.toggleVisibility()
-      blogFormRef.current.emptyBlogForm()
-      setNotification(notificationDispatch, "NEW_BLOG", addedBlog.title, 5)
-    } catch (exception) {
-      setNotification(notificationDispatch, "ERROR", exception.message, 5)
-    }
-  }
+  // Move toggle visibility to BlogForm component
+  // togglableBlogFormRef.current.toggleVisibility()
 
   return (
     <div>
-      <Notification />
-      {!user && <LoginForm setUser={setUser} />}
-      {user && [
-        <BlogList key="Bloglist" user={user} setBlogs={setBlogs} />,
-        <Togglable
-          key="BlogForm"
-          showLabel="Add new blog"
-          hideLabel="Cancel"
-          ref={togglableBlogFormRef}
-        >
-          <BlogForm createNewBlog={createNewBlog} ref={blogFormRef} />
-        </Togglable>,
-        <LoggedUser key="LoggedUser" user={user} setUser={setUser} />,
-      ]}
+      <BlogContextProvider>
+        <Notification />
+        {!user && <LoginForm setUser={setUser} />}
+        {user && [
+          <BlogList key="Bloglist" user={user} setBlogs={setBlogs} />,
+          <Togglable
+            key="BlogForm"
+            showLabel="Add new blog"
+            hideLabel="Cancel"
+            ref={togglableBlogFormRef}
+          >
+            <BlogForm />
+          </Togglable>,
+          <LoggedUser key="LoggedUser" user={user} setUser={setUser} />,
+        ]}
+      </BlogContextProvider>
     </div>
   )
 }

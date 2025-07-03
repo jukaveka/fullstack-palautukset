@@ -7,7 +7,11 @@ import { useQuery } from "@tanstack/react-query"
 
 const BlogList = ({ user, setBlogs }) => {
   const notificationDispatch = useNotificationDispatch()
-  const result = useQuery({ queryKey: "blogs", queryFn: BlogService.getAll })
+  const result = useQuery({
+    queryKey: ["blogs"],
+    queryFn: BlogService.getAll,
+    refetchOnWindowFocus: false,
+  })
 
   if (result.isPending) {
     return <div> Loading blog data </div>
@@ -77,7 +81,6 @@ const BlogList = ({ user, setBlogs }) => {
 
 BlogList.propTypes = {
   user: PropTypes.object.isRequired,
-  blogs: PropTypes.array.isRequired,
   setBlogs: PropTypes.func.isRequired,
 }
 
