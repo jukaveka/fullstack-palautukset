@@ -2,13 +2,11 @@ import { useState } from "react"
 import Input from "./Input"
 import Button from "./Button"
 import PropTypes from "prop-types"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import BlogService from "../services/blogs"
-import { useBlogsDispatch } from "../context/BlogContext"
 import { useNotificationDispatch } from "../context/NotificationContext"
 import {
   setErrorNotification,
-  setNotification,
   setSuccessNotification,
 } from "../reducers/NotificationReducer"
 
@@ -16,14 +14,15 @@ const BlogForm = ({ togglableBlogFormRef }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
-  const blogsDispatch = useBlogsDispatch()
+  const queryClient = useQueryClient()
   const notificationDispatch = useNotificationDispatch()
 
   const newBlogMutation = useMutation({
     mutationFn: BlogService.create,
     onSuccess: (newBlog) => {
       emptyBlogForm()
-      blogsDispatch({ type: "NEW_BLOG", payload: newBlog })
+      const blogs = queryClient.getQueryData(["blogs"])
+      queryClient.setQueryData(["blogs"], blogs.concat(newBlog))
       setSuccessNotification(notificationDispatch, "NEW_BLOG", newBlog.title)
     },
     onError: (error) => {

@@ -1,17 +1,16 @@
 import Blog from "./Blog"
 import BlogService from "../services/blogs"
 import PropTypes from "prop-types"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
   setErrorNotification,
   setSuccessNotification,
 } from "../reducers/NotificationReducer"
 import { useNotificationDispatch } from "../context/NotificationContext"
-import { useBlogsDispatch } from "../context/BlogContext"
 
 const BlogList = ({ user, setBlogs }) => {
   const notificationDispatch = useNotificationDispatch()
-  const blogsDispatch = useBlogsDispatch()
+  const queryClient = useQueryClient()
 
   const result = useQuery({
     queryKey: ["blogs"],
