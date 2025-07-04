@@ -8,7 +8,7 @@ import {
 } from "../reducers/NotificationReducer"
 import { useNotificationDispatch } from "../context/NotificationContext"
 
-const BlogList = ({ user, setBlogs }) => {
+const BlogList = ({ user }) => {
   const notificationDispatch = useNotificationDispatch()
   const queryClient = useQueryClient()
 
@@ -33,7 +33,27 @@ const BlogList = ({ user, setBlogs }) => {
       )
     },
     onError: (error) => {
-      setNotification(notificationDispatch, "ERROR", error.message, 5)
+      setErrorNotification(notificationDispatch, "ERROR", error.message)
+    },
+  })
+
+  const blogLikeMutation = useMutation({
+    mutationFn: BlogService.addLike,
+    onSuccess: (likedBlog) => {
+      const blogs = queryClient.getQueryData(["blogs"])
+      const likedBlogIndex = blogs.findIndex((blog) => blog.id === likedBlog.id)
+      queryClient.setQueryData(
+        ["blogs"],
+        blogs.toSpliced(likedBlogIndex, 1, likedBlog)
+      )
+      setSuccessNotification(
+        notificationDispatch,
+        "LIKE",
+        `${likedBlog.title} by ${likedBlog.author}`
+      )
+    },
+    onError: (error) => {
+      setErrorNotification(notificationDispatch, error.message)
     },
   })
 
@@ -49,14 +69,9 @@ const BlogList = ({ user, setBlogs }) => {
 
   const sortedBlogs = blogs.toSorted((a, b) => (a.likes > b.likes ? -1 : 1))
 
-  const updateBlogLikes = async (blogWithUpdatedLikes) => {
-    const updatedBlog = await BlogService.addLike(blogWithUpdatedLikes)
-
-    const blogIndex = blogs.findIndex((blog) => blog.id === updatedBlog.id)
-
-    const updatedBlogs = blogs.toSpliced(blogIndex, 1, updatedBlog)
-
-    setBlogs(updatedBlogs)
+  const handleBlogLike = async (blog) => {
+    const updatedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
+    blogLikeMutation.mutate(updatedBlog)
   }
 
   const removeBlogBy = async (blogToRemove) => {
@@ -77,7 +92,7 @@ const BlogList = ({ user, setBlogs }) => {
           key={blog.id}
           user={user}
           blog={blog}
-          updateBlogLikes={updateBlogLikes}
+          likeBlog={handleBlogLike}
           removeBlog={() => removeBlogBy(blog)}
         />
       ))}
@@ -87,7 +102,6 @@ const BlogList = ({ user, setBlogs }) => {
 
 BlogList.propTypes = {
   user: PropTypes.object.isRequired,
-  setBlogs: PropTypes.func.isRequired,
 }
 
 export default BlogList

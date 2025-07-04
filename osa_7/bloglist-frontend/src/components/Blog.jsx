@@ -2,7 +2,7 @@ import Togglable from "./Togglable"
 import Button from "./Button"
 import PropTypes from "prop-types"
 
-const Blog = ({ blog, user, updateBlogLikes, removeBlog }) => {
+const Blog = ({ blog, user, likeBlog, removeBlog }) => {
   const blogStyle = {
     padding: "5px",
     margin: "5px",
@@ -21,10 +21,7 @@ const Blog = ({ blog, user, updateBlogLikes, removeBlog }) => {
   }
 
   const handleLike = async () => {
-    const newLikes = blog.likes + 1
-    const updatedBlog = { ...blog, likes: newLikes, user: blog.user.id }
-
-    await updateBlogLikes(updatedBlog)
+    await likeBlog(blog)
   }
 
   return (
@@ -52,7 +49,7 @@ const Blog = ({ blog, user, updateBlogLikes, removeBlog }) => {
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  updateBlogLikes: PropTypes.func.isRequired,
+  likeBlog: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
 }
 
