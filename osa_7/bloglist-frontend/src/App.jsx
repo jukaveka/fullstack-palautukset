@@ -6,6 +6,7 @@ import BlogForm from "./components/BlogForm"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import UserList from "./components/UserList"
+import User from "./components/User"
 import BlogService from "./services/blogs"
 import UserContext from "./context/UserContext"
 import { Link, Routes, Route } from "react-router-dom"
@@ -45,6 +46,7 @@ const App = () => {
         <Routes key="Routes">
           <Route path="/blogs" element={<BlogList />} />
           <Route path="/users" element={<UserList />} />
+          <Route path="/users/:id" element={<User />} />
         </Routes>,
       ]}
     </div>
