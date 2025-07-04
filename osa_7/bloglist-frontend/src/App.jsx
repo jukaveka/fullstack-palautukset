@@ -30,7 +30,7 @@ const App = () => {
       <Notification />
       {!user && <LoginForm setUser={setUser} />}
       {user && [
-        <BlogList key="Bloglist" user={user} setBlogs={setBlogs} />,
+        <BlogList key="Bloglist" user={user} />,
         <Togglable
           key="BlogForm"
           showLabel="Add new blog"
@@ -39,7 +39,7 @@ const App = () => {
         >
           <BlogForm togglableBlogFormRef={togglableBlogFormRef} />
         </Togglable>,
-        <LoggedUser key="LoggedUser" user={user} setUser={setUser} />,
+        <LoggedUser key="LoggedUser" />,
       ]}
     </div>
   )
