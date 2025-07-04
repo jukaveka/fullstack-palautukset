@@ -1,6 +1,5 @@
 import { useContext } from "react"
 import Button from "./Button"
-import PropTypes from "prop-types"
 import UserContext from "../context/UserContext"
 
 const LoggedUser = () => {
