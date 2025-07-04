@@ -3,7 +3,6 @@ import Input from "./Input"
 import Button from "./Button"
 import loginService from "../services/login"
 import blogService from "../services/blogs"
-import PropTypes from "prop-types"
 import { useNotificationDispatch } from "../context/NotificationContext"
 import {
   setErrorNotification,
