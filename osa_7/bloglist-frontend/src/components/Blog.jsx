@@ -1,8 +1,11 @@
 import Togglable from "./Togglable"
 import Button from "./Button"
 import PropTypes from "prop-types"
+import { useUserValue } from "../context/UserContext"
 
-const Blog = ({ blog, user, likeBlog, removeBlog }) => {
+const Blog = ({ blog, likeBlog, removeBlog }) => {
+  const user = useUserValue()
+
   const blogStyle = {
     padding: "5px",
     margin: "5px",
@@ -48,7 +51,6 @@ const Blog = ({ blog, user, likeBlog, removeBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
   likeBlog: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
 }

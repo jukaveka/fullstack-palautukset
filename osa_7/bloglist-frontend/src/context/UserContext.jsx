@@ -13,6 +13,11 @@ export const UserContextProvider = (props) => {
   )
 }
 
+export const useUserValue = () => {
+  const userContext = useContext(UserContext)
+  return userContext[0]
+}
+
 export const useUserDispatch = () => {
   const userContext = useContext(UserContext)
   return userContext[1]

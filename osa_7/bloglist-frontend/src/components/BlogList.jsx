@@ -1,6 +1,5 @@
 import Blog from "./Blog"
 import BlogService from "../services/blogs"
-import PropTypes from "prop-types"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
   setErrorNotification,
@@ -8,7 +7,7 @@ import {
 } from "../reducers/NotificationReducer"
 import { useNotificationDispatch } from "../context/NotificationContext"
 
-const BlogList = ({ user }) => {
+const BlogList = () => {
   const notificationDispatch = useNotificationDispatch()
   const queryClient = useQueryClient()
 
@@ -90,7 +89,6 @@ const BlogList = ({ user }) => {
       {sortedBlogs.map((blog) => (
         <Blog
           key={blog.id}
-          user={user}
           blog={blog}
           likeBlog={handleBlogLike}
           removeBlog={() => removeBlogBy(blog)}
@@ -98,10 +96,6 @@ const BlogList = ({ user }) => {
       ))}
     </div>
   )
-}
-
-BlogList.propTypes = {
-  user: PropTypes.object.isRequired,
 }
 
 export default BlogList
