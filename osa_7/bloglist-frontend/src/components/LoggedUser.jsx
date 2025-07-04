@@ -1,7 +1,10 @@
+import { useContext } from "react"
 import Button from "./Button"
 import PropTypes from "prop-types"
+import UserContext from "../context/UserContext"
 
-const LoggedUser = ({ user, setUser }) => {
+const LoggedUser = () => {
+  const [user, userDispatch] = useContext(UserContext)
   const logoutButtonStyle = {
     color: "white",
     backgroundColor: "#4C5C68",
@@ -14,7 +17,7 @@ const LoggedUser = ({ user, setUser }) => {
 
   const handleLogout = (event) => {
     window.localStorage.removeItem("LoggedBlogUser")
-    setUser(null)
+    userDispatch({ type: "CLEAR_USER" })
   }
 
   return (
@@ -24,11 +27,6 @@ const LoggedUser = ({ user, setUser }) => {
       <Button text="Logout" onClick={handleLogout} style={logoutButtonStyle} />
     </div>
   )
-}
-
-LoggedUser.propTypes = {
-  user: PropTypes.object.isRequired,
-  setUser: PropTypes.func.isRequired,
 }
 
 export default LoggedUser
