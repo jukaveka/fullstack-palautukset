@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef, useContext } from "react"
 import BlogList from "./components/BlogList"
 import LoginForm from "./components/LoginForm"
 import LoggedUser from "./components/LoggedUser"
@@ -6,11 +6,10 @@ import BlogForm from "./components/BlogForm"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import BlogService from "./services/blogs"
-import { useUserDispatch } from "./context/UserContext"
+import UserContext from "./context/UserContext"
 
 const App = () => {
-  const [user, setUser] = useState(null)
-  const userDispatch = useUserDispatch()
+  const [user, userDispatch] = useContext(UserContext)
 
   useEffect(() => {
     const userInLocalStorage = window.localStorage.getItem("LoggedBlogUser")
