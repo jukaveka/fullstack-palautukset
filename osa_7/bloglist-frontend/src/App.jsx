@@ -6,10 +6,11 @@ import BlogForm from "./components/BlogForm"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import BlogService from "./services/blogs"
+import { useUserDispatch } from "./context/UserContext"
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
+  const userDispatch = useUserDispatch()
 
   useEffect(() => {
     const userInLocalStorage = window.localStorage.getItem("LoggedBlogUser")
@@ -17,7 +18,7 @@ const App = () => {
     if (userInLocalStorage) {
       const user = JSON.parse(userInLocalStorage)
 
-      setUser(user)
+      userDispatch({ type: "SET_USER", payload: user })
       BlogService.setToken(user.token)
     }
   }, [])
