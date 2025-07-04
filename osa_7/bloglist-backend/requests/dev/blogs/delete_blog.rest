@@ -1,0 +1,5 @@
+@token = TODO_add_valid_token_here
+@blogId = TODO_add_id_of_the_blog_to_remove_here
+
+DELETE http://localhost:3001/api/blogs/{{blogId}}
+Authorization: Bearer {{token}}

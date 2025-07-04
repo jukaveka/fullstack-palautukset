@@ -1,0 +1,12 @@
+@token = TODO_paste_token_here
+
+POST http://localhost:3001/api/blogs/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "A blog on OOPS in python:",
+  "author": "Singanavena Sathish",
+  "url": "https://medium.com/@sathishsinganavena1/a-blog-on-oops-in-python-c9c48831f3e",
+  "likes": 10
+}
