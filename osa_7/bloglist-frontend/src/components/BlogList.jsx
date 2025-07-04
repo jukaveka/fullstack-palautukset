@@ -2,7 +2,10 @@ import Blog from "./Blog"
 import BlogService from "../services/blogs"
 import PropTypes from "prop-types"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { setNotification } from "../reducers/NotificationReducer"
+import {
+  setErrorNotification,
+  setSuccessNotification,
+} from "../reducers/NotificationReducer"
 import { useNotificationDispatch } from "../context/NotificationContext"
 import { useBlogsDispatch } from "../context/BlogContext"
 
@@ -20,7 +23,7 @@ const BlogList = ({ user, setBlogs }) => {
     mutationFn: BlogService.remove,
     onSuccess: (data, variables) => {
       blogsDispatch({ type: "REMOVE", payload: variables.id })
-      setNotification(
+      setSuccessNotification(
         notificationDispatch,
         "DELETE_BLOG",
         `${variables.title} by ${variables.author}`,

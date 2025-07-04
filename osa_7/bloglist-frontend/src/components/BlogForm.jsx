@@ -6,7 +6,11 @@ import { useMutation } from "@tanstack/react-query"
 import BlogService from "../services/blogs"
 import { useBlogsDispatch } from "../context/BlogContext"
 import { useNotificationDispatch } from "../context/NotificationContext"
-import { setNotification } from "../reducers/NotificationReducer"
+import {
+  setErrorNotification,
+  setNotification,
+  setSuccessNotification,
+} from "../reducers/NotificationReducer"
 
 const BlogForm = ({ togglableBlogFormRef }) => {
   const [title, setTitle] = useState("")
@@ -20,10 +24,10 @@ const BlogForm = ({ togglableBlogFormRef }) => {
     onSuccess: (newBlog) => {
       emptyBlogForm()
       blogsDispatch({ type: "NEW_BLOG", payload: newBlog })
-      setNotification(notificationDispatch, "NEW_BLOG", newBlog.title, 5)
+      setSuccessNotification(notificationDispatch, "NEW_BLOG", newBlog.title)
     },
     onError: (error) => {
-      setNotification(notificationDispatch, "ERROR", error.message, 5)
+      setErrorNotification(notificationDispatch, error.message)
     },
   })
 

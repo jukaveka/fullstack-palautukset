@@ -27,11 +27,18 @@ const NotificationReducer = (state, action) => {
   }
 }
 
-export const setNotification = (dispatch, type, payload, timeout) => {
+export const setSuccessNotification = (dispatch, type, payload) => {
   dispatch({ type: type, payload: payload })
   setTimeout(() => {
     dispatch({ type: "CLEAR" })
-  }, timeout * 1000)
+  }, 5000)
+}
+
+export const setErrorNotification = (dispatch, payload) => {
+  dispatch({ type: "ERROR", payload: payload })
+  setTimeout(() => {
+    dispatch({ type: "CLEAR" })
+  }, 5000)
 }
 
 export default NotificationReducer

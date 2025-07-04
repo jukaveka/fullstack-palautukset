@@ -5,7 +5,10 @@ import loginService from "../services/login"
 import blogService from "../services/blogs"
 import PropTypes from "prop-types"
 import { useNotificationDispatch } from "../context/NotificationContext"
-import { setNotification } from "../reducers/NotificationReducer"
+import {
+  setErrorNotification,
+  setSuccessNotification,
+} from "../reducers/NotificationReducer"
 
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState("")
@@ -31,12 +34,12 @@ const LoginForm = ({ setUser }) => {
       setUsername("")
       setPassword("")
 
-      setNotification(notificationDispatch, "LOGIN", user.username, 5)
+      setSuccessNotification(notificationDispatch, "LOGIN", user.username)
     } catch (exception) {
       console.log("error with logging in")
       console.log("Exception", exception.message)
 
-      setNotification(notificationDispatch, "ERROR", exception.message, 5)
+      setErrorNotification(notificationDispatch, exception.message)
     }
   }
 
