@@ -39,8 +39,6 @@ const remove = async (blogToRemove) => {
   const requestUrl = `${baseUrl}/${blogToRemove.id}`
   const response = await axios.delete(requestUrl, config)
 
-  console.log(response.data)
-
   return response.data
 }
 

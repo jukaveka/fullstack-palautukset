@@ -1,16 +1,35 @@
 import Blog from "./Blog"
 import BlogService from "../services/blogs"
 import PropTypes from "prop-types"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { setNotification } from "../reducers/NotificationReducer"
 import { useNotificationDispatch } from "../context/NotificationContext"
-import { useQuery } from "@tanstack/react-query"
+import { useBlogsDispatch } from "../context/BlogContext"
 
 const BlogList = ({ user, setBlogs }) => {
   const notificationDispatch = useNotificationDispatch()
+  const blogsDispatch = useBlogsDispatch()
+
   const result = useQuery({
     queryKey: ["blogs"],
     queryFn: BlogService.getAll,
     refetchOnWindowFocus: false,
+  })
+
+  const blogRemovalMutation = useMutation({
+    mutationFn: BlogService.remove,
+    onSuccess: (data, variables) => {
+      blogsDispatch({ type: "REMOVE", payload: variables.id })
+      setNotification(
+        notificationDispatch,
+        "DELETE_BLOG",
+        `${variables.title} by ${variables.author}`,
+        5
+      )
+    },
+    onError: (error) => {
+      setNotification(notificationDispatch, "ERROR", error.message, 5)
+    },
   })
 
   if (result.isPending) {
@@ -41,25 +60,7 @@ const BlogList = ({ user, setBlogs }) => {
         `Are you sure you want to remove blog ${blogToRemove.title} by ${blogToRemove.author}`
       )
     ) {
-      try {
-        const response = await BlogService.remove(blogToRemove)
-
-        const removedBlogIndex = blogs.findIndex(
-          (blog) => blog.id === blogToRemove.id
-        )
-        const blogsAfterRemoval = blogs.toSpliced(removedBlogIndex, 1)
-
-        setBlogs(blogsAfterRemoval)
-
-        setNotification(
-          notificationDispatch,
-          "DELETE_BLOG",
-          `${blogToRemove.title} by ${blogToRemove.author}`,
-          5
-        )
-      } catch (exception) {
-        setNotification(notificationDispatch, "ERROR", exception.message, 5)
-      }
+      blogRemovalMutation.mutate(blogToRemove)
     }
   }
 
