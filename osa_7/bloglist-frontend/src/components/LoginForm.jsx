@@ -9,10 +9,12 @@ import {
   setErrorNotification,
   setSuccessNotification,
 } from "../reducers/NotificationReducer"
+import { useUserDispatch } from "../context/UserContext"
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const userDispatch = useUserDispatch()
   const notificationDispatch = useNotificationDispatch()
 
   const buttonStyle = {
@@ -29,7 +31,7 @@ const LoginForm = ({ setUser }) => {
 
       window.localStorage.setItem("LoggedBlogUser", JSON.stringify(user))
       blogService.setToken(user.token)
-      setUser(user)
+      userDispatch({ type: "SET_USER", payload: user })
 
       setUsername("")
       setPassword("")
@@ -65,10 +67,6 @@ const LoginForm = ({ setUser }) => {
       </form>
     </div>
   )
-}
-
-LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired,
 }
 
 export default LoginForm

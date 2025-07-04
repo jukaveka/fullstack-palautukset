@@ -27,7 +27,7 @@ const App = () => {
   return (
     <div>
       <Notification />
-      {!user && <LoginForm setUser={setUser} />}
+      {!user && <LoginForm />}
       {user && [
         <BlogList key="Bloglist" user={user} />,
         <Togglable
