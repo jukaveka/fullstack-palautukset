@@ -21,12 +21,15 @@ const BlogList = ({ user, setBlogs }) => {
   const blogRemovalMutation = useMutation({
     mutationFn: BlogService.remove,
     onSuccess: (data, variables) => {
-      blogsDispatch({ type: "REMOVE", payload: variables.id })
+      const blogs = queryClient.getQueryData(["blogs"])
+      const removedBlogIndex = blogs.findIndex(
+        (blog) => blog.id === variables.id
+      )
+      queryClient.setQueryData(["blogs"], blogs.toSpliced(removedBlogIndex, 1))
       setSuccessNotification(
         notificationDispatch,
         "DELETE_BLOG",
-        `${variables.title} by ${variables.author}`,
-        5
+        `${variables.title} by ${variables.author}`
       )
     },
     onError: (error) => {
