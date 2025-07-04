@@ -5,8 +5,10 @@ import LoggedUser from "./components/LoggedUser"
 import BlogForm from "./components/BlogForm"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
+import UserList from "./components/UserList"
 import BlogService from "./services/blogs"
 import UserContext from "./context/UserContext"
+import { Link, Routes, Route } from "react-router-dom"
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
@@ -26,10 +28,11 @@ const App = () => {
 
   return (
     <div>
+      <Link to="/blogs"> Blogs </Link>
+      <Link to="/users"> Users </Link>
       <Notification />
       {!user && <LoginForm />}
       {user && [
-        <BlogList key="Bloglist" user={user} />,
         <Togglable
           key="BlogForm"
           showLabel="Add new blog"
@@ -39,6 +42,10 @@ const App = () => {
           <BlogForm togglableBlogFormRef={togglableBlogFormRef} />
         </Togglable>,
         <LoggedUser key="LoggedUser" />,
+        <Routes key="Routes">
+          <Route path="/blogs" element={<BlogList />} />
+          <Route path="/users" element={<UserList />} />
+        </Routes>,
       ]}
     </div>
   )
