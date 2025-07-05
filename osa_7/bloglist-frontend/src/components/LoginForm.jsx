@@ -2,7 +2,7 @@ import { useState } from "react"
 import Input from "./Input"
 import Button from "./Button"
 import loginService from "../services/login"
-import blogService from "../services/blogs"
+import blogService from "../services/BlogService"
 import { useNotificationDispatch } from "../context/NotificationContext"
 import {
   setErrorNotification,

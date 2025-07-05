@@ -7,10 +7,11 @@ import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import UserList from "./components/UserList"
 import User from "./components/User"
-import BlogService from "./services/blogs"
+import BlogService from "./services/BlogService"
 import UserContext from "./context/UserContext"
-import { Link, Routes, Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import Menu from "./components/Menu"
+import Blog from "./components/Blog"
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
@@ -45,6 +46,7 @@ const App = () => {
         <LoggedUser key="LoggedUser" />,
         <Routes key="Routes">
           <Route path="/blogs" element={<BlogList />} />
+          <Route path="/blogs/:id" element={<Blog />} />
           <Route path="/users" element={<UserList />} />
           <Route path="/users/:id" element={<User />} />
         </Routes>,

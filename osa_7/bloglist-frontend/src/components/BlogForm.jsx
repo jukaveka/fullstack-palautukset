@@ -3,7 +3,7 @@ import Input from "./Input"
 import Button from "./Button"
 import PropTypes from "prop-types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import BlogService from "../services/blogs"
+import BlogService from "../services/BlogService"
 import { useNotificationDispatch } from "../context/NotificationContext"
 import {
   setErrorNotification,
