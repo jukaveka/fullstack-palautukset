@@ -31,10 +31,10 @@ blogRouter.post('/', userExtractor, async (request, response, next) => {
   response.status(201).json(addedBlog)
 })
 
-blogRouter.post('/:id/comments', async (request, response) => {
+blogRouter.post('/:id/comments', async (request, response, next) => {
   const commentedBlog = await blogService.addCommentToBlog(
     request.params.id,
-    request.body
+    request.body.comment
   )
 
   response.status(201).json(commentedBlog)
