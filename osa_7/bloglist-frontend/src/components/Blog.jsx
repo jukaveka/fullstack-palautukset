@@ -39,12 +39,7 @@ const Blog = () => {
   const blogLikeMutation = useMutation({
     mutationFn: BlogService.addLike,
     onSuccess: (likedBlog) => {
-      const blogs = queryClient.getQueryData(["blogs"])
-      const likedBlogIndex = blogs.findIndex((blog) => blog.id === likedBlog.id)
-      queryClient.setQueryData(
-        ["blogs"],
-        blogs.toSpliced(likedBlogIndex, 1, likedBlog)
-      )
+      blog.likes = blog.likes + 1
       setSuccessNotification(
         notificationDispatch,
         "LIKE",
