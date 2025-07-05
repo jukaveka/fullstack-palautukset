@@ -10,6 +10,7 @@ import User from "./components/User"
 import BlogService from "./services/blogs"
 import UserContext from "./context/UserContext"
 import { Link, Routes, Route } from "react-router-dom"
+import Menu from "./components/Menu"
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
@@ -29,8 +30,7 @@ const App = () => {
 
   return (
     <div>
-      <Link to="/blogs"> Blogs </Link>
-      <Link to="/users"> Users </Link>
+      <Menu />
       <Notification />
       {!user && <LoginForm />}
       {user && [
