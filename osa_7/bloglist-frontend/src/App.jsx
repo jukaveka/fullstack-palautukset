@@ -43,14 +43,13 @@ const App = () => {
         >
           <BlogForm togglableBlogFormRef={togglableBlogFormRef} />
         </Togglable>,
-        <LoggedUser key="LoggedUser" />,
-        <Routes key="Routes">
-          <Route path="/blogs" element={<BlogList />} />
-          <Route path="/blogs/:id" element={<Blog />} />
-          <Route path="/users" element={<UserList />} />
-          <Route path="/users/:id" element={<User />} />
-        </Routes>,
       ]}
+      <Routes key="Routes">
+        <Route path="/blogs" element={<BlogList />} />
+        <Route path="/blogs/:id" element={<Blog />} />
+        <Route path="/users" element={<UserList />} />
+        <Route path="/users/:id" element={<User />} />
+      </Routes>
     </div>
   )
 }
