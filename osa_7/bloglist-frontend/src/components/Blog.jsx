@@ -1,7 +1,5 @@
-import Togglable from "./Togglable"
 import Button from "./Button"
 import BlogService from "../services/BlogService"
-import PropTypes from "prop-types"
 import { useUserValue } from "../context/UserContext"
 import { useParams } from "react-router-dom"
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
@@ -10,12 +8,15 @@ import {
   setSuccessNotification,
   setErrorNotification,
 } from "../reducers/NotificationReducer"
+import { useState } from "react"
+import Input from "./Input"
 
 const Blog = () => {
   const queryClient = useQueryClient()
   const notificationDispatch = useNotificationDispatch()
   const user = useUserValue()
   const params = useParams()
+  const [comment, setComment] = useState("")
 
   const blogRemovalMutation = useMutation({
     mutationFn: BlogService.remove,
@@ -51,6 +52,16 @@ const Blog = () => {
     },
   })
 
+  const blogCommentMutation = useMutation({
+    mutationFn: ({ id, comment }) => BlogService.addComment(id, comment),
+    onSuccess: (commentedBlog) => {
+      queryClient.setQueryData(["blog"], commentedBlog)
+    },
+    onError: (error) => {
+      setErrorNotification(notificationDispatch, error.message)
+    },
+  })
+
   const result = useQuery({
     queryKey: ["blog"],
     queryFn: () => BlogService.getById(params.id),
@@ -76,6 +87,7 @@ const Blog = () => {
   const likeButtonStyle = {
     color: "white",
     backgroundColor: "#8FA998",
+    margin: "0px 10px",
   }
 
   const handleLike = () => {
@@ -96,6 +108,10 @@ const Blog = () => {
     }
   }
 
+  const handleComment = () => {
+    blogCommentMutation.mutate({ id: blog.id, comment: comment })
+  }
+
   return (
     <div>
       <h2>
@@ -103,7 +119,7 @@ const Blog = () => {
       </h2>
       <a href={blog.url}>{blog.url}</a>
       <p data-testid="blogLikes">
-        likes {blog.likes}{" "}
+        likes {blog.likes}
         <Button text="Like" onClick={handleLike} style={likeButtonStyle} />
       </p>
       <p>Added to list by {blog.user.name}</p>
@@ -114,6 +130,19 @@ const Blog = () => {
           style={removalButtonStyle}
         />
       )}
+      <h3> Comments </h3>
+      <Input
+        label="New comment"
+        type="text"
+        value={comment}
+        onChange={({ target }) => setComment(target.value)}
+      />
+      <Button text="Add" onClick={handleComment} style={likeButtonStyle} />
+      <ul>
+        {blog.comments.map((comment, index) => {
+          return <li key={`blog-comment-${index}`}> {comment} </li>
+        })}
+      </ul>
     </div>
   )
 }
