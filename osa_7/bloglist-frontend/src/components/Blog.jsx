@@ -109,7 +109,7 @@ const Blog = () => {
   }
 
   const handleComment = () => {
-    blogCommentMutation.mutate({ id: blog.id, comment: comment })
+    blogCommentMutation.mutate({ id: blog.id, comment: { comment } })
   }
 
   return (
