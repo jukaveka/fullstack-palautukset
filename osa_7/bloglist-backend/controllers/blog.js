@@ -1,66 +1,67 @@
-const blogRouter = require("express").Router();
-const blogService = require("../services/blogService");
-const userService = require("../services/userService");
-const { userExtractor } = require("../utils/middleware");
+const blogRouter = require('express').Router()
+const blogService = require('../services/blogService')
+const userService = require('../services/userService')
+const { userExtractor } = require('../utils/middleware')
 
-blogRouter.get("/", async (request, response) => {
-  const blogs = await blogService.fetchAllBlogs();
+blogRouter.get('/', async (request, response) => {
+  const blogs = await blogService.fetchAllBlogs()
 
-  response.json(blogs);
-});
+  response.json(blogs)
+})
 
-blogRouter.get("/:id", async (request, response) => {
-  const blog = await blogService.fetchBlog(request.params.id);
+blogRouter.get('/:id', async (request, response) => {
+  const blog = await blogService.findBlog(request.params.id)
 
-  response.json(blog);
-});
+  blog.populate('user', { name: 1 })
 
-blogRouter.post("/", userExtractor, async (request, response, next) => {
-  const validatedRequest = blogService.validateBlogPostRequest(request);
+  response.json(blog)
+})
 
-  if (validatedRequest.invalidRequest) {
-    return response
-      .status(validatedRequest.status)
-      .json({ error: validatedRequest.error });
-  }
-
-  const addedBlog = await blogService.saveBlogAndUpdateUser(request);
-
-  response.status(201).json(addedBlog);
-});
-
-blogRouter.delete("/:id", userExtractor, async (request, response, next) => {
-  const validatedRequest = await blogService.validateBlogDeletionRequest(
-    request
-  );
+blogRouter.post('/', userExtractor, async (request, response, next) => {
+  const validatedRequest = blogService.validateBlogPostRequest(request)
 
   if (validatedRequest.invalidRequest) {
     return response
       .status(validatedRequest.status)
-      .json({ error: validatedRequest.error });
+      .json({ error: validatedRequest.error })
   }
 
-  const deletedBlog = await blogService.deleteBlog(request.params.id);
+  const addedBlog = await blogService.saveBlogAndUpdateUser(request)
 
-  await userService.removeBlogFromUser(deletedBlog.id, deletedBlog.user);
+  response.status(201).json(addedBlog)
+})
 
-  response.status(204).end();
-});
-
-blogRouter.put("/:id", async (request, response, next) => {
-  const validatedRequest = await blogService.validateBlogUpdateRequest(request);
+blogRouter.delete('/:id', userExtractor, async (request, response, next) => {
+  const validatedRequest =
+    await blogService.validateBlogDeletionRequest(request)
 
   if (validatedRequest.invalidRequest) {
     return response
       .status(validatedRequest.status)
-      .json({ error: validatedRequest.error });
+      .json({ error: validatedRequest.error })
   }
 
-  const blog = await blogService.findBlog(request.params.id);
-  const updatedBlog = await blogService.saveBlog(blog, request.body, blog.user);
-  await updatedBlog.populate("user", { username: 1, name: 1 });
+  const deletedBlog = await blogService.deleteBlog(request.params.id)
 
-  response.json(updatedBlog);
-});
+  await userService.removeBlogFromUser(deletedBlog.id, deletedBlog.user)
 
-module.exports = blogRouter;
+  response.status(204).end()
+})
+
+blogRouter.put('/:id', async (request, response, next) => {
+  const validatedRequest = await blogService.validateBlogUpdateRequest(request)
+
+  if (validatedRequest.invalidRequest) {
+    return response
+      .status(validatedRequest.status)
+      .json({ error: validatedRequest.error })
+  }
+
+  const blog = await blogService.findBlog(request.params.id)
+  const updatedBlog = await blogService.saveBlog(blog, request.body, blog.user)
+  await updatedBlog.populate('user', { username: 1, name: 1 })
+
+  response.json(updatedBlog)
+})
+
+module.exports = blogRouter
