@@ -12,6 +12,13 @@ const getAll = async () => {
   return response.data
 }
 
+const getById = async (blogId) => {
+  const requestUrl = `${baseUrl}/${blogId}`
+  const response = await axios.get(requestUrl)
+
+  return response.data
+}
+
 const create = async (newBlog) => {
   const config = {
     headers: {
