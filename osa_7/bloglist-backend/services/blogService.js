@@ -1,12 +1,10 @@
-const Blog = require("../models/blog")
-const userService = require("./userService")
-const validatorService = require("./requestValidatorService")
-const tokenService = require("./tokenService")
+const Blog = require('../models/blog')
+const userService = require('./userService')
+const validatorService = require('./requestValidatorService')
+const tokenService = require('./tokenService')
 
 const fetchAllBlogs = async () => {
-  const blogs = await Blog
-    .find({})
-    .populate("user", { username: 1, name: 1 })
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
 
   return blogs
 }
@@ -16,9 +14,8 @@ const saveBlog = async (blog, request, user) => {
   blog.author = request.author
   blog.url = request.url
   blog.user = user
-  blog.likes = !request.likes
-    ? 0
-    : request.likes
+  blog.comments = []
+  blog.likes = !request.likes ? 0 : request.likes
 
   return await blog.save()
 }
@@ -45,7 +42,17 @@ const saveBlogAndUpdateUser = async (request) => {
   blogUser.blogs = blogUser.blogs.concat(addedBlog._id)
   await blogUser.save()
 
-  return addedBlog.populate("user", { username: 1, name: 1 })
+  return addedBlog.populate('user', { username: 1, name: 1 })
+}
+
+const addCommentToBlog = async (id, comment) => {
+  const blog = await findBlog(id)
+
+  blog.comments = blog.comments.concat(comment)
+
+  await blog.save()
+
+  return blog
 }
 
 // Request validation functions
@@ -62,28 +69,37 @@ const unauthorizedOperation = async (id, requestUser) => {
 
 const validateBlogPostRequest = (request) => {
   if (tokenService.invalidToken(request.token)) {
-    return validatorService.generateInvalidRequestObject(401, "invalid token")
+    return validatorService.generateInvalidRequestObject(401, 'invalid token')
   }
 
   if (requestMissingRequiredInformation(request.body)) {
-    return validatorService.generateInvalidRequestObject(400, "title or url can't be empty")
+    return validatorService.generateInvalidRequestObject(
+      400,
+      "title or url can't be empty"
+    )
   }
 
   return validatorService.generateValidRequestObject()
 }
 
 const validateBlogUpdateRequest = async (request) => {
-  if (validatorService.requestIdIsInvalid(request.params.id) ) {
-    return validatorService.generateInvalidRequestObject(400, "Malformatted id")
+  if (validatorService.requestIdIsInvalid(request.params.id)) {
+    return validatorService.generateInvalidRequestObject(400, 'Malformatted id')
   }
-  
-  if (requestMissingRequiredInformation(request.body) ) {
-    return validatorService.generateInvalidRequestObject(400, "title or url can't be empty")
+
+  if (requestMissingRequiredInformation(request.body)) {
+    return validatorService.generateInvalidRequestObject(
+      400,
+      "title or url can't be empty"
+    )
   }
 
   const blogIsNonexistent = await nonexistentBlog(request.params.id)
   if (blogIsNonexistent) {
-    return validatorService.generateInvalidRequestObject(404, "Blog with given id not found")
+    return validatorService.generateInvalidRequestObject(
+      404,
+      'Blog with given id not found'
+    )
   }
 
   return validatorService.generateValidRequestObject()
@@ -91,21 +107,30 @@ const validateBlogUpdateRequest = async (request) => {
 
 const validateBlogDeletionRequest = async (request) => {
   if (tokenService.invalidToken(request.token)) {
-    return validatorService.generateInvalidRequestObject(401, "invalid token")
+    return validatorService.generateInvalidRequestObject(401, 'invalid token')
   }
 
-  if (validatorService.requestIdIsInvalid(request.params.id) ) {
-    return validatorService.generateInvalidRequestObject(400, "Malformatted id") 
+  if (validatorService.requestIdIsInvalid(request.params.id)) {
+    return validatorService.generateInvalidRequestObject(400, 'Malformatted id')
   }
 
   const blogIsNonexistent = await nonexistentBlog(request.params.id)
   if (blogIsNonexistent) {
-    return validatorService.generateInvalidRequestObject(204, "Blog with given id not found") 
+    return validatorService.generateInvalidRequestObject(
+      204,
+      'Blog with given id not found'
+    )
   }
 
-  const unauthorizedUser = await unauthorizedOperation(request.params.id, request.user)
+  const unauthorizedUser = await unauthorizedOperation(
+    request.params.id,
+    request.user
+  )
   if (unauthorizedUser) {
-    return validatorService.generateInvalidRequestObject(401, "Invalid token for deleting blog") 
+    return validatorService.generateInvalidRequestObject(
+      401,
+      'Invalid token for deleting blog'
+    )
   }
 
   return validatorService.generateValidRequestObject()
@@ -116,9 +141,10 @@ module.exports = {
   saveBlog,
   findBlog,
   deleteBlog,
+  addCommentToBlog,
   nonexistentBlog,
   saveBlogAndUpdateUser,
   validateBlogPostRequest,
   validateBlogUpdateRequest,
-  validateBlogDeletionRequest
+  validateBlogDeletionRequest,
 }

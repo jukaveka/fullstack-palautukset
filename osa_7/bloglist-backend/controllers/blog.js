@@ -31,6 +31,15 @@ blogRouter.post('/', userExtractor, async (request, response, next) => {
   response.status(201).json(addedBlog)
 })
 
+blogRouter.post('/:id/comments', async (request, response) => {
+  const commentedBlog = await blogService.addCommentToBlog(
+    request.params.id,
+    request.body
+  )
+
+  response.status(201).json(commentedBlog)
+})
+
 blogRouter.delete('/:id', userExtractor, async (request, response, next) => {
   const validatedRequest =
     await blogService.validateBlogDeletionRequest(request)
