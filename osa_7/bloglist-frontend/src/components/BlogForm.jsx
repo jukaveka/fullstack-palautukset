@@ -38,9 +38,21 @@ const BlogForm = () => {
     setUrl("")
   }
 
-  const buttonStyle = {
+  const openButtonStyle = {
+    color: "white",
+    backgroundColor: "#5d4e6d",
+    margin: "5px",
+  }
+
+  const submitButtonStyle = {
     color: "white",
     backgroundColor: "#8FA998",
+    margin: "5px",
+  }
+
+  const cancelButtonStyle = {
+    color: "white",
+    backgroundColor: "#a26769",
     margin: "5px",
   }
 
@@ -66,7 +78,7 @@ const BlogForm = () => {
         <Button
           text="Add new blog"
           onClick={() => setVisible(true)}
-          style={buttonStyle}
+          style={openButtonStyle}
         />
       </div>
     )
@@ -97,19 +109,19 @@ const BlogForm = () => {
         />
         <br />
         <br />
-        <Button text="Add blog" onClick={handleNewBlog} style={buttonStyle} />
         <Button
-          text="Hide form"
+          text="Add blog"
+          onClick={handleNewBlog}
+          style={submitButtonStyle}
+        />
+        <Button
+          text="Cancel"
           onClick={() => setVisible(false)}
-          style={buttonStyle}
+          style={cancelButtonStyle}
         />
       </form>
     </div>
   )
-}
-
-BlogForm.propTypes = {
-  togglableBlogFormRef: PropTypes.object.isRequired,
 }
 
 export default BlogForm
