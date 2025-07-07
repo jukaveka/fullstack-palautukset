@@ -10,10 +10,11 @@ import {
   setSuccessNotification,
 } from "../reducers/NotificationReducer"
 
-const BlogForm = ({ togglableBlogFormRef }) => {
+const BlogForm = () => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+  const [visible, setVisible] = useState(false)
   const queryClient = useQueryClient()
   const notificationDispatch = useNotificationDispatch()
 
@@ -23,6 +24,7 @@ const BlogForm = ({ togglableBlogFormRef }) => {
       emptyBlogForm()
       const blogs = queryClient.getQueryData(["blogs"])
       queryClient.setQueryData(["blogs"], blogs.concat(newBlog))
+      setVisible(false)
       setSuccessNotification(notificationDispatch, "NEW_BLOG", newBlog.title)
     },
     onError: (error) => {
@@ -56,7 +58,18 @@ const BlogForm = ({ togglableBlogFormRef }) => {
     }
 
     newBlogMutation.mutate(newBlog)
-    togglableBlogFormRef.current.toggleVisibility()
+  }
+
+  if (!visible) {
+    return (
+      <div>
+        <Button
+          text="Add new blog"
+          onClick={() => setVisible(true)}
+          style={buttonStyle}
+        />
+      </div>
+    )
   }
 
   return (
@@ -85,6 +98,11 @@ const BlogForm = ({ togglableBlogFormRef }) => {
         <br />
         <br />
         <Button text="Add blog" onClick={handleNewBlog} style={buttonStyle} />
+        <Button
+          text="Hide form"
+          onClick={() => setVisible(false)}
+          style={buttonStyle}
+        />
       </form>
     </div>
   )

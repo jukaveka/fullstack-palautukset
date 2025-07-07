@@ -26,23 +26,12 @@ const App = () => {
     }
   }, [])
 
-  const togglableBlogFormRef = useRef({ toggleVisibility: () => {} })
-
   return (
     <div>
       <Menu />
       <Notification />
       {!user && <LoginForm />}
-      {user && [
-        <Togglable
-          key="BlogForm"
-          showLabel="Add new blog"
-          hideLabel="Cancel"
-          ref={togglableBlogFormRef}
-        >
-          <BlogForm togglableBlogFormRef={togglableBlogFormRef} />
-        </Togglable>,
-      ]}
+      {user && <BlogForm />}
       <Routes key="Routes">
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/blogs/:id" element={<Blog />} />
