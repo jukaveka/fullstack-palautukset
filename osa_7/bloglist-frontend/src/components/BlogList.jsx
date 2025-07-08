@@ -1,6 +1,15 @@
 import BlogService from "../services/BlogService"
 import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material"
 
 const BlogList = () => {
   const result = useQuery({
@@ -23,12 +32,25 @@ const BlogList = () => {
 
   return (
     <div>
-      <h2>All blogs</h2>
-      {sortedBlogs.map((blog) => (
-        <p key={blog.id}>
-          <Link to={`/blogs/${blog.id}`}> {blog.title} </Link>
-        </p>
-      ))}
+      <Typography variant="h4"> All blogs </Typography>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell> Title </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {sortedBlogs.map((blog) => (
+              <TableRow key={blog.id}>
+                <TableCell component={Link} to={`/blogs/${blog.id}`}>
+                  <Typography> {blog.title} </Typography>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
