@@ -2,16 +2,24 @@ import BlogService from "../services/BlogService"
 import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import {
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
+  TablePagination,
   TableRow,
   Typography,
 } from "@mui/material"
+import { useState } from "react"
 
 const BlogList = () => {
+  const [page, setPage] = useState(0)
+  const [rowsOnPage, setRowsOnPage] = useState(5)
+  const startIndex = page * 5
+  const endIndex = startIndex + rowsOnPage
   const result = useQuery({
     queryKey: ["blogs"],
     queryFn: BlogService.getAll,
@@ -30,25 +38,58 @@ const BlogList = () => {
 
   const sortedBlogs = blogs.toSorted((a, b) => (a.likes > b.likes ? -1 : 1))
 
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsOnPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+
+  const visibleBlogs = sortedBlogs.slice(startIndex, endIndex)
+
   return (
     <div>
-      <Typography variant="h4"> All blogs </Typography>
-      <TableContainer>
+      <Typography variant="h4" style={{ textAlign: "center" }}>
+        All blogs
+      </Typography>
+      <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell> Title </TableCell>
+              <TableCell>
+                <Typography variant="h5"> Title </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h5"> Author </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedBlogs.map((blog) => (
+            {visibleBlogs.map((blog) => (
               <TableRow key={blog.id}>
-                <TableCell component={Link} to={`/blogs/${blog.id}`}>
-                  <Typography> {blog.title} </Typography>
+                <TableCell>
+                  <Link component={Link} to={`/blogs/${blog.id}`}>
+                    {blog.title}
+                  </Link>
                 </TableCell>
+                <TableCell>{blog.author}</TableCell>
               </TableRow>
             ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 20]}
+                count={blogs.length}
+                page={page}
+                onPageChange={handlePageChange}
+                rowsPerPage={rowsOnPage}
+                onRowsPerPageChange={handleRowsPerPageChange}
+              ></TablePagination>
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
     </div>
