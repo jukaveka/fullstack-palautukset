@@ -5,11 +5,12 @@ import BlogForm from "./components/BlogForm"
 import Notification from "./components/Notification"
 import UserList from "./components/UserList"
 import User from "./components/User"
+import AppNav from "./components/AppBar"
+import Blog from "./components/Blog"
 import BlogService from "./services/BlogService"
 import UserContext from "./context/UserContext"
 import { Routes, Route } from "react-router-dom"
-import Menu from "./components/Menu"
-import Blog from "./components/Blog"
+import { Container } from "@mui/material"
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
@@ -26,8 +27,8 @@ const App = () => {
   }, [])
 
   return (
-    <div>
-      <Menu />
+    <Container>
+      <AppNav />
       <Notification />
       {!user && <LoginForm />}
       {user && <BlogForm />}
@@ -37,7 +38,7 @@ const App = () => {
         <Route path="/users" element={<UserList />} />
         <Route path="/users/:id" element={<User />} />
       </Routes>
-    </div>
+    </Container>
   )
 }
 
