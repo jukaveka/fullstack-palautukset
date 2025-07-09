@@ -83,6 +83,7 @@ const Blog = () => {
   }
 
   const blog = result.data
+  const canDeleteBlog = blog.user.username === user.username
 
   const likeButtonStyle = {
     color: "white",
@@ -168,9 +169,16 @@ const Blog = () => {
               <IconButton onClick={handleLike} size="large" color="success">
                 <LikeIcon />
               </IconButton>
-              <IconButton onClick={handleRemoval} size="large" color="error">
-                <DeleteIcon />
-              </IconButton>
+              {canDeleteBlog && (
+                <IconButton onClick={handleRemoval} size="large" color="error">
+                  <DeleteIcon />
+                </IconButton>
+              )}
+              {!canDeleteBlog && (
+                <IconButton size="large" disabled>
+                  <DeleteIcon />
+                </IconButton>
+              )}
             </Grid>
           </Grid>
         </Paper>
