@@ -11,15 +11,18 @@ import {
   MenuItem,
 } from "@mui/material"
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"
+import { useNavigate } from "react-router-dom"
 
 const AppNav = () => {
   const [user, userDispatch] = useContext(UserContext)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+  const navigate = useNavigate()
 
   const handleLogout = () => {
     window.localStorage.removeItem("LoggedBlogUser")
     userDispatch({ type: "CLEAR_USER" })
+    navigate("/")
   }
 
   const handleMenuOpen = (event) => {
