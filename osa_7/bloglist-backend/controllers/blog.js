@@ -37,6 +37,8 @@ blogRouter.post('/:id/comments', async (request, response, next) => {
     request.body.comment
   )
 
+  await commentedBlog.populate('user', { name: 1, username: 1 })
+
   response.status(201).json(commentedBlog)
 })
 
