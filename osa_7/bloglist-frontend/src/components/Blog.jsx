@@ -16,6 +16,7 @@ import {
   OpenInBrowser as OpenLink,
   ThumbUp as LikeIcon,
 } from "@mui/icons-material"
+import Comments from "./Comments"
 
 const Blog = () => {
   const queryClient = useQueryClient()
@@ -191,11 +192,20 @@ const Blog = () => {
         onChange={({ target }) => setComment(target.value)}
       />
       <Button text="Add" onClick={handleComment} style={likeButtonStyle} />
-      <ul>
-        {blog.comments.map((comment, index) => {
-          return <li key={`blog-comment-${index}`}> {comment} </li>
-        })}
-      </ul>
+      <Box
+        sx={{ display: "flex", justifyContent: "center", paddingTop: "50px" }}
+      >
+        <Paper
+          elevation={1}
+          sx={{
+            minWidth: 200,
+            maxWidth: 700,
+            flexGrow: 1,
+          }}
+        >
+          <Comments comments={blog.comments} />
+        </Paper>
+      </Box>
     </div>
   )
 }
