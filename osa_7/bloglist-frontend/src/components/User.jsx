@@ -15,8 +15,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material"
+import { useState } from "react"
 
 const User = () => {
+  const [page, setPage] = useState(0)
+  const [rowsOnPage, setRowsOnPage] = useState(10)
+  const startIndex = page * 5
+  const endIndex = startIndex + rowsOnPage
   const params = useParams()
   const result = useQuery({
     queryKey: ["user"],
@@ -33,6 +38,17 @@ const User = () => {
   }
 
   const user = result.data
+
+  const visibleBlogs = user.blogs.slice(startIndex, endIndex)
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleRowsOnPageChange = (event) => {
+    setRowsOnPage(event.target.value)
+    setPage(0)
+  }
 
   return (
     <div>
@@ -70,28 +86,51 @@ const User = () => {
           </Grid>
         </Paper>
       </Box>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell> Blogs added </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {user.blogs.map((blog) => {
-              return (
-                <>
-                  <TableRow>
-                    <TableCell>
-                      <Link to={`/blogs/${blog.id}`}>{blog.title} </Link>
-                    </TableCell>
-                  </TableRow>
-                </>
-              )
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box
+        sx={{ display: "flex", justifyContent: "center", paddingTop: "50px" }}
+      >
+        <Paper
+          elevation={2}
+          sx={{
+            minWidth: 400,
+            maxWidth: 800,
+            flexGrow: 1,
+          }}
+        >
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell> Blogs added </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {visibleBlogs.map((blog) => {
+                  return (
+                    <>
+                      <TableRow>
+                        <TableCell>
+                          <Link to={`/blogs/${blog.id}`}>{blog.title} </Link>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  )
+                })}
+              </TableBody>
+            </Table>
+            <TableFooter>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 20]}
+                count={user.blogs.length}
+                page={page}
+                onPageChange={handlePageChange}
+                rowsPerPage={rowsOnPage}
+                onRowsPerPageChange={handleRowsOnPageChange}
+              />
+            </TableFooter>
+          </TableContainer>
+        </Paper>
+      </Box>
     </div>
   )
 }
