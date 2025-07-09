@@ -51,9 +51,6 @@ const BlogList = () => {
 
   return (
     <div>
-      <Typography variant="h4" style={{ textAlign: "center" }}>
-        All blogs
-      </Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
