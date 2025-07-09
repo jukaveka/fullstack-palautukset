@@ -1,4 +1,5 @@
 import Button from "./Button"
+import Input from "./Input"
 import BlogService from "../services/BlogService"
 import { useUserValue } from "../context/UserContext"
 import { useParams } from "react-router-dom"
@@ -9,7 +10,12 @@ import {
   setErrorNotification,
 } from "../reducers/NotificationReducer"
 import { useState } from "react"
-import Input from "./Input"
+import { Box, Grid, Paper, Typography, IconButton } from "@mui/material"
+import {
+  Delete as DeleteIcon,
+  OpenInBrowser as OpenLink,
+  ThumbUp as LikeIcon,
+} from "@mui/icons-material"
 
 const Blog = () => {
   const queryClient = useQueryClient()
@@ -78,12 +84,6 @@ const Blog = () => {
 
   const blog = result.data
 
-  const removalButtonStyle = {
-    color: "white",
-    backgroundColor: "#DB5461",
-    margin: "5px",
-  }
-
   const likeButtonStyle = {
     color: "white",
     backgroundColor: "#8FA998",
@@ -114,22 +114,67 @@ const Blog = () => {
 
   return (
     <div>
-      <h2>
-        {blog.title} by {blog.author}
-      </h2>
-      <a href={blog.url}>{blog.url}</a>
-      <p data-testid="blogLikes">
-        likes {blog.likes}
-        <Button text="Like" onClick={handleLike} style={likeButtonStyle} />
-      </p>
-      <p>Added to list by {blog.user.name}</p>
-      {blog.user.username === user.username && (
-        <Button
-          text="Remove"
-          onClick={handleRemoval}
-          style={removalButtonStyle}
-        />
-      )}
+      <Box
+        sx={{ display: "flex", justifyContent: "center", paddingTop: "50px" }}
+      >
+        <Paper
+          elevation={1}
+          sx={{
+            minWidth: 200,
+            maxWidth: 700,
+            flexGrow: 1,
+          }}
+        >
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              textAlign: "center",
+              justifyContent: "center",
+              padding: "20px",
+            }}
+          >
+            <Grid size={12}>
+              <Typography variant="h5">{blog.title}</Typography>
+            </Grid>
+            <Grid size={4}>
+              <Typography>Written by</Typography>
+              <Typography variant="h6">
+                <b>{blog.author}</b>
+              </Typography>
+            </Grid>
+            <Grid size={4}>
+              <Typography>Times commented</Typography>
+              <Typography variant="h6">
+                <b>{blog.comments.length}</b>
+              </Typography>
+            </Grid>
+            <Grid size={4}>
+              <Typography>Times liked</Typography>
+              <Typography variant="h6">
+                <b>{blog.likes}</b>
+              </Typography>
+            </Grid>
+            <Grid size={4}>
+              <Typography>Added by</Typography>
+              <Typography variant="h6">
+                <b>{blog.user.name}</b>
+              </Typography>
+            </Grid>
+            <Grid size={4}>
+              <IconButton href={blog.url} size="large" color="secondary">
+                <OpenLink />
+              </IconButton>
+              <IconButton onClick={handleLike} size="large" color="success">
+                <LikeIcon />
+              </IconButton>
+              <IconButton onClick={handleRemoval} size="large" color="error">
+                <DeleteIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Box>
       <h3> Comments </h3>
       <Input
         label="New comment"
