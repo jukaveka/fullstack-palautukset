@@ -9,7 +9,7 @@ const Comments = ({ comments }) => {
       {comments.map((comment, index) => {
         return (
           <ListItem key={`comment-${index}`}>
-            <Typography variant="h6"> - {comment}</Typography>
+            <Typography> - {comment}</Typography>
           </ListItem>
         )
       })}

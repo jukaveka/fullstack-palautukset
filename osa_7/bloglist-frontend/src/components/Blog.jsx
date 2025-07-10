@@ -1,5 +1,3 @@
-import Button from "./Button"
-import Input from "./Input"
 import BlogService from "../services/BlogService"
 import { useUserValue } from "../context/UserContext"
 import { useParams } from "react-router-dom"
@@ -10,11 +8,19 @@ import {
   setErrorNotification,
 } from "../reducers/NotificationReducer"
 import { useState } from "react"
-import { Box, Grid, Paper, Typography, IconButton } from "@mui/material"
+import {
+  Box,
+  Grid,
+  Paper,
+  Typography,
+  IconButton,
+  TextField,
+} from "@mui/material"
 import {
   Delete as DeleteIcon,
-  OpenInBrowser as OpenLink,
+  OpenInBrowser as OpenLinkIcon,
   ThumbUp as LikeIcon,
+  AddComment as AddCommentIcon,
 } from "@mui/icons-material"
 import Comments from "./Comments"
 
@@ -24,6 +30,12 @@ const Blog = () => {
   const user = useUserValue()
   const params = useParams()
   const [comment, setComment] = useState("")
+
+  const result = useQuery({
+    queryKey: ["blog"],
+    queryFn: () => BlogService.getById(params.id),
+    refetchOnWindowFocus: false,
+  })
 
   const blogRemovalMutation = useMutation({
     mutationFn: BlogService.remove,
@@ -69,12 +81,6 @@ const Blog = () => {
     },
   })
 
-  const result = useQuery({
-    queryKey: ["blog"],
-    queryFn: () => BlogService.getById(params.id),
-    refetchOnWindowFocus: false,
-  })
-
   if (result.isLoading) {
     return <div> Fetching user information </div>
   }
@@ -85,12 +91,6 @@ const Blog = () => {
 
   const blog = result.data
   const canDeleteBlog = blog.user.username === user.username
-
-  const likeButtonStyle = {
-    color: "white",
-    backgroundColor: "#8FA998",
-    margin: "0px 10px",
-  }
 
   const handleLike = () => {
     blogLikeMutation.mutate({
@@ -146,15 +146,15 @@ const Blog = () => {
               </Typography>
             </Grid>
             <Grid size={4}>
-              <Typography>Times commented</Typography>
-              <Typography variant="h6">
-                <b>{blog.comments.length}</b>
-              </Typography>
-            </Grid>
-            <Grid size={4}>
               <Typography>Times liked</Typography>
               <Typography variant="h6">
                 <b>{blog.likes}</b>
+              </Typography>
+            </Grid>
+            <Grid size={4}>
+              <Typography>Times commented</Typography>
+              <Typography variant="h6">
+                <b>{blog.comments.length}</b>
               </Typography>
             </Grid>
             <Grid size={4}>
@@ -165,7 +165,7 @@ const Blog = () => {
             </Grid>
             <Grid size={4}>
               <IconButton href={blog.url} size="large" color="secondary">
-                <OpenLink />
+                <OpenLinkIcon />
               </IconButton>
               <IconButton onClick={handleLike} size="large" color="success">
                 <LikeIcon />
@@ -181,17 +181,28 @@ const Blog = () => {
                 </IconButton>
               )}
             </Grid>
+            <Grid size={4}>
+              <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                <TextField
+                  id="new-comment-input"
+                  label="Add a new comment"
+                  variant="standard"
+                  value={comment}
+                  onChange={({ target }) => setComment(target.value)}
+                />
+                <AddCommentIcon
+                  onClick={handleComment}
+                  sx={{
+                    color: "action.active",
+                    marginLeft: 0.5,
+                    paddingBottom: 0.25,
+                  }}
+                />
+              </Box>
+            </Grid>
           </Grid>
         </Paper>
       </Box>
-      <h3> Comments </h3>
-      <Input
-        label="New comment"
-        type="text"
-        value={comment}
-        onChange={({ target }) => setComment(target.value)}
-      />
-      <Button text="Add" onClick={handleComment} style={likeButtonStyle} />
       <Box
         sx={{ display: "flex", justifyContent: "center", paddingTop: "50px" }}
       >
