@@ -8,6 +8,7 @@ import {
 } from "../reducers/NotificationReducer"
 
 import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
 import { Box, Button, Paper, TextField, Typography } from "@mui/material"
 
 const LoginForm = () => {
@@ -16,12 +17,9 @@ const LoginForm = () => {
   const userDispatch = useUserDispatch()
   const notificationDispatch = useNotificationDispatch()
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
-    try {
-      const user = await loginService.login({ username, password })
-
+  const loginMutation = useMutation({
+    mutationFn: loginService.login,
+    onSuccess: (user) => {
       window.localStorage.setItem("LoggedBlogUser", JSON.stringify(user))
       blogService.setToken(user.token)
       userDispatch({ type: "SET_USER", payload: user })
@@ -30,12 +28,16 @@ const LoginForm = () => {
       setPassword("")
 
       setSuccessNotification(notificationDispatch, "LOGIN", user.username)
-    } catch (exception) {
-      console.log("error with logging in")
-      console.log("Exception", exception.message)
+    },
+    onError: (error) => {
+      setErrorNotification(notificationDispatch, error.message)
+    },
+  })
 
-      setErrorNotification(notificationDispatch, exception.message)
-    }
+  const handleLogin = async (event) => {
+    event.preventDefault()
+
+    loginMutation.mutate({ username: username, password: password })
   }
 
   return (
