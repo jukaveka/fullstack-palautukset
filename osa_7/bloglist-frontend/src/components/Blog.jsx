@@ -18,7 +18,7 @@ import {
 } from "@mui/material"
 import {
   Delete as DeleteIcon,
-  OpenInBrowser as OpenLinkIcon,
+  Link as LinkIcon,
   ThumbUp as LikeIcon,
   AddComment as AddCommentIcon,
 } from "@mui/icons-material"
@@ -164,14 +164,14 @@ const Blog = () => {
               </Typography>
             </Grid>
             <Grid size={4}>
-              <IconButton href={blog.url} size="large" color="secondary">
-                <OpenLinkIcon />
+              <IconButton href={blog.url} size="large">
+                <LinkIcon />
               </IconButton>
-              <IconButton onClick={handleLike} size="large" color="success">
+              <IconButton onClick={handleLike} size="large">
                 <LikeIcon />
               </IconButton>
               {canDeleteBlog && (
-                <IconButton onClick={handleRemoval} size="large" color="error">
+                <IconButton onClick={handleRemoval} size="large">
                   <DeleteIcon />
                 </IconButton>
               )}
