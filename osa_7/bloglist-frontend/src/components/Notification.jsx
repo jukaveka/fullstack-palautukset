@@ -1,55 +1,41 @@
-import PropTypes from "prop-types"
 import { useNotificationState } from "../context/NotificationContext"
+import { Alert, Box } from "@mui/material"
 
 const Notification = () => {
   const notification = useNotificationState()
-
-  const messageStyle = {
-    fontSize: "20px",
-    fontWeight: "bold",
-    padding: "2px",
-    border: "solid",
-    borderSize: "10px",
-    width: "25em",
-    textAlign: "center",
-  }
-
-  const successMessageStyle = {
-    color: "white",
-    backgroundColor: "#285238",
-    borderColor: "#285238",
-  }
-
-  const errorMessageStyle = {
-    color: "white",
-    backgroundColor: "#9E2B14",
-    borderColor: "#9E2B14",
-  }
 
   if (!notification) {
     return null
   }
 
-  if (notification.type === "SUCCESS") {
-    return (
-      <div style={{ ...messageStyle, ...successMessageStyle }}>
-        <p> {notification.message} </p>
-      </div>
-    )
-  }
+  const severity = notification.type === "SUCCESS" ? "success" : "error"
 
-  if (notification.type === "ERROR") {
-    return (
-      <div style={{ ...messageStyle, ...errorMessageStyle }}>
-        <p> {notification.message} </p>
-      </div>
-    )
-  }
-}
-
-Notification.propTypes = {
-  successMessage: PropTypes.string,
-  errorMessage: PropTypes.string,
+  return (
+    <div>
+      {" "}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "25px",
+        }}
+      >
+        <Alert
+          severity={severity}
+          sx={{
+            minWidth: 200,
+            maxWidth: 400,
+            minHeight: 50,
+            maxHeight: 100,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {notification.message}
+        </Alert>
+      </Box>
+    </div>
+  )
 }
 
 export default Notification
