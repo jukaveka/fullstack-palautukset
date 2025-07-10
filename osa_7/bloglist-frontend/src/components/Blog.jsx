@@ -1,13 +1,16 @@
+import Comments from "./Comments"
+
 import BlogService from "../services/BlogService"
 import { useUserValue } from "../context/UserContext"
-import { useParams } from "react-router-dom"
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import { useNotificationDispatch } from "../context/NotificationContext"
 import {
   setSuccessNotification,
   setErrorNotification,
 } from "../reducers/NotificationReducer"
+
 import { useState } from "react"
+import { useParams } from "react-router-dom"
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import {
   Box,
   Grid,
@@ -22,7 +25,6 @@ import {
   ThumbUp as LikeIcon,
   AddComment as AddCommentIcon,
 } from "@mui/icons-material"
-import Comments from "./Comments"
 
 const Blog = () => {
   const queryClient = useQueryClient()

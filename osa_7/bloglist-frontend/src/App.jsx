@@ -32,11 +32,11 @@ const App = () => {
       <AppNav />
       <Notification />
       {!user && <LoginForm />}
-      {user && <BlogForm />}
       <Routes key="Routes">
         <Route path="/" element={<Home />} />
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/blogs/:id" element={<Blog />} />
+        <Route path="/blogs/new" element={<BlogForm />} />
         <Route path="/users" element={<UserList />} />
         <Route path="/users/:id" element={<User />} />
       </Routes>
