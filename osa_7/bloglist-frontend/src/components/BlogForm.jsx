@@ -58,7 +58,7 @@ const BlogForm = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          paddingTop: "50px",
+          marginBottom: "25px",
         }}
       >
         <Paper

@@ -34,7 +34,7 @@ const AppNav = () => {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ marginBottom: "25px" }}>
       <Toolbar
         sx={{
           justifyContent: "space-between",

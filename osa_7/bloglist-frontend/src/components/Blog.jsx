@@ -118,9 +118,7 @@ const Blog = () => {
 
   return (
     <div>
-      <Box
-        sx={{ display: "flex", justifyContent: "center", paddingTop: "50px" }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Paper
           elevation={1}
           sx={{
