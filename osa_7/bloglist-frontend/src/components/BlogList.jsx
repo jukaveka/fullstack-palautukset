@@ -1,5 +1,5 @@
 import BlogService from "../services/BlogService"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import {
   Paper,
@@ -20,21 +20,9 @@ const BlogList = () => {
   const [rowsOnPage, setRowsOnPage] = useState(5)
   const startIndex = page * 5
   const endIndex = startIndex + rowsOnPage
-  const result = useQuery({
-    queryKey: ["blogs"],
-    queryFn: BlogService.getAll,
-    refetchOnWindowFocus: false,
-  })
 
-  if (result.isPending) {
-    return <div> Loading blog data </div>
-  }
-
-  if (result.isError) {
-    return <div> Error fetching blogs. ${result.error}</div>
-  }
-
-  const blogs = result.data
+  const queryClient = useQueryClient()
+  const blogs = queryClient.getQueryData(["blogs"])
 
   const sortedBlogs = blogs.toSorted((a, b) => (a.likes > b.likes ? -1 : 1))
 

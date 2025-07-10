@@ -12,6 +12,7 @@ import UserContext from "./context/UserContext"
 import { Routes, Route } from "react-router-dom"
 import { Container } from "@mui/material"
 import Home from "./components/Home"
+import { useQuery } from "@tanstack/react-query"
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
@@ -26,6 +27,12 @@ const App = () => {
       BlogService.setToken(user.token)
     }
   }, [])
+
+  const result = useQuery({
+    queryKey: ["blogs"],
+    queryFn: BlogService.getAll,
+    refetchOnWindowFocus: false,
+  })
 
   return (
     <Container>
