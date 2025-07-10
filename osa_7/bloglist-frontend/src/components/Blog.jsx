@@ -190,14 +190,14 @@ const Blog = () => {
                   value={comment}
                   onChange={({ target }) => setComment(target.value)}
                 />
-                <AddCommentIcon
-                  onClick={handleComment}
+                <IconButton
+                  size="large"
                   sx={{
-                    color: "action.active",
                     marginLeft: 0.5,
-                    paddingBottom: 0.25,
                   }}
-                />
+                >
+                  <AddCommentIcon onClick={handleComment} />
+                </IconButton>
               </Box>
             </Grid>
           </Grid>
