@@ -9,7 +9,7 @@ import {
 } from "../reducers/NotificationReducer"
 
 import { useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import {
   Box,
@@ -32,6 +32,7 @@ const Blog = () => {
   const user = useUserValue()
   const params = useParams()
   const [comment, setComment] = useState("")
+  const navigate = useNavigate()
 
   const result = useQuery({
     queryKey: ["blog"],
@@ -47,6 +48,7 @@ const Blog = () => {
         (blog) => blog.id === variables.id
       )
       queryClient.setQueryData(["blogs"], blogs.toSpliced(removedBlogIndex, 1))
+      navigate("/blogs")
       setSuccessNotification(
         notificationDispatch,
         "DELETE_BLOG",
