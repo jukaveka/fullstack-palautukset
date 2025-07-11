@@ -77,6 +77,12 @@ const Blog = () => {
     mutationFn: ({ id, comment }) => BlogService.addComment(id, comment),
     onSuccess: (commentedBlog) => {
       queryClient.setQueryData(["blog"], commentedBlog)
+      setComment("")
+      setSuccessNotification(
+        notificationDispatch,
+        "COMMENT",
+        `${commentedBlog.title} by ${commentedBlog.author}`
+      )
     },
     onError: (error) => {
       setErrorNotification(notificationDispatch, error.message)

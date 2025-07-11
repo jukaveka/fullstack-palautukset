@@ -20,6 +20,11 @@ const NotificationReducer = (state, action) => {
         message: `You liked ${action.payload}`,
         type: "SUCCESS",
       }
+    case "COMMENT":
+      return {
+        message: `You commented ${action.payload}`,
+        type: "SUCCESS",
+      }
     case "ERROR":
       return {
         message: `${action.payload}`,
