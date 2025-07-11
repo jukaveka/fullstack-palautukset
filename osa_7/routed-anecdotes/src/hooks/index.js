@@ -7,19 +7,19 @@ export const useField = (type) => {
     setValue(event.target.value)
   }
 
-  const reset = (event) => {
+  const reset = () => {
     setValue("")
   }
 
   const style = {
-    margin: "5px 0px"
+    margin: "5px 0px",
   }
 
   const attributes = {
     type,
     value,
     onChange,
-    style
+    style,
   }
 
   return {
@@ -28,6 +28,6 @@ export const useField = (type) => {
     onChange,
     reset,
     style,
-    attributes
+    attributes,
   }
 }
