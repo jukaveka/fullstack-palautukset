@@ -20,7 +20,7 @@ import { useState } from "react"
 const User = () => {
   const [page, setPage] = useState(0)
   const [rowsOnPage, setRowsOnPage] = useState(10)
-  const startIndex = page * 5
+  const startIndex = page * rowsOnPage
   const endIndex = startIndex + rowsOnPage
   const params = useParams()
   const result = useQuery({
